@@ -3,1296 +3,716 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oncology Trial Finder · Korea</title>
+<title>NSCLC Trial Finder · Korea</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── IMPORTANT NOTE ────────────────────────────────────────────────────────
+   This app calls clinicaltrials.gov/api/v2 DIRECTLY FROM THE BROWSER.
+   - Claude.ai artifact preview → CORS blocked → shows error (expected)
+   - GitHub Pages / any real browser → works perfectly
+   ─────────────────────────────────────────────────────────────────────── */
+
 :root {
-  --bg: #f4f1ec;
-  --bg2: #ede9e2;
-  --surface: #ffffff;
-  --surface2: #faf8f5;
-  --ink: #1a1612;
-  --ink2: #4a4540;
-  --ink3: #8a857e;
-  --accent: #c8401a;
-  --accent2: #2a5caa;
-  --green: #1a7a4a;
-  --amber: #c47a00;
-  --border: rgba(26,22,18,0.1);
-  --border2: rgba(26,22,18,0.06);
-  --shadow: 0 2px 12px rgba(26,22,18,0.08);
-  --shadow-lg: 0 8px 40px rgba(26,22,18,0.12);
+  --bg:#0b0f1a; --bg2:#111827; --surface:#141d2e; --surface2:#1a2540;
+  --border:rgba(100,140,255,.1); --border2:rgba(100,140,255,.06);
+  --text:#e2e8f5; --text2:#7a90bb; --text3:#3a4a6a;
+  --blue:#4d8ef0; --teal:#2dd4bf; --green:#22c55e;
+  --amber:#f59e0b; --red:#f43f5e; --purple:#a78bfa;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;
+  font-size:14px;line-height:1.6;min-height:100vh;
 }
 
 /* HEADER */
-header {
-  background: var(--ink);
-  color: #fff;
-  padding: 0;
-  position: sticky;
-  top: 0;
-  z-index: 200;
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(11,15,26,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
 }
-.header-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 32px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.hdr{
+  max-width:1280px;margin:0 auto;padding:0 28px;
+  height:54px;display:flex;align-items:center;justify-content:space-between;
 }
-.logo {
-  font-family: 'DM Mono', monospace;
-  font-size: 13px;
-  letter-spacing: 2px;
-  color: #fff;
-  text-transform: uppercase;
+.logo{font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;color:var(--text);}
+.logo .d{color:var(--blue);}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.badge{
+  font-family:'Geist Mono',monospace;font-size:10px;
+  padding:3px 10px;border-radius:20px;border:1px solid var(--border);
+  color:var(--text2);letter-spacing:.5px;
 }
-.logo em { color: var(--accent); font-style: normal; }
-.header-right { display: flex; align-items: center; gap: 20px; }
-.live-pill {
-  display: flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: #9ef5c0;
+.badge.live{
+  border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);
+  color:var(--green);display:flex;align-items:center;gap:5px;
 }
-.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #9ef5c0; animation: blink 2s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.header-stat { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.5); }
-.header-stat span { color: #fff; }
+.ldot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}60%{opacity:.7;box-shadow:0 0 0 5px transparent}}
 
 /* HERO */
-.hero {
-  background: var(--ink);
-  color: #fff;
-  padding: 64px 32px 56px;
-  position: relative;
-  overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -100px; right: -100px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(200,64,26,0.15) 0%, transparent 60%);
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -80px; left: 20%;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(42,92,170,0.12) 0%, transparent 60%);
-  pointer-events: none;
-}
-.hero-content { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
-.hero-kicker {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: var(--accent);
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.hero h1 {
-  font-size: clamp(32px, 4vw, 56px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -1px;
-  margin-bottom: 20px;
-}
-.hero h1 span { color: var(--accent); }
-.hero-desc {
-  color: rgba(255,255,255,0.55);
-  font-size: 15px;
-  max-width: 600px;
-  line-height: 1.8;
-}
+.hero{padding:56px 28px 48px;background:var(--bg);position:relative;overflow:hidden;}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(100,140,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(100,140,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+.hglow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(77,142,240,.07) 0%,transparent 65%);pointer-events:none;}
+.hi{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.hkick{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--blue);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.hkick::before{content:'';width:28px;height:1px;background:var(--blue);}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,60px);font-weight:400;line-height:1.05;color:#fff;margin-bottom:14px;}
+h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hdesc{color:var(--text2);font-size:15px;line-height:1.8;max-width:600px;}
+.hdesc strong{color:var(--teal);}
 
-/* MAIN LAYOUT */
-.main { max-width: 1280px; margin: 0 auto; padding: 40px 32px 80px; }
+/* MAIN */
+.main{max-width:1280px;margin:0 auto;padding:36px 28px 100px;}
 
-/* SEARCH BAR */
-.search-wrapper {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 24px;
-  margin-bottom: 32px;
-  box-shadow: var(--shadow);
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.search-input {
-  flex: 1;
-  min-width: 200px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
-  color: var(--ink);
-  outline: none;
-  transition: border-color 0.2s;
-}
-.search-input:focus { border-color: var(--accent2); }
-.search-input::placeholder { color: var(--ink3); }
-.filter-sel {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 13px;
-  color: var(--ink);
-  outline: none;
-  cursor: pointer;
-}
-.search-btn {
-  background: var(--ink);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 24px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-.search-btn:hover { background: var(--accent); }
-.reset-btn {
-  background: transparent;
-  color: var(--ink3);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.reset-btn:hover { border-color: var(--ink); color: var(--ink); }
+/* CONTROL PANEL */
+.ctrl{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:28px;}
+.clabel{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
 
-/* CANCER TYPE TABS */
-.cancer-tabs {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.chip{
+  padding:6px 14px;border-radius:20px;
+  border:1px solid var(--border);background:transparent;
+  font-family:'Geist Mono',monospace;font-size:11px;
+  color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;
 }
-.cancer-tab {
-  padding: 7px 16px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink2);
-  cursor: pointer;
-  transition: all 0.18s;
-  user-select: none;
-}
-.cancer-tab:hover { border-color: var(--ink2); }
-.cancer-tab.active {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
-}
+.chip:hover{border-color:var(--text2);color:var(--text);}
+.chip.on{border-color:var(--blue);background:rgba(77,142,240,.15);color:var(--blue);}
 
-/* MUTATION CHIPS */
-.mutation-section { margin-bottom: 32px; }
-.section-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 12px;
+/* SEARCH ROW */
+.srow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;}
+.sinput{
+  flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 16px;
+  font-family:'Pretendard',sans-serif;font-size:14px;color:var(--text);
+  outline:none;transition:border-color .2s;
 }
-.section-title {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--ink3);
-  text-transform: uppercase;
+.sinput:focus{border-color:var(--blue);}
+.sinput::placeholder{color:var(--text3);}
+.ssel{
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-family:'Pretendard',sans-serif;font-size:13px;
+  color:var(--text);outline:none;cursor:pointer;
 }
-.mutation-groups { display: flex; flex-direction: column; gap: 12px; }
-.mutation-group { display: flex; align-items: flex-start; gap: 10px; }
-.group-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--ink3);
-  min-width: 80px;
-  padding-top: 8px;
-  text-transform: uppercase;
+.ssel option{background:var(--bg2);}
+.sbtn{
+  background:var(--blue);color:#fff;border:none;border-radius:8px;
+  padding:10px 28px;font-family:'Geist Mono',monospace;font-size:12px;
+  letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;
 }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  padding: 6px 13px;
-  border-radius: 5px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--ink2);
-  cursor: pointer;
-  transition: all 0.15s;
-  user-select: none;
+.sbtn:hover:not(:disabled){background:#6ba3f9;transform:translateY(-1px);}
+.sbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.rbtn{
+  background:transparent;color:var(--text2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 16px;font-family:'Geist Mono',monospace;
+  font-size:12px;cursor:pointer;transition:all .2s;
 }
-.chip:hover { border-color: var(--ink2); color: var(--ink); }
-.chip.active {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
-}
-.chip.approved-exists::after {
-  content: '●';
-  font-size: 7px;
-  color: var(--green);
-  margin-left: 5px;
-  vertical-align: super;
-}
+.rbtn:hover{border-color:var(--text2);color:var(--text);}
 
-/* STATS ROW */
-.stats-row {
-  display: flex;
-  gap: 1px;
-  background: var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 28px;
-  box-shadow: var(--shadow);
-}
-.stat-cell {
-  flex: 1;
-  background: var(--surface);
-  padding: 18px 24px;
-  text-align: center;
-}
-.stat-num {
-  font-family: 'DM Mono', monospace;
-  font-size: 28px;
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.stat-num.red { color: var(--accent); }
-.stat-num.blue { color: var(--accent2); }
-.stat-num.green { color: var(--green); }
-.stat-lbl { font-size: 11px; color: var(--ink3); }
+/* STATS */
+.stats{display:flex;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;border:1px solid var(--border);}
+.stat{flex:1;background:var(--surface);padding:16px 20px;text-align:center;}
+.stn{font-family:'Geist Mono',monospace;font-size:24px;color:#fff;line-height:1;margin-bottom:3px;transition:all .3s;}
+.stn.blue{color:var(--blue);}
+.stn.green{color:var(--green);}
+.stn.teal{color:var(--teal);}
+.stn.amber{color:var(--amber);font-size:13px;}
+.stl{font-size:11px;color:var(--text3);}
 
-/* RESULTS */
-.results-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+/* RESBAR */
+.resbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.resc{font-family:'Geist Mono',monospace;font-size:12px;color:var(--text2);}
+.resc strong{color:var(--text);}
+.ract{display:flex;gap:8px;}
+.alink{
+  font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);
+  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  padding:6px 14px;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.5px;
 }
-.results-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--ink3); }
-.results-count strong { color: var(--ink); }
-.export-btn {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--ink3);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: all 0.15s;
-  text-decoration: none;
-}
-.export-btn:hover { color: var(--ink); border-color: var(--ink2); }
+.alink:hover{color:var(--text);border-color:var(--text2);}
 
 /* CARD */
-.trial-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  margin-bottom: 16px;
-  overflow: hidden;
-  transition: box-shadow 0.2s, transform 0.2s;
-  box-shadow: var(--shadow);
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .2s;
 }
-.trial-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-
-.card-header {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border2);
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
+.card:hover{
+  border-color:rgba(77,142,240,.3);
+  box-shadow:0 0 0 1px rgba(77,142,240,.1),0 8px 32px rgba(0,0,0,.4);
+  transform:translateY(-2px);
 }
-.card-left { flex: 1; min-width: 0; }
-.card-right { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-
-.trial-id {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--ink3);
-  margin-bottom: 6px;
+.ctop{padding:18px 22px 14px;border-bottom:1px solid var(--border2);display:flex;gap:14px;align-items:flex-start;}
+.cl{flex:1;min-width:0;}
+.cr{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:130px;}
+.cnct{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:5px;}
+.ctitle{font-size:14px;font-weight:600;color:#fff;line-height:1.5;margin-bottom:10px;}
+.tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tag{font-family:'Geist Mono',monospace;font-size:10px;padding:3px 9px;border-radius:4px;border:1px solid;}
+.tm{color:var(--purple);border-color:rgba(167,139,250,.25);background:rgba(167,139,250,.06);}
+.td{color:var(--amber);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.06);}
+.tp{color:var(--teal);border-color:rgba(45,212,191,.25);background:rgba(45,212,191,.06);}
+.tt{color:var(--text2);border-color:var(--border);}
+.spill{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.spill.rec{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25);}
+.spill.act{background:rgba(77,142,240,.1);color:var(--blue);border:1px solid rgba(77,142,240,.25);}
+.cmeta{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);text-align:right;line-height:1.8;}
+.ctglink{
+  font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);
+  background:rgba(77,142,240,.08);border:1px solid rgba(77,142,240,.2);
+  border-radius:5px;padding:4px 10px;text-decoration:none;transition:all .12s;
 }
-.trial-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.5;
-  margin-bottom: 10px;
-}
-.trial-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-.tag {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  padding: 3px 9px;
-  border-radius: 4px;
-  border: 1px solid;
-  letter-spacing: 0.3px;
-}
-.tag-mut  { color: #7c3aed; border-color: rgba(124,58,237,0.25); background: rgba(124,58,237,0.06); }
-.tag-drug { color: var(--accent); border-color: rgba(200,64,26,0.25); background: rgba(200,64,26,0.06); }
-.tag-cancer { color: var(--accent2); border-color: rgba(42,92,170,0.25); background: rgba(42,92,170,0.06); }
-.tag-phase { color: var(--green); border-color: rgba(26,122,74,0.25); background: rgba(26,122,74,0.06); }
-
-.status-pill {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 500;
-}
-.status-pill.enrolling { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-.status-pill.active    { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
-.sponsor-name { font-size: 11px; color: var(--ink3); text-align: right; }
-
-/* APPROVED DRUGS PANEL */
-.approved-panel {
-  padding: 16px 24px;
-  background: linear-gradient(135deg, rgba(26,122,74,0.04), rgba(26,122,74,0.02));
-  border-bottom: 1px solid var(--border2);
-}
-.approved-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--green);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.approved-label::before { content: '✓'; font-size: 12px; }
-.drug-list { display: flex; flex-wrap: wrap; gap: 8px; }
-.drug-item {
-  background: var(--surface);
-  border: 1px solid rgba(26,122,74,0.2);
-  border-radius: 6px;
-  padding: 6px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.drug-name { font-weight: 600; font-size: 12px; color: var(--ink); }
-.drug-generic { font-size: 10px; color: var(--ink3); font-family: 'DM Mono', monospace; }
-.drug-approval { font-size: 9px; color: var(--green); font-family: 'DM Mono', monospace; }
-
-/* CARD BODY - META */
-.card-meta {
-  padding: 14px 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  border-bottom: 1px solid var(--border2);
-}
-.meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink2); }
-.meta-icon { font-size: 14px; }
+.ctglink:hover{background:rgba(77,142,240,.18);}
 
 /* SITES */
-.sites-toggle-btn {
-  width: 100%;
-  padding: 12px 24px;
-  background: var(--surface2);
-  border: none;
-  border-top: 1px solid var(--border2);
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--ink2);
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.15s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.stoggle{
+  width:100%;padding:11px 22px;background:var(--bg2);border:none;
+  border-top:1px solid var(--border2);font-family:'Geist Mono',monospace;
+  font-size:10px;letter-spacing:.5px;color:var(--text2);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;transition:background .15s;
 }
-.sites-toggle-btn:hover { background: var(--bg2); color: var(--ink); }
-.sites-panel { display: none; padding: 0 24px 20px; }
-.sites-panel.open { display: block; }
-.sites-grid { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
-.site-row {
-  display: grid;
-  grid-template-columns: 1fr 130px 100px auto;
-  gap: 12px;
-  align-items: center;
-  padding: 10px 14px;
-  background: var(--bg2);
-  border-radius: 7px;
-  border: 1px solid var(--border2);
-  transition: background 0.12s;
+.stoggle:hover{background:var(--surface2);color:var(--text);}
+.spanel{display:none;padding:12px 22px 16px;}
+.spanel.open{display:block;}
+.slist{display:flex;flex-direction:column;gap:6px;margin-top:4px;}
+.srow2{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 13px;background:var(--bg);border-radius:8px;
+  border:1px solid var(--border2);gap:10px;flex-wrap:wrap;
 }
-.site-row:hover { background: var(--bg); }
-.site-name { font-weight: 600; font-size: 13px; }
-.site-pi { font-size: 11px; color: var(--ink3); margin-top: 1px; }
-.site-dept { font-size: 11px; color: var(--ink3); }
-.site-status-pill {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  padding: 3px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.site-status-pill.e { background: #dcfce7; color: #15803d; }
-.site-status-pill.a { background: #dbeafe; color: #1d4ed8; }
-.contact-link {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--accent2);
-  background: rgba(42,92,170,0.08);
-  border: 1px solid rgba(42,92,170,0.2);
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.12s;
-  white-space: nowrap;
-}
-.contact-link:hover { background: rgba(42,92,170,0.15); }
+.srow2:hover{background:rgba(77,142,240,.04);}
+.sname{font-size:13px;font-weight:500;color:#fff;}
+.scity{font-size:11px;color:var(--text3);font-family:'Geist Mono',monospace;margin-top:1px;}
+.sdot{font-family:'Geist Mono',monospace;font-size:9px;padding:3px 9px;border-radius:10px;}
+.sdot.r{background:rgba(34,197,94,.1);color:var(--green);}
+.sdot.a{background:rgba(77,142,240,.1);color:var(--blue);}
+.nosite{color:var(--text3);font-size:12px;padding:6px 0;}
+.nosite a{color:var(--blue);}
 
-/* EMPTY / LOADING */
-.loading-state, .empty-state {
-  text-align: center; padding: 80px 20px; color: var(--ink3);
-}
-.spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty-icon { font-size: 48px; margin-bottom: 16px; }
-.empty-msg { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
-.empty-sub { font-size: 13px; }
+/* STATES */
+.loading,.empty,.errstate{text-align:center;padding:80px 24px;color:var(--text2);}
+.spinner{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--blue);animation:spin .8s linear infinite;margin:0 auto 18px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ltitle{font-size:15px;font-weight:500;color:#fff;margin-bottom:8px;}
+.lsub{font-size:12px;color:var(--text3);}
+.lapi{margin-top:10px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);}
 
-/* MODAL */
-.modal-bg {
-  display: none; position: fixed; inset: 0;
-  background: rgba(26,22,18,0.5); backdrop-filter: blur(4px);
-  z-index: 500; align-items: center; justify-content: center; padding: 20px;
+/* PAGINATION */
+.pager{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.pbtn{
+  font-family:'Geist Mono',monospace;font-size:11px;padding:7px 14px;
+  border-radius:6px;border:1px solid var(--border);background:var(--surface);
+  color:var(--text2);cursor:pointer;transition:all .15s;
 }
-.modal-bg.open { display: flex; }
-.modal {
-  background: var(--surface); border-radius: 16px;
-  padding: 32px; max-width: 480px; width: 100%;
-  box-shadow: var(--shadow-lg); position: relative;
-  max-height: 80vh; overflow-y: auto;
-}
-.modal-close { position: absolute; right: 20px; top: 20px; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--ink3); }
-.modal h3 { font-size: 18px; margin-bottom: 6px; }
-.modal-sub { font-size: 12px; color: var(--ink3); margin-bottom: 20px; }
-.info-grid { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; }
-.info-row { display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 10px 14px; gap: 12px; }
-.info-label { font-size: 12px; color: var(--ink3); flex-shrink: 0; }
-.info-value { font-size: 12px; color: var(--ink); text-align: right; font-family: 'DM Mono', monospace; }
-.info-value a { color: var(--accent2); text-decoration: none; }
-.modal-note { font-size: 11px; color: var(--ink3); margin-top: 16px; line-height: 1.7; padding: 12px; background: var(--bg2); border-radius: 8px; }
+.pbtn:hover:not(:disabled){border-color:var(--text2);color:var(--text);}
+.pbtn.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.pbtn:disabled{opacity:.3;cursor:not-allowed;}
+.pinfo{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text3);padding:0 6px;}
 
-/* FOOTER */
-footer {
-  background: var(--ink); color: rgba(255,255,255,0.4);
-  padding: 32px; text-align: center;
-  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1px;
+footer{
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:24px;text-align:center;font-family:'Geist Mono',monospace;
+  font-size:10px;color:var(--text3);letter-spacing:.5px;
 }
-footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+footer a{color:var(--text2);text-decoration:none;}
+footer a:hover{color:var(--blue);}
 
-@media (max-width: 768px) {
-  .hero { padding: 40px 20px; }
-  .main { padding: 24px 20px 60px; }
-  .site-row { grid-template-columns: 1fr auto; }
-  .site-dept, .site-status-pill { display: none; }
-  .stats-row { flex-direction: column; }
-  .header-stat { display: none; }
+@media(max-width:768px){
+  .hero{padding:40px 16px;}
+  .main{padding:24px 16px 60px;}
+  .ctop{flex-direction:column;}
+  .cr{align-items:flex-start;flex-direction:row;flex-wrap:wrap;}
+  .stats{flex-wrap:wrap;}
+  .stat{min-width:calc(50% - 1px);}
+  .hdr-right .badge:not(.live){display:none;}
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-inner">
-    <div class="logo">Onco<em>.</em>Trial <em>//</em> KR</div>
-    <div class="header-right">
-      <div class="header-stat">임상시험 <span id="hTotal">—</span>건</div>
-      <div class="header-stat">모집중 <span id="hEnrolling">—</span>건</div>
-      <div class="live-pill"><div class="live-dot"></div>DEMO DATA</div>
+  <div class="hdr">
+    <div class="logo">NSCLC<span class="d">.</span>Trials<span class="d">.</span>KR</div>
+    <div class="hdr-right">
+      <div class="badge">총 <span id="hTotal" style="color:#fff">—</span>건</div>
+      <div class="badge">모집중 <span id="hRec" style="color:var(--green)">—</span>건</div>
+      <div class="badge live"><div class="ldot"></div>ClinicalTrials.gov LIVE</div>
     </div>
   </div>
 </header>
 
 <div class="hero">
-  <div class="hero-content">
-    <div class="hero-kicker">Solid Tumor · Targeted Therapy · Korea</div>
-    <h1>고형암 타겟치료<br><span>임상시험 사이트</span> 파인더</h1>
-    <p class="hero-desc">NSCLC·유방암·대장암·위암 등 전체 고형암의 타겟별 승인 약제와 현재 국내 모집 중인 임상시험 참여기관·연락처를 한 화면에서 확인합니다.</p>
+  <div class="hgrid"></div>
+  <div class="hglow"></div>
+  <div class="hi">
+    <div class="hkick">South Korea · NSCLC · Targeted Therapy</div>
+    <h1>국내 NSCLC<br><em>임상시험</em> 실시간 검색</h1>
+    <p class="hdesc">
+      <strong>ClinicalTrials.gov API</strong>에서 실시간으로 직접 조회합니다.<br>
+      Mutation 선택 → 국내 모집 중인 전체 trial과 참여 기관을 즉시 확인.
+    </p>
   </div>
 </div>
 
 <div class="main">
-  <!-- SEARCH -->
-  <div class="search-wrapper">
-    <input class="search-input" id="searchInput" type="text" placeholder="키워드 검색 (약물명, 암종, 시험번호...)">
-    <select class="filter-sel" id="phaseFilter">
-      <option value="">모든 단계</option>
-      <option value="1">1상</option>
-      <option value="2">2상</option>
-      <option value="3">3상</option>
-    </select>
-    <select class="filter-sel" id="statusFilter">
-      <option value="">모든 상태</option>
-      <option value="enrolling">모집 중</option>
-      <option value="active">진행 중</option>
-    </select>
-    <button class="search-btn" onclick="runSearch()">검색</button>
-    <button class="reset-btn" onclick="resetAll()">초기화</button>
-  </div>
 
-  <!-- CANCER TYPE TABS -->
-  <div style="margin-bottom:10px;">
-    <div class="section-title" style="margin-bottom:10px;">암종</div>
-    <div class="cancer-tabs" id="cancerTabs">
-      <div class="cancer-tab active" data-cancer="ALL" onclick="selectCancer(this)">전체</div>
-      <div class="cancer-tab" data-cancer="NSCLC" onclick="selectCancer(this)">비소세포폐암</div>
-      <div class="cancer-tab" data-cancer="BREAST" onclick="selectCancer(this)">유방암</div>
-      <div class="cancer-tab" data-cancer="CRC" onclick="selectCancer(this)">대장암</div>
-      <div class="cancer-tab" data-cancer="GASTRIC" onclick="selectCancer(this)">위암</div>
-      <div class="cancer-tab" data-cancer="OVARIAN" onclick="selectCancer(this)">난소암</div>
-      <div class="cancer-tab" data-cancer="PANCREATIC" onclick="selectCancer(this)">췌장암</div>
-      <div class="cancer-tab" data-cancer="SOLID" onclick="selectCancer(this)">고형암 (전체)</div>
+  <!-- CONTROL PANEL -->
+  <div class="ctrl">
+    <div class="clabel">Mutation / Drug 선택 (중복 선택 가능)</div>
+    <div class="chips" id="chips">
+      <div class="chip on" data-q="EGFR">EGFR</div>
+      <div class="chip" data-q="ALK">ALK</div>
+      <div class="chip" data-q="KRAS G12C">KRAS G12C</div>
+      <div class="chip" data-q="KRAS G12D">KRAS G12D</div>
+      <div class="chip" data-q="ROS1">ROS1</div>
+      <div class="chip" data-q="RET fusion">RET fusion</div>
+      <div class="chip" data-q="MET exon14">MET ex14</div>
+      <div class="chip" data-q="HER2">HER2</div>
+      <div class="chip" data-q="BRAF V600E">BRAF V600E</div>
+      <div class="chip" data-q="NTRK">NTRK</div>
+      <div class="chip" data-q="PD-L1">PD-L1</div>
+      <div class="chip" data-q="PARP">PARP/DDR</div>
+      <div class="chip" data-q="NRG1">NRG1</div>
+      <div class="chip" data-q="osimertinib">Osimertinib</div>
+      <div class="chip" data-q="lazertinib">Lazertinib</div>
+      <div class="chip" data-q="amivantamab">Amivantamab</div>
+      <div class="chip" data-q="tepotinib">Tepotinib</div>
+      <div class="chip" data-q="capmatinib">Capmatinib</div>
     </div>
-  </div>
 
-  <!-- MUTATION CHIPS -->
-  <div class="mutation-section">
-    <div class="section-head">
-      <div class="section-title">타겟 변이 선택</div>
-      <span style="font-size:10px;color:var(--green);font-family:'DM Mono',monospace;">● 승인 약제 있음</span>
-    </div>
-    <div class="mutation-groups" id="mutationGroups">
-      <!-- rendered by JS -->
+    <div class="srow">
+      <input class="sinput" id="kw" type="text"
+        placeholder="추가 키워드 (약물명, NCT번호, 스폰서, 기관명 등...)">
+      <select class="ssel" id="phaseF">
+        <option value="">모든 단계</option>
+        <option value="PHASE1">Phase I</option>
+        <option value="PHASE2">Phase II</option>
+        <option value="PHASE3">Phase III</option>
+      </select>
+      <select class="ssel" id="statusF">
+        <option value="RECRUITING,ACTIVE_NOT_RECRUITING">모집중 + 진행중</option>
+        <option value="RECRUITING">모집중만</option>
+        <option value="ACTIVE_NOT_RECRUITING">진행중만</option>
+      </select>
+      <button class="sbtn" id="sbtn" onclick="doSearch()">실시간 검색</button>
+      <button class="rbtn" onclick="doReset()">초기화</button>
     </div>
   </div>
 
   <!-- STATS -->
-  <div class="stats-row" id="statsRow" style="display:none;">
-    <div class="stat-cell"><div class="stat-num red" id="sTotal">0</div><div class="stat-lbl">임상시험</div></div>
-    <div class="stat-cell"><div class="stat-num green" id="sEnrolling">0</div><div class="stat-lbl">모집 중</div></div>
-    <div class="stat-cell"><div class="stat-num blue" id="sSites">0</div><div class="stat-lbl">참여 기관</div></div>
-    <div class="stat-cell"><div class="stat-num" id="sUpdated" style="font-size:13px;color:var(--ink3);">—</div><div class="stat-lbl">조회 시각</div></div>
+  <div class="stats" id="statsEl" style="display:none;">
+    <div class="stat"><div class="stn blue" id="stT">0</div><div class="stl">검색된 Trial</div></div>
+    <div class="stat"><div class="stn green" id="stR">0</div><div class="stl">모집 중</div></div>
+    <div class="stat"><div class="stn teal" id="stS">0</div><div class="stl">국내 참여 기관</div></div>
+    <div class="stat"><div class="stn amber" id="stTime">—</div><div class="stl">조회 시각</div></div>
   </div>
 
-  <!-- RESULTS -->
-  <div class="results-bar" id="resultsBar" style="display:none;">
-    <div class="results-count"><strong id="rCount">0</strong>건 검색됨</div>
-    <div style="display:flex;gap:8px;">
-      <button class="export-btn" onclick="exportCSV()">CSV 저장</button>
-      <a class="export-btn" href="https://cris.nih.go.kr/cris/search/search.do" target="_blank">CRIS ↗</a>
+  <!-- RESBAR -->
+  <div class="resbar" id="resbarEl" style="display:none;">
+    <div class="resc">총 <strong id="rN">0</strong>건 · 페이지 <span id="rP">1</span>/<span id="rTP">1</span></div>
+    <div class="ract">
+      <button class="alink" onclick="exportCSV()">CSV 저장</button>
+      <a class="alink" id="ctgHref" href="https://clinicaltrials.gov" target="_blank">CTG.gov 원본 ↗</a>
     </div>
   </div>
 
-  <div id="resultsArea"></div>
-</div>
-
-<!-- CONTACT MODAL -->
-<div class="modal-bg" id="contactModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h3 id="mTitle"></h3>
-    <div class="modal-sub" id="mSub"></div>
-    <div class="info-grid" id="mContent"></div>
-    <div class="modal-note" id="mNote"></div>
+  <div id="results">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="ltitle">검색 버튼을 눌러주세요</div>
+      <div class="lsub">Mutation을 선택하고 실시간 검색을 누르면<br>ClinicalTrials.gov에서 직접 데이터를 가져옵니다</div>
+    </div>
   </div>
+  <div class="pager" id="pagerEl"></div>
 </div>
 
 <footer>
-  ONCO.TRIAL KR &nbsp;·&nbsp; 데이터: <a href="https://cris.nih.go.kr" target="_blank">CRIS</a> + <a href="https://www.mfds.go.kr" target="_blank">MFDS</a> &nbsp;·&nbsp; 연구 목적 전용 &nbsp;·&nbsp; Demo v2.0
+  NSCLC.Trials.KR &nbsp;·&nbsp;
+  Data source: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (실시간 · 인증 불필요)
+  &nbsp;·&nbsp; 연구·의뢰 목적 전용 &nbsp;·&nbsp; 참여 전 반드시 원본에서 최신 정보 확인
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// MUTATION TAXONOMY
-// ═══════════════════════════════════════════════════════
-const MUTATION_GROUPS = [
-  {
-    label: "EGFR",
-    mutations: [
-      { id: "EGFR_19del", label: "Exon19del", approved: true },
-      { id: "EGFR_L858R", label: "L858R", approved: true },
-      { id: "EGFR_20ins", label: "Exon20ins", approved: true },
-      { id: "EGFR_T790M", label: "T790M", approved: true },
-      { id: "EGFR_C797S", label: "C797S", approved: false },
-      { id: "EGFR_G719X", label: "G719X", approved: true },
-    ]
-  },
-  {
-    label: "ALK/ROS1/RET",
-    mutations: [
-      { id: "ALK", label: "ALK fusion", approved: true },
-      { id: "ROS1", label: "ROS1 fusion", approved: true },
-      { id: "RET", label: "RET fusion", approved: true },
-    ]
-  },
-  {
-    label: "KRAS/BRAF",
-    mutations: [
-      { id: "KRAS_G12C", label: "KRAS G12C", approved: true },
-      { id: "KRAS_G12D", label: "KRAS G12D", approved: false },
-      { id: "KRAS_G12V", label: "KRAS G12V", approved: false },
-      { id: "BRAF_V600E", label: "BRAF V600E", approved: true },
-    ]
-  },
-  {
-    label: "HER2/MET",
-    mutations: [
-      { id: "HER2_mut", label: "HER2 mut", approved: true },
-      { id: "HER2_amp", label: "HER2 amp", approved: true },
-      { id: "MET_ex14", label: "MET ex14skip", approved: true },
-      { id: "MET_amp", label: "MET amp", approved: false },
-    ]
-  },
-  {
-    label: "NTRK/NRG1",
-    mutations: [
-      { id: "NTRK", label: "NTRK fusion", approved: true },
-      { id: "NRG1", label: "NRG1 fusion", approved: false },
-      { id: "FGFR", label: "FGFR alt", approved: true },
-    ]
-  },
-  {
-    label: "TP53/STK11",
-    mutations: [
-      { id: "TP53", label: "TP53", approved: false },
-      { id: "STK11", label: "STK11", approved: false },
-      { id: "KEAP1", label: "KEAP1", approved: false },
-    ]
-  },
-  {
-    label: "DDR/PARP",
-    mutations: [
-      { id: "BRCA1", label: "BRCA1", approved: true },
-      { id: "BRCA2", label: "BRCA2", approved: true },
-      { id: "ATM", label: "ATM", approved: false },
-      { id: "CDK12", label: "CDK12", approved: false },
-      { id: "PARP", label: "PARP inhib", approved: true },
-    ]
-  },
-  {
-    label: "면역/기타",
-    mutations: [
-      { id: "PDL1", label: "PD-L1 high", approved: true },
-      { id: "TMB", label: "TMB-H", approved: true },
-      { id: "MSI", label: "MSI-H", approved: true },
-    ]
-  },
-];
+// ══════════════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════════════
+const CTG = 'https://clinicaltrials.gov/api/v2/studies';
+const PER = 25;
 
-// ═══════════════════════════════════════════════════════
-// APPROVED DRUGS DATABASE
-// ═══════════════════════════════════════════════════════
-const APPROVED_DRUGS = {
-  EGFR_19del: [
-    { name: "Osimertinib", generic: "Tagrisso", approval: "1차/2차 FDA" },
-    { name: "Gefitinib", generic: "Iressa", approval: "1차 식약처" },
-    { name: "Erlotinib", generic: "Tarceva", approval: "1차 식약처" },
-    { name: "Afatinib", generic: "Giotrif", approval: "1차 식약처" },
-  ],
-  EGFR_L858R: [
-    { name: "Osimertinib", generic: "Tagrisso", approval: "1차 FDA" },
-    { name: "Gefitinib", generic: "Iressa", approval: "1차 식약처" },
-    { name: "Dacomitinib", generic: "Vizimpro", approval: "1차 FDA" },
-  ],
-  EGFR_20ins: [
-    { name: "Amivantamab", generic: "Rybrevant", approval: "2차 FDA 2021" },
-    { name: "Mobocertinib", generic: "Exkivity", approval: "2차 FDA 2021" },
-  ],
-  EGFR_T790M: [
-    { name: "Osimertinib", generic: "Tagrisso", approval: "2차 FDA/식약처" },
-  ],
-  EGFR_G719X: [
-    { name: "Afatinib", generic: "Giotrif", approval: "식약처" },
-  ],
-  ALK: [
-    { name: "Alectinib", generic: "Alecensa", approval: "1차 FDA/식약처" },
-    { name: "Lorlatinib", generic: "Lorbrena", approval: "1차 FDA 2022" },
-    { name: "Brigatinib", generic: "Alunbrig", approval: "1/2차 FDA" },
-    { name: "Crizotinib", generic: "Xalkori", approval: "식약처" },
-  ],
-  ROS1: [
-    { name: "Entrectinib", generic: "Rozlytrek", approval: "FDA/식약처" },
-    { name: "Crizotinib", generic: "Xalkori", approval: "FDA" },
-    { name: "Repotrectinib", generic: "Augtyro", approval: "FDA 2023" },
-  ],
-  RET: [
-    { name: "Selpercatinib", generic: "Retevmo", approval: "FDA/식약처" },
-    { name: "Pralsetinib", generic: "Gavreto", approval: "FDA" },
-  ],
-  KRAS_G12C: [
-    { name: "Sotorasib", generic: "Lumakras", approval: "2차 FDA/식약처" },
-    { name: "Adagrasib", generic: "Krazati", approval: "2차 FDA 2022" },
-  ],
-  BRAF_V600E: [
-    { name: "Dabrafenib+Tram", generic: "Tafinlar+Mekinist", approval: "FDA/식약처" },
-  ],
-  HER2_mut: [
-    { name: "T-DXd", generic: "Enhertu", approval: "2차+ FDA 2022" },
-  ],
-  HER2_amp: [
-    { name: "Trastuzumab", generic: "Herceptin", approval: "유방/위암 식약처" },
-    { name: "T-DXd", generic: "Enhertu", approval: "FDA/식약처" },
-    { name: "Pertuzumab", generic: "Perjeta", approval: "유방암 식약처" },
-    { name: "Lapatinib", generic: "Tykerb", approval: "식약처" },
-  ],
-  MET_ex14: [
-    { name: "Capmatinib", generic: "Tabrecta", approval: "FDA/식약처" },
-    { name: "Tepotinib", generic: "Tepmetko", approval: "FDA" },
-  ],
-  NTRK: [
-    { name: "Larotrectinib", generic: "Vitrakvi", approval: "FDA/식약처 tumor-agnostic" },
-    { name: "Entrectinib", generic: "Rozlytrek", approval: "FDA" },
-  ],
-  FGFR: [
-    { name: "Erdafitinib", generic: "Balversa", approval: "방광암 FDA" },
-    { name: "Futibatinib", generic: "Lytgobi", approval: "담도암 FDA" },
-    { name: "Pemigatinib", generic: "Pemazyre", approval: "담도암 FDA" },
-  ],
-  BRCA1: [
-    { name: "Olaparib", generic: "Lynparza", approval: "유방/난소/전립선 FDA" },
-    { name: "Niraparib", generic: "Zejula", approval: "난소암 FDA/식약처" },
-    { name: "Talazoparib", generic: "Talzenna", approval: "유방암 FDA" },
-  ],
-  BRCA2: [
-    { name: "Olaparib", generic: "Lynparza", approval: "FDA/식약처" },
-    { name: "Rucaparib", generic: "Rubraca", approval: "FDA" },
-  ],
-  PARP: [
-    { name: "Olaparib", generic: "Lynparza", approval: "FDA/식약처" },
-    { name: "Niraparib", generic: "Zejula", approval: "식약처" },
-  ],
-  NRG1: [],
-  TP53: [],
-  STK11: [],
-  KEAP1: [],
-  PDL1: [
-    { name: "Pembrolizumab", generic: "Keytruda", approval: "FDA/식약처" },
-    { name: "Atezolizumab", generic: "Tecentriq", approval: "식약처" },
-    { name: "Nivolumab", generic: "Opdivo", approval: "식약처" },
-  ],
-  TMB: [
-    { name: "Pembrolizumab", generic: "Keytruda", approval: "FDA tumor-agnostic" },
-  ],
-  MSI: [
-    { name: "Pembrolizumab", generic: "Keytruda", approval: "FDA tumor-agnostic" },
-    { name: "Dostarlimab", generic: "Jemperli", approval: "FDA" },
-  ],
-};
-
-// ═══════════════════════════════════════════════════════
-// TRIAL DATA
-// ═══════════════════════════════════════════════════════
-const TRIALS = [
-  {
-    id: "KCT0009841", status: "enrolling", phase: "2/3상",
-    sponsor: "AstraZeneca Korea", cancer: "NSCLC", cancerType: "NSCLC",
-    mutations: ["EGFR_T790M", "EGFR_C797S"],
-    title: "Osimertinib 내성 EGFR 양성 NSCLC 대상 4세대 EGFR 억제제 병용 무작위배정 2/3상",
-    enrollTarget: 240,
-    sites: [
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "김태유", tel: "02-2072-2114", email: "onco@snuh.org", status: "enrolling" },
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "박근칠", tel: "02-3410-2114", email: "oncology@smc.samsung.com", status: "enrolling" },
-      { name: "세브란스병원", dept: "종양내과", pi: "조병철", tel: "02-2228-0114", email: "onco@yuhs.ac", status: "enrolling" },
-      { name: "서울아산병원", dept: "종양내과", pi: "이지연", tel: "02-3010-3310", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "서울성모병원", dept: "혈액종양내과", pi: "강진형", tel: "02-2258-2062", email: "onco@cmcnu.or.kr", status: "active" },
-    ]
-  },
-  {
-    id: "KCT0009542", status: "enrolling", phase: "1b/2상",
-    sponsor: "Pfizer Korea", cancer: "NSCLC", cancerType: "NSCLC",
-    mutations: ["ALK"],
-    title: "ALK 양성 NSCLC 대상 Lorlatinib 병용 1b/2상 — 뇌전이 포함",
-    enrollTarget: 80,
-    sites: [
-      { name: "국립암센터", dept: "폐암센터", pi: "김진수", tel: "031-920-1730", email: "lungcancer@ncc.re.kr", status: "enrolling" },
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "방선욱", tel: "02-2072-3760", email: "onco@snuh.org", status: "enrolling" },
-      { name: "고려대 안암병원", dept: "종양혈액내과", pi: "임선교", tel: "02-920-5360", email: "onco@korea.ac.kr", status: "active" },
-    ]
-  },
-  {
-    id: "KCT0009215", status: "enrolling", phase: "2상",
-    sponsor: "Amgen Korea", cancer: "NSCLC/CRC", cancerType: "SOLID",
-    mutations: ["KRAS_G12C"],
-    title: "KRAS G12C 돌연변이 고형암 대상 Adagrasib + Cetuximab 병용 2상",
-    enrollTarget: 120,
-    sites: [
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "이정민", tel: "02-3410-1480", email: "oncology@smc.samsung.com", status: "enrolling" },
-      { name: "서울아산병원", dept: "종양내과", pi: "정한영", tel: "02-3010-5950", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "분당서울대병원", dept: "혈액종양내과", pi: "김범준", tel: "031-787-7042", email: "onco@snubh.org", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009108", status: "enrolling", phase: "2상",
-    sponsor: "Mirati/BMS Korea", cancer: "NSCLC/CRC", cancerType: "SOLID",
-    mutations: ["KRAS_G12D", "KRAS_G12V"],
-    title: "KRAS G12D/G12V 돌연변이 고형암 대상 MRTX1133 단독 및 병용 2상 (First-in-class)",
-    enrollTarget: 90,
-    sites: [
-      { name: "국립암센터", dept: "항암신약임상시험센터", pi: "장봉현", tel: "031-920-1605", email: "clinicaltrial@ncc.re.kr", status: "enrolling" },
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "방선욱", tel: "02-2072-3760", email: "onco@snuh.org", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0008976", status: "enrolling", phase: "3상",
-    sponsor: "Roche Korea", cancer: "NSCLC", cancerType: "NSCLC",
-    mutations: ["ROS1"],
-    title: "ROS1 재배열 양성 NSCLC 대상 Entrectinib vs Crizotinib 무작위배정 3상",
-    enrollTarget: 200,
-    sites: [
-      { name: "세브란스병원", dept: "종양내과", pi: "안중배", tel: "02-2228-1979", email: "onco@yuhs.ac", status: "enrolling" },
-      { name: "서울아산병원", dept: "종양내과", pi: "박시영", tel: "02-3010-3310", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "경북대병원", dept: "혈액종양내과", pi: "김민욱", tel: "053-200-5620", email: "hemonco@knuh.kr", status: "active" },
-      { name: "전남대병원", dept: "혈액종양내과", pi: "이제훈", tel: "062-220-5360", email: "onco@jnuh.chonnam.ac.kr", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009633", status: "enrolling", phase: "3상",
-    sponsor: "Daiichi Sankyo/AZ Korea", cancer: "유방암 HER2+", cancerType: "BREAST",
-    mutations: ["HER2_amp"],
-    title: "HER2 양성 유방암 대상 T-DXd 1차 단독 vs 병용 무작위배정 3상 (DESTINY-Breast09)",
-    enrollTarget: 450,
-    sites: [
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "임석아", tel: "02-3410-1411", email: "oncology@smc.samsung.com", status: "enrolling" },
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "한원식", tel: "02-2072-2384", email: "onco@snuh.org", status: "enrolling" },
-      { name: "서울아산병원", dept: "종양내과", pi: "강윤구", tel: "02-3010-3215", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "세브란스암병원", dept: "종양내과", pi: "손주혁", tel: "02-2228-8119", email: "onco@yuhs.ac", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009102", status: "enrolling", phase: "2상",
-    sponsor: "AstraZeneca Korea", cancer: "난소암/유방암 BRCA+", cancerType: "OVARIAN",
-    mutations: ["BRCA1", "BRCA2", "PARP"],
-    title: "BRCA1/2 변이 양성 난소암·유방암 대상 Olaparib 유지요법 한국인 실세계 코호트 연구",
-    enrollTarget: 300,
-    sites: [
-      { name: "서울대학교병원", dept: "산부인과종양", pi: "김재원", tel: "02-2072-3073", email: "gync@snuh.org", status: "enrolling" },
-      { name: "삼성서울병원", dept: "부인종양과", pi: "이진화", tel: "02-3410-3511", email: "gyneonco@smc.samsung.com", status: "enrolling" },
-      { name: "서울아산병원", dept: "산부인과", pi: "김종혁", tel: "02-3010-3630", email: "gyneonco@amc.seoul.kr", status: "enrolling" },
-      { name: "국립암센터", dept: "자궁/난소암센터", pi: "이정윤", tel: "031-920-1760", email: "gync@ncc.re.kr", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0008734", status: "enrolling", phase: "1/2상",
-    sponsor: "AstraZeneca Korea", cancer: "ATM/CDK12 변이 고형암", cancerType: "SOLID",
-    mutations: ["ATM", "CDK12"],
-    title: "DDR 경로 이상 (ATM/CDK12) 고형암 대상 Ceralasertib (ATR 억제제) 병용 1/2상",
-    enrollTarget: 100,
-    sites: [
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "방선욱", tel: "02-2072-3760", email: "onco@snuh.org", status: "enrolling" },
-      { name: "국립암센터", dept: "항암신약임상시험센터", pi: "장봉현", tel: "031-920-1605", email: "clinicaltrial@ncc.re.kr", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009401", status: "enrolling", phase: "2상",
-    sponsor: "MSD Korea", cancer: "MSI-H 고형암", cancerType: "SOLID",
-    mutations: ["MSI", "TMB"],
-    title: "MSI-H/TMB-H 고형암 대상 Pembrolizumab 단독 2차+ 치료 Tumor-agnostic 2상 (KEYNOTE-158 KR)",
-    enrollTarget: 180,
-    sites: [
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "노동영", tel: "02-2072-2790", email: "onco@snuh.org", status: "enrolling" },
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "박연희", tel: "02-3410-1461", email: "oncology@smc.samsung.com", status: "enrolling" },
-      { name: "부산대병원", dept: "혈액종양내과", pi: "이인호", tel: "051-240-7329", email: "onco@pusan.ac.kr", status: "active" },
-      { name: "전북대병원", dept: "혈액종양내과", pi: "송호철", tel: "063-250-2061", email: "onco@jbuh.ac.kr", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009710", status: "enrolling", phase: "2상",
-    sponsor: "Lilly Korea", cancer: "NSCLC HER2 변이", cancerType: "NSCLC",
-    mutations: ["HER2_mut"],
-    title: "HER2 변이 양성 NSCLC 대상 T-DXd vs 표준치료 무작위 2상 (DESTINY-Lung03)",
-    enrollTarget: 160,
-    sites: [
-      { name: "세브란스병원", dept: "종양내과", pi: "조병철", tel: "02-2228-0114", email: "onco@yuhs.ac", status: "enrolling" },
-      { name: "서울아산병원", dept: "종양내과", pi: "이지연", tel: "02-3010-3310", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "고려대 구로병원", dept: "종양혈액내과", pi: "배재현", tel: "02-2626-3060", email: "onco@kumc.or.kr", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009320", status: "enrolling", phase: "3상",
-    sponsor: "Novartis Korea", cancer: "위암/위식도접합부암 HER2+", cancerType: "GASTRIC",
-    mutations: ["HER2_amp"],
-    title: "HER2 양성 위암/위식도접합부암 1차 치료 Trastuzumab + 화학요법 vs 면역병용 3상",
-    enrollTarget: 350,
-    sites: [
-      { name: "서울대학교병원", dept: "내과(소화기)", pi: "오도연", tel: "02-2072-2228", email: "gi@snuh.org", status: "enrolling" },
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "류민희", tel: "02-3410-3459", email: "oncology@smc.samsung.com", status: "enrolling" },
-      { name: "서울아산병원", dept: "종양내과", pi: "강윤구", tel: "02-3010-3215", email: "oncology@amc.seoul.kr", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009055", status: "enrolling", phase: "2상",
-    sponsor: "Incyte/MSD Korea", cancer: "NSCLC MET", cancerType: "NSCLC",
-    mutations: ["MET_ex14", "MET_amp"],
-    title: "MET exon14 skipping 또는 MET 증폭 NSCLC 대상 Capmatinib 한국인 단일군 2상",
-    enrollTarget: 60,
-    sites: [
-      { name: "국립암센터", dept: "폐암센터", pi: "김진수", tel: "031-920-1730", email: "lungcancer@ncc.re.kr", status: "enrolling" },
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "김태유", tel: "02-2072-2114", email: "onco@snuh.org", status: "enrolling" },
-      { name: "충남대병원", dept: "혈액종양내과", pi: "정준", tel: "042-280-7160", email: "onco@cnuh.co.kr", status: "active" },
-    ]
-  },
-  {
-    id: "KCT0009780", status: "enrolling", phase: "2상",
-    sponsor: "Eli Lilly Korea", cancer: "NSCLC/갑상선암 RET+", cancerType: "NSCLC",
-    mutations: ["RET"],
-    title: "RET 융합 양성 NSCLC 및 갑상선암 대상 Selpercatinib 한국인 단일군 2상 (LIBRETTO-321 KR)",
-    enrollTarget: 70,
-    sites: [
-      { name: "국립암센터", dept: "폐암센터", pi: "김진수", tel: "031-920-1730", email: "lungcancer@ncc.re.kr", status: "enrolling" },
-      { name: "세브란스병원", dept: "종양내과", pi: "조병철", tel: "02-2228-0114", email: "onco@yuhs.ac", status: "enrolling" },
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "김태유", tel: "02-2072-2114", email: "onco@snuh.org", status: "active" },
-      { name: "아주대병원", dept: "혈액종양내과", pi: "박인근", tel: "031-219-5990", email: "onco@ajou.ac.kr", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009820", status: "enrolling", phase: "1/2상",
-    sponsor: "Merus/Janssen Korea", cancer: "NRG1 융합 고형암", cancerType: "SOLID",
-    mutations: ["NRG1"],
-    title: "NRG1 융합 양성 고형암 대상 Zenocutuzumab (bispecific HER2×HER3) 바스켓 1/2상 (eNRGy)",
-    enrollTarget: 60,
-    sites: [
-      { name: "국립암센터", dept: "항암신약임상시험센터", pi: "장봉현", tel: "031-920-1605", email: "clinicaltrial@ncc.re.kr", status: "enrolling" },
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "이정민", tel: "02-3410-1480", email: "oncology@smc.samsung.com", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009860", status: "enrolling", phase: "2상",
-    sponsor: "MSD/AstraZeneca Korea", cancer: "NSCLC STK11/KEAP1 변이", cancerType: "NSCLC",
-    mutations: ["STK11", "KEAP1"],
-    title: "STK11 또는 KEAP1 변이 NSCLC 대상 면역치료 내성 극복 병용요법 2상 — Pembrolizumab + STING agonist",
-    enrollTarget: 80,
-    sites: [
-      { name: "서울아산병원", dept: "종양내과", pi: "이지연", tel: "02-3010-3310", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "서울대학교병원", dept: "혈액종양내과", pi: "방선욱", tel: "02-2072-3760", email: "onco@snuh.org", status: "enrolling" },
-      { name: "고려대 안암병원", dept: "종양혈액내과", pi: "임선교", tel: "02-920-5360", email: "onco@korea.ac.kr", status: "active" },
-    ]
-  },
-  {
-    id: "KCT0009890", status: "enrolling", phase: "1/2상",
-    sponsor: "BioNTech/Pfizer Korea", cancer: "TP53 변이 고형암", cancerType: "SOLID",
-    mutations: ["TP53"],
-    title: "TP53 변이 양성 고형암 대상 TP53 mRNA 치료백신 (BNT111 유사) + Pembrolizumab 병용 1/2상",
-    enrollTarget: 50,
-    sites: [
-      { name: "국립암센터", dept: "항암신약임상시험센터", pi: "장봉현", tel: "031-920-1605", email: "clinicaltrial@ncc.re.kr", status: "enrolling" },
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "박근칠", tel: "02-3410-2114", email: "oncology@smc.samsung.com", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0008890", status: "enrolling", phase: "1/2상",
-    sponsor: "Loxo/Eli Lilly Korea", cancer: "NTRK 융합 고형암", cancerType: "SOLID",
-    mutations: ["NTRK"],
-    title: "NTRK 융합 양성 고형암 (소아·성인) 대상 Larotrectinib 장기 추적 관찰 및 확장 코호트",
-    enrollTarget: 80,
-    sites: [
-      { name: "서울대학교어린이병원", dept: "소아종양과", pi: "박재원", tel: "02-2072-3625", email: "pedsonco@snuh.org", status: "enrolling" },
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "이정민", tel: "02-3410-1480", email: "oncology@smc.samsung.com", status: "enrolling" },
-    ]
-  },
-  {
-    id: "KCT0009580", status: "enrolling", phase: "2상",
-    sponsor: "Pfizer Korea", cancer: "췌장암 BRCA+", cancerType: "PANCREATIC",
-    mutations: ["BRCA1", "BRCA2"],
-    title: "BRCA 변이 양성 전이성 췌장암 대상 Olaparib 유지요법 vs 위약 무작위배정 2상 (POLO-KR)",
-    enrollTarget: 120,
-    sites: [
-      { name: "서울아산병원", dept: "종양내과", pi: "임호영", tel: "02-3010-5942", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "삼성서울병원", dept: "혈액종양내과", pi: "박준오", tel: "02-3410-3459", email: "oncology@smc.samsung.com", status: "enrolling" },
-      { name: "세브란스병원", dept: "종양내과", pi: "황호연", tel: "02-2228-0114", email: "onco@yuhs.ac", status: "active" },
-    ]
-  },
-  {
-    id: "KCT0009445", status: "enrolling", phase: "2상",
-    sponsor: "BeiGene Korea", cancer: "대장암 KRAS/RAS 야생형", cancerType: "CRC",
-    mutations: ["MSI", "BRAF_V600E"],
-    title: "BRAF V600E 변이 대장암 대상 Encorafenib + Binimetinib + Cetuximab 2상",
-    enrollTarget: 90,
-    sites: [
-      { name: "서울대학교병원", dept: "내과(소화기)", pi: "한세원", tel: "02-2072-2228", email: "gi@snuh.org", status: "enrolling" },
-      { name: "서울아산병원", dept: "종양내과", pi: "정한영", tel: "02-3010-5950", email: "oncology@amc.seoul.kr", status: "enrolling" },
-      { name: "인하대병원", dept: "혈액종양내과", pi: "유진영", tel: "032-890-2560", email: "onco@inha.ac.kr", status: "enrolling" },
-    ]
-  },
-];
-
-// ═══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════════════
-let selectedMutations = new Set();
-let selectedCancer = "ALL";
-let currentResults = [];
-
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
-window.onload = () => {
-  renderMutationChips();
-  runSearch();
+// ══════════════════════════════════════════════════════
+const S = {
+  trials: [],
+  total: 0,
+  page: 1,
+  tokens: [null],   // pageToken per page: tokens[0]=null(first page), tokens[1]=token for page 2...
+  busy: false
 };
 
-function renderMutationChips() {
-  const container = document.getElementById('mutationGroups');
-  container.innerHTML = MUTATION_GROUPS.map(group => `
-    <div class="mutation-group">
-      <div class="group-label">${group.label}</div>
-      <div class="chips">
-        ${group.mutations.map(m => `
-          <div class="chip ${m.approved ? 'approved-exists' : ''}" 
-               data-id="${m.id}" onclick="toggleMutation(this)">
-            <span>${m.label}</span>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-}
+// ══════════════════════════════════════════════════════
+// CHIP TOGGLE
+// ══════════════════════════════════════════════════════
+document.querySelectorAll('.chip').forEach(c =>
+  c.addEventListener('click', () => c.classList.toggle('on'))
+);
 
-function toggleMutation(el) {
-  const id = el.dataset.id;
-  if (selectedMutations.has(id)) {
-    selectedMutations.delete(id);
-    el.classList.remove('active');
-  } else {
-    selectedMutations.add(id);
-    el.classList.add('active');
-  }
-}
+// ══════════════════════════════════════════════════════
+// BUILD FETCH URL
+// ══════════════════════════════════════════════════════
+function buildURL(token) {
+  const onChips = [...document.querySelectorAll('.chip.on')].map(c => c.dataset.q);
+  const kw      = document.getElementById('kw').value.trim();
+  const phase   = document.getElementById('phaseF').value;
+  const status  = document.getElementById('statusF').value;
 
-function selectCancer(el) {
-  document.querySelectorAll('.cancer-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  selectedCancer = el.dataset.cancer;
-}
+  // Combine chip terms + free text as intervention/term query
+  const termParts = [...onChips, kw].filter(Boolean);
 
-function resetAll() {
-  selectedMutations.clear();
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.cancer-tab').forEach(t => t.classList.toggle('active', t.dataset.cancer === 'ALL'));
-  selectedCancer = 'ALL';
-  document.getElementById('searchInput').value = '';
-  document.getElementById('phaseFilter').value = '';
-  document.getElementById('statusFilter').value = '';
-  runSearch();
-}
-
-// ═══════════════════════════════════════════════════════
-// SEARCH
-// ═══════════════════════════════════════════════════════
-async function runSearch() {
-  const ra = document.getElementById('resultsArea');
-  ra.innerHTML = `<div class="loading-state"><div class="spinner"></div>데이터 조회 중...</div>`;
-  document.getElementById('statsRow').style.display = 'none';
-  document.getElementById('resultsBar').style.display = 'none';
-
-  await new Promise(r => setTimeout(r, 500));
-
-  const kw = document.getElementById('searchInput').value.toLowerCase();
-  const phase = document.getElementById('phaseFilter').value;
-  const status = document.getElementById('statusFilter').value;
-
-  currentResults = TRIALS.filter(t => {
-    const mutMatch = selectedMutations.size === 0 || t.mutations.some(m => selectedMutations.has(m));
-    const cancerMatch = selectedCancer === 'ALL' || t.cancerType === selectedCancer;
-    const kwMatch = !kw || t.title.toLowerCase().includes(kw) || t.cancer.toLowerCase().includes(kw)
-      || t.id.toLowerCase().includes(kw) || t.sponsor.toLowerCase().includes(kw)
-      || t.mutations.some(m => m.toLowerCase().includes(kw));
-    const phaseMatch = !phase || t.phase.includes(phase + '상');
-    const statusMatch = !status || t.status === status;
-    return mutMatch && cancerMatch && kwMatch && phaseMatch && statusMatch;
+  const p = new URLSearchParams({
+    'query.cond': 'Non-Small Cell Lung Cancer',
+    'query.locn': 'South Korea',
+    'filter.overallStatus': status,
+    'pageSize': PER,
+    'countTotal': 'true',
+    'format': 'json'
   });
+  if (termParts.length) p.set('query.intr', termParts.join(' '));
+  if (phase)            p.set('filter.phase', phase);
+  if (token)            p.set('pageToken', token);
 
-  // Stats
-  const totalSites = currentResults.reduce((s, t) => s + t.sites.length, 0);
-  const enrolling = currentResults.filter(t => t.status === 'enrolling').length;
-  document.getElementById('sTotal').textContent = currentResults.length;
-  document.getElementById('sEnrolling').textContent = enrolling;
-  document.getElementById('sSites').textContent = totalSites;
-  document.getElementById('sUpdated').textContent = new Date().toLocaleTimeString('ko-KR');
-  document.getElementById('statsRow').style.display = 'flex';
-  document.getElementById('hTotal').textContent = currentResults.length;
-  document.getElementById('hEnrolling').textContent = enrolling;
+  // Update CTG web link
+  const wp = new URLSearchParams({ cond:'Non-Small Cell Lung Cancer', locn:'South Korea' });
+  if (termParts.length) wp.set('intr', termParts.join(' '));
+  if (status.includes('RECRUITING')) wp.set('aggFilters','status:rec');
+  document.getElementById('ctgHref').href = `https://clinicaltrials.gov/search?${wp}`;
 
-  document.getElementById('rCount').textContent = currentResults.length;
-  document.getElementById('resultsBar').style.display = 'flex';
-
-  if (currentResults.length === 0) {
-    ra.innerHTML = `<div class="empty-state"><div class="empty-icon">🔬</div><div class="empty-msg">검색 결과가 없습니다</div><div class="empty-sub">다른 변이 또는 암종을 선택해보세요</div></div>`;
-    return;
-  }
-
-  ra.innerHTML = currentResults.map(renderCard).join('');
+  return `${CTG}?${p}`;
 }
 
-// ═══════════════════════════════════════════════════════
-// CARD RENDER
-// ═══════════════════════════════════════════════════════
-function renderCard(trial) {
-  // Collect approved drugs for this trial's mutations
-  const drugs = [];
-  const seen = new Set();
-  trial.mutations.forEach(m => {
-    (APPROVED_DRUGS[m] || []).forEach(d => {
-      const key = d.name;
-      if (!seen.has(key)) { seen.add(key); drugs.push(d); }
-    });
-  });
+// ══════════════════════════════════════════════════════
+// FETCH
+// ══════════════════════════════════════════════════════
+async function fetchPage(token = null) {
+  const res = await fetch(buildURL(token));
+  if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+  return res.json();
+}
 
-  const approvedPanel = drugs.length > 0 ? `
-    <div class="approved-panel">
-      <div class="approved-label">현재 승인된 표준치료 약제</div>
-      <div class="drug-list">
-        ${drugs.map(d => `
-          <div class="drug-item">
-            <div class="drug-name">${d.name}</div>
-            <div class="drug-generic">${d.generic}</div>
-            <div class="drug-approval">${d.approval}</div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  ` : '';
+// ══════════════════════════════════════════════════════
+// PARSE ONE STUDY
+// ══════════════════════════════════════════════════════
+function parse(study) {
+  const ps  = study.protocolSection || {};
+  const id  = ps.identificationModule  || {};
+  const st  = ps.statusModule          || {};
+  const ds  = ps.designModule          || {};
+  const sp  = ps.sponsorCollaboratorsModule || {};
+  const cnd = ps.conditionsModule      || {};
+  const arm = ps.armsInterventionsModule|| {};
+  const cl  = ps.contactsLocationsModule|| {};
+  const dsc = ps.descriptionModule     || {};
 
-  const mutTags = trial.mutations.map(m => {
-    const label = MUTATION_GROUPS.flatMap(g => g.mutations).find(x => x.id === m)?.label || m;
-    return `<span class="tag tag-mut">${label}</span>`;
-  }).join('');
+  const nct    = id.nctId || '';
+  const title  = id.briefTitle || '';
+  const status = st.overallStatus || '';
+  const phases = (ds.phases || []).map(p => p.replace('PHASE','Phase ')).join('/');
+  const styp   = ds.studyType || '';
+  const enroll = ds.enrollmentInfo?.count;
+  const start  = st.startDateStruct?.date || '';
+  const spon   = sp.leadSponsor?.name || '';
+  const conds  = cnd.conditions || [];
+  const summ   = dsc.briefSummary || '';
 
-  const sitesHTML = trial.sites.map((s, i) => `
-    <div class="site-row">
-      <div>
-        <div class="site-name">${s.name}</div>
-        <div class="site-pi">PI: ${s.pi}</div>
-      </div>
-      <div class="site-dept">${s.dept}</div>
-      <div><span class="site-status-pill ${s.status === 'enrolling' ? 'e' : 'a'}">${s.status === 'enrolling' ? '모집중' : '진행중'}</span></div>
-      <button class="contact-link" onclick="showContact('${trial.id}', ${i})">연락처</button>
-    </div>
-  `).join('');
+  const drugs = (arm.interventions || [])
+    .filter(i => ['DRUG','BIOLOGICAL','COMBINATION_PRODUCT'].includes(i.type))
+    .map(i => i.name).filter(Boolean).slice(0, 6);
+
+  // Korea sites only
+  const sites = (cl.locations || [])
+    .filter(l => {
+      const c = (l.country || '').toLowerCase();
+      return c === 'korea, republic of' || c.includes('korea');
+    })
+    .map(l => ({ name: l.facility || '', city: l.city || '', status: l.status || '' }));
+
+  const muts = detectMuts((title + ' ' + conds.join(' ') + ' ' + summ).toLowerCase());
+
+  return { nct, title, status, phases, styp, enroll, start, spon, drugs, sites, muts };
+}
+
+// ══════════════════════════════════════════════════════
+// MUTATION AUTO-DETECT
+// ══════════════════════════════════════════════════════
+const MUTS = [
+  { l:'EGFR exon20ins', p:['exon 20 ins','exon20ins','exon 20 insertion','ex20ins'] },
+  { l:'EGFR T790M',     p:['t790m'] },
+  { l:'EGFR L858R',     p:['l858r'] },
+  { l:'EGFR C797S',     p:['c797s'] },
+  { l:'EGFR',           p:['egfr','epidermal growth factor receptor'] },
+  { l:'ALK',            p:[' alk ','alk fusion','alk rearrang','alk-'] },
+  { l:'KRAS G12C',      p:['kras g12c','g12c'] },
+  { l:'KRAS G12D',      p:['kras g12d','g12d'] },
+  { l:'KRAS',           p:['kras'] },
+  { l:'ROS1',           p:['ros1','ros-1'] },
+  { l:'RET fusion',     p:['ret fusion','ret rearrang','ret-positive'] },
+  { l:'MET ex14',       p:['met ex14','met exon 14','met exon14','metex14'] },
+  { l:'MET amp',        p:['met amplif','met overexpress'] },
+  { l:'HER2',           p:['her2','erbb2'] },
+  { l:'BRAF V600E',     p:['braf v600','v600e'] },
+  { l:'NTRK',           p:['ntrk','larotrectinib','entrectinib','trkfusion'] },
+  { l:'PD-L1',          p:['pd-l1','pdl1','programmed death-ligand'] },
+  { l:'PARP/DDR',       p:['parp inhibit','brca','atm alter','ddr defic','olaparib','niraparib','rucaparib'] },
+  { l:'NRG1',           p:['nrg1','zenocutuzumab'] },
+];
+
+function detectMuts(txt) {
+  const found = [], seen = new Set();
+  for (const { l, p } of MUTS) {
+    if (p.some(x => txt.includes(x))) {
+      // Skip generic if specific subtype already found
+      const base = l.split(' ')[0];
+      if (l === base && seen.has(base + '_sub')) continue;
+      found.push(l);
+      seen.add(l);
+      if (l.includes(' ')) seen.add(base + '_sub');
+    }
+  }
+  return found;
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER CARD
+// ══════════════════════════════════════════════════════
+const STATUS_KO = {
+  RECRUITING:'● 모집 중', ACTIVE_NOT_RECRUITING:'◉ 진행 중',
+  COMPLETED:'완료', TERMINATED:'조기종료', NOT_YET_RECRUITING:'준비 중'
+};
+
+function renderCard(t) {
+  const url = `https://clinicaltrials.gov/study/${t.nct}`;
+  const mutTags  = t.muts.map(m => `<span class="tag tm">${m}</span>`).join('');
+  const drugTags = t.drugs.slice(0,5).map(d => `<span class="tag td">${d}</span>`).join('');
+  const phLabel  = t.phases || '—';
+  const typLabel = t.styp === 'INTERVENTIONAL' ? '중재' : t.styp === 'OBSERVATIONAL' ? '관찰' : '';
+  const sN       = t.sites.length;
+  const scls     = t.status === 'RECRUITING' ? 'rec' : 'act';
+
+  const sitesHTML = sN > 0
+    ? t.sites.map(s => {
+        const sdCls = s.status.toUpperCase().includes('RECRUIT') ? 'r'
+                    : s.status.toUpperCase().includes('ACTIVE')  ? 'a' : 'a';
+        const sdLabel = s.status.toUpperCase().includes('RECRUIT') ? '모집중'
+                      : s.status.toUpperCase().includes('ACTIVE')  ? '진행중' : s.status;
+        return `
+          <div class="srow2">
+            <div>
+              <div class="sname">${s.name}</div>
+              <div class="scity">${s.city}</div>
+            </div>
+            ${s.status ? `<span class="sdot ${sdCls}">${sdLabel}</span>` : ''}
+          </div>`;
+      }).join('')
+    : `<div class="nosite">국내 기관 정보가 등록되지 않았습니다.
+        <a href="${url}" target="_blank">CTG.gov에서 확인 ↗</a></div>`;
 
   return `
-    <div class="trial-card">
-      <div class="card-header">
-        <div class="card-left">
-          <div class="trial-id">${trial.id} · ${trial.sponsor}</div>
-          <div class="trial-title">${trial.title}</div>
-          <div class="trial-tags">
-            ${mutTags}
-            <span class="tag tag-cancer">${trial.cancer}</span>
-            <span class="tag tag-phase">${trial.phase}</span>
-          </div>
-        </div>
-        <div class="card-right">
-          <span class="status-pill ${trial.status === 'enrolling' ? 'enrolling' : 'active'}">
-            ${trial.status === 'enrolling' ? '● 모집 중' : '● 진행 중'}
-          </span>
-          <div class="sponsor-name">목표 ${trial.enrollTarget}명</div>
-          <div class="sponsor-name">참여기관 ${trial.sites.length}곳</div>
+  <div class="card">
+    <div class="ctop">
+      <div class="cl">
+        <div class="cnct">${t.nct} · ${t.spon}</div>
+        <div class="ctitle">${t.title}</div>
+        <div class="tags">
+          ${mutTags}${drugTags}
+          <span class="tag tp">${phLabel}</span>
+          ${typLabel ? `<span class="tag tt">${typLabel}</span>` : ''}
         </div>
       </div>
-      ${approvedPanel}
-      <button class="sites-toggle-btn" onclick="toggleSites('${trial.id}', this)">
-        <span>참여 사이트 · 연락처 보기</span>
-        <span>▾</span>
-      </button>
-      <div class="sites-panel" id="sites-${trial.id}">
-        <div class="sites-grid">${sitesHTML}</div>
+      <div class="cr">
+        <span class="spill ${scls}">${STATUS_KO[t.status] || t.status}</span>
+        <div class="cmeta">
+          ${t.enroll ? `목표 ${t.enroll.toLocaleString()}명<br>` : ''}
+          ${t.start  ? `시작: ${t.start}<br>` : ''}
+          국내 기관: ${sN}곳
+        </div>
+        <a href="${url}" target="_blank" class="ctglink">CTG ↗</a>
       </div>
     </div>
-  `;
+    <button class="stoggle" onclick="toggleSites('${t.nct}',this)">
+      <span>국내 참여 기관 ${sN}곳${sN ? ' 보기' : ' (등록 정보 없음)'}</span>
+      <span>▾</span>
+    </button>
+    <div class="spanel" id="sp-${t.nct}">
+      <div class="slist">${sitesHTML}</div>
+    </div>
+  </div>`;
 }
 
-function toggleSites(id, btn) {
-  const panel = document.getElementById(`sites-${id}`);
-  const isOpen = panel.classList.toggle('open');
-  btn.querySelector('span:last-child').textContent = isOpen ? '▴' : '▾';
-  btn.querySelector('span:first-child').textContent = isOpen ? '사이트 접기' : '참여 사이트 · 연락처 보기';
+function toggleSites(nct, btn) {
+  const p = document.getElementById('sp-' + nct);
+  const open = p.classList.toggle('open');
+  btn.querySelector('span:last-child').textContent = open ? '▴' : '▾';
 }
 
-// ═══════════════════════════════════════════════════════
-// CONTACT MODAL
-// ═══════════════════════════════════════════════════════
-function showContact(trialId, siteIdx) {
-  const trial = TRIALS.find(t => t.id === trialId);
-  const site = trial.sites[siteIdx];
-  document.getElementById('mTitle').textContent = site.name;
-  document.getElementById('mSub').textContent = `${site.dept} · ${trial.cancer} · ${trial.phase}`;
-  document.getElementById('mContent').innerHTML = `
-    <div class="info-row"><span class="info-label">책임연구자 (PI)</span><span class="info-value">${site.pi}</span></div>
-    <div class="info-row"><span class="info-label">진료과</span><span class="info-value">${site.dept}</span></div>
-    <div class="info-row"><span class="info-label">대표전화</span><span class="info-value"><a href="tel:${site.tel}">${site.tel}</a></span></div>
-    <div class="info-row"><span class="info-label">이메일</span><span class="info-value"><a href="mailto:${site.email}">${site.email}</a></span></div>
-    <div class="info-row"><span class="info-label">시험번호</span><span class="info-value">${trialId}</span></div>
-    <div class="info-row"><span class="info-label">모집상태</span><span class="info-value" style="color:${site.status==='enrolling'?'#15803d':'#1d4ed8'}">${site.status==='enrolling'?'✓ 현재 모집 중':'◉ 진행 중'}</span></div>
-  `;
-  document.getElementById('mNote').innerHTML = `문의 시 임상시험 번호 <strong>${trialId}</strong>를 함께 안내하세요. 연락 전 <a href="https://cris.nih.go.kr" target="_blank" style="color:var(--accent2)">CRIS</a>에서 최신 정보를 반드시 확인하세요.`;
-  document.getElementById('contactModal').classList.add('open');
-}
-function closeModal() { document.getElementById('contactModal').classList.remove('open'); }
-document.getElementById('contactModal').addEventListener('click', e => { if (e.target.id === 'contactModal') closeModal(); });
+// ══════════════════════════════════════════════════════
+// MAIN SEARCH
+// ══════════════════════════════════════════════════════
+async function doSearch(token = null, pageNum = 1) {
+  if (S.busy) return;
+  S.busy = true;
 
-// ═══════════════════════════════════════════════════════
-// EXPORT
-// ═══════════════════════════════════════════════════════
+  const btn = document.getElementById('sbtn');
+  btn.disabled = true;
+  btn.textContent = '검색 중...';
+
+  const onChips   = [...document.querySelectorAll('.chip.on')].map(c => c.dataset.q);
+  const kw        = document.getElementById('kw').value.trim();
+  const queryDesc = [...onChips, kw].filter(Boolean).join(' + ') || 'NSCLC Korea';
+
+  document.getElementById('results').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="ltitle">ClinicalTrials.gov 실시간 조회 중</div>
+      <div class="lsub">${queryDesc} · South Korea</div>
+      <div class="lapi">clinicaltrials.gov/api/v2/studies</div>
+    </div>`;
+  document.getElementById('statsEl').style.display   = 'none';
+  document.getElementById('resbarEl').style.display  = 'none';
+  document.getElementById('pagerEl').innerHTML       = '';
+
+  try {
+    const data      = await fetchPage(token);
+    const total     = data.totalCount || 0;
+    const trials    = (data.studies || []).map(parse);
+    const nextToken = data.nextPageToken || null;
+
+    S.trials = trials;
+    S.total  = total;
+    S.page   = pageNum;
+    if (nextToken && !S.tokens[pageNum]) S.tokens[pageNum] = nextToken;
+
+    // Stats
+    const recN  = trials.filter(t => t.status === 'RECRUITING').length;
+    const siteN = trials.reduce((a, t) => a + t.sites.length, 0);
+
+    document.getElementById('stT').textContent    = total.toLocaleString();
+    document.getElementById('stR').textContent    = recN;
+    document.getElementById('stS').textContent    = siteN;
+    document.getElementById('stTime').textContent = new Date().toLocaleTimeString('ko-KR');
+    document.getElementById('statsEl').style.display = 'flex';
+
+    document.getElementById('hTotal').textContent = total.toLocaleString();
+    document.getElementById('hRec').textContent   = recN;
+
+    const totalPages = Math.ceil(total / PER);
+    document.getElementById('rN').textContent  = total.toLocaleString();
+    document.getElementById('rP').textContent  = pageNum;
+    document.getElementById('rTP').textContent = totalPages;
+    document.getElementById('resbarEl').style.display = 'flex';
+
+    document.getElementById('results').innerHTML =
+      trials.length
+        ? trials.map(renderCard).join('')
+        : `<div class="empty">
+             <div style="font-size:36px;margin-bottom:14px">🔬</div>
+             <div class="ltitle">검색 결과가 없습니다</div>
+             <div class="lsub">다른 mutation이나 키워드로 검색해보세요</div>
+           </div>`;
+
+    renderPager(total, pageNum, nextToken);
+
+  } catch (err) {
+    // Show honest error — do NOT show fake demo data
+    document.getElementById('results').innerHTML = `
+      <div class="errstate">
+        <div style="font-size:36px;margin-bottom:14px">⚠️</div>
+        <div style="font-size:15px;font-weight:600;color:var(--red);margin-bottom:8px">API 연결 오류</div>
+        <div style="color:var(--text2);font-size:13px;margin-bottom:12px">${err.message}</div>
+        <div style="font-size:12px;color:var(--text3);line-height:2;background:var(--surface);border-radius:10px;padding:16px 20px;display:inline-block;text-align:left;max-width:480px;">
+          <strong style="color:var(--text)">원인:</strong> Claude.ai 미리보기 환경은 외부 API 호출이 차단됩니다.<br>
+          <strong style="color:var(--text)">해결:</strong> 이 파일을 <strong style="color:var(--teal)">GitHub Pages</strong>에 올리면 정상 작동합니다.<br>
+          <strong style="color:var(--text)">방법:</strong> GitHub 저장소에 이 <code style="color:var(--blue)">index.html</code>을 올리고<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Settings → Pages → Deploy from branch 설정.
+        </div>
+        <br><br>
+        <button class="sbtn" onclick="doSearch()">다시 시도</button>
+      </div>`;
+  } finally {
+    S.busy = false;
+    btn.disabled = false;
+    btn.textContent = '실시간 검색';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// PAGINATION
+// ══════════════════════════════════════════════════════
+function renderPager(total, cur, nextToken) {
+  const tp  = Math.ceil(total / PER);
+  if (tp <= 1) return;
+  const pg  = document.getElementById('pagerEl');
+  let   html = `<button class="pbtn" ${cur<=1?'disabled':''} onclick="goPage(${cur-1})">← 이전</button>`;
+  const s = Math.max(1, cur-2), e = Math.min(tp, cur+2);
+  if (s > 1)  html += `<button class="pbtn" onclick="goPage(1)">1</button>`;
+  if (s > 2)  html += `<span class="pinfo">…</span>`;
+  for (let i=s;i<=e;i++) html += `<button class="pbtn ${i===cur?'on':''}" onclick="goPage(${i})">${i}</button>`;
+  if (e < tp-1) html += `<span class="pinfo">…</span>`;
+  if (e < tp)   html += `<button class="pbtn" onclick="goPage(${tp})">${tp}</button>`;
+  html += `<button class="pbtn" ${!nextToken?'disabled':''} onclick="goPage(${cur+1})">다음 →</button>`;
+  html += `<span class="pinfo">${total.toLocaleString()}건 중 ${(cur-1)*PER+1}–${Math.min(cur*PER,total)}건 표시</span>`;
+  pg.innerHTML = html;
+}
+
+async function goPage(n) {
+  if (n < 1 || S.busy) return;
+  await doSearch(S.tokens[n-1] || null, n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════════════
+function doReset() {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  document.querySelector('.chip[data-q="EGFR"]').classList.add('on');
+  document.getElementById('kw').value = '';
+  document.getElementById('phaseF').value = '';
+  document.getElementById('statusF').value = 'RECRUITING,ACTIVE_NOT_RECRUITING';
+  S.tokens = [null];
+  S.page   = 1;
+}
+
+// ══════════════════════════════════════════════════════
+// EXPORT CSV
+// ══════════════════════════════════════════════════════
 function exportCSV() {
-  const rows = [['시험번호','제목','암종','변이','단계','스폰서','기관','진료과','PI','전화','이메일','상태']];
-  currentResults.forEach(t => {
-    t.sites.forEach(s => {
-      rows.push([t.id, `"${t.title}"`, t.cancer, t.mutations.join(';'), t.phase, t.sponsor,
-        s.name, s.dept, s.pi, s.tel, s.email, s.status]);
-    });
-  });
-  const csv = '\uFEFF' + rows.map(r => r.join(',')).join('\n');
-  const a = Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'})),
-    download: `onco_trials_KR_${new Date().toISOString().slice(0,10)}.csv`
-  });
-  a.click();
+  const rows = [['NCT','Title','Status','Phase','Sponsor','Mutations','Drugs','Korea Sites (name)','Korea Sites (city)','Start Date','Enrollment']];
+  S.trials.forEach(t => rows.push([
+    t.nct,
+    `"${t.title.replace(/"/g,'""')}"`,
+    t.status, t.phases, `"${t.spon}"`,
+    t.muts.join(';'),
+    t.drugs.join(';'),
+    `"${t.sites.map(s=>s.name).join(' | ')}"`,
+    `"${t.sites.map(s=>s.city).join(' | ')}"`,
+    t.start, t.enroll || ''
+  ]));
+  const blob = new Blob(['\uFEFF' + rows.map(r => r.join(',')).join('\n')], { type: 'text/csv;charset=utf-8;' });
+  Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: `NSCLC_Korea_${new Date().toISOString().slice(0,10)}.csv`
+  }).click();
 }
 
-document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+// ══════════════════════════════════════════════════════
+// KEYBOARD
+// ══════════════════════════════════════════════════════
+document.getElementById('kw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
 </script>
 </body>
 </html>
