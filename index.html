@@ -192,6 +192,28 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .nosite{color:var(--text3);font-size:12px;padding:6px 0;}
 .nosite a{color:var(--blue);}
 
+/* CONTACTS */
+.central-contacts{
+  margin-bottom:14px;padding:12px 14px;
+  background:rgba(77,142,240,.05);border:1px solid rgba(77,142,240,.15);
+  border-radius:8px;
+}
+.central-contacts-label{
+  font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;
+  color:var(--blue);text-transform:uppercase;margin-bottom:8px;
+}
+.contact-row{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:flex-start;margin-bottom:6px;}
+.contact-row:last-child{margin-bottom:0;}
+.cname{font-size:12px;font-weight:600;color:#fff;width:100%;}
+.cinfo{display:flex;align-items:center;gap:5px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);}
+.cinfo a{color:var(--blue);text-decoration:none;}
+.cinfo a:hover{text-decoration:underline;}
+.cinfo-ico{font-size:10px;color:var(--text3);}
+.site-contacts{margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid var(--border2);}
+.site-contacts-label{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
+.scontact-row{display:flex;flex-wrap:wrap;gap:3px 16px;margin-bottom:4px;}
+.scontact-row:last-child{margin-bottom:0;}
+
 /* STATES */
 .loading,.empty,.errstate{text-align:center;padding:80px 24px;color:var(--text2);}
 .spinner{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--blue);animation:spin .8s linear infinite;margin:0 auto 18px;}
@@ -293,7 +315,7 @@ footer a:hover{color:var(--blue);}
         <option value="PHASE3">Phase III</option>
       </select>
       <select class="ssel" id="statusF">
-        <option value="RECRUITING,ACTIVE_NOT_RECRUITING">모집중 + 진행중</option>
+        <option value="RECRUITING,ACTIVE_NOT_RECRUITING" selected>모집중 + 진행중</option>
         <option value="RECRUITING">모집중만</option>
         <option value="ACTIVE_NOT_RECRUITING">진행중만</option>
       </select>
@@ -431,17 +453,35 @@ function parse(study) {
     .filter(i => ['DRUG','BIOLOGICAL','COMBINATION_PRODUCT'].includes(i.type))
     .map(i => i.name).filter(Boolean).slice(0, 6);
 
-  // Korea sites only
+  // Central (study-level) contacts
+  const centralContacts = (cl.centralContacts || []).map(c => ({
+    name:  c.name  || '',
+    role:  c.role  || '',
+    phone: c.phone || '',
+    email: c.email || ''
+  }));
+
+  // Korea sites + their site-level contacts
   const sites = (cl.locations || [])
     .filter(l => {
       const c = (l.country || '').toLowerCase();
       return c === 'korea, republic of' || c.includes('korea');
     })
-    .map(l => ({ name: l.facility || '', city: l.city || '', status: l.status || '' }));
+    .map(l => ({
+      name:     l.facility || '',
+      city:     l.city     || '',
+      status:   l.status   || '',
+      contacts: (l.contacts || []).map(c => ({
+        name:  c.name  || '',
+        role:  c.role  || '',
+        phone: c.phone || '',
+        email: c.email || ''
+      }))
+    }));
 
   const muts = detectMuts((title + ' ' + conds.join(' ') + ' ' + summ).toLowerCase());
 
-  return { nct, title, status, phases, styp, enroll, start, spon, drugs, sites, muts };
+  return { nct, title, status, phases, styp, enroll, start, spon, drugs, sites, centralContacts, muts };
 }
 
 // ══════════════════════════════════════════════════════
@@ -492,6 +532,17 @@ const STATUS_KO = {
   COMPLETED:'완료', TERMINATED:'조기종료', NOT_YET_RECRUITING:'준비 중'
 };
 
+function renderContact(c, small = false) {
+  if (!c.name && !c.phone && !c.email) return '';
+  const sz = small ? 'font-size:10px' : 'font-size:12px';
+  return `
+    <div class="contact-row">
+      ${c.name ? `<div class="cname" style="${sz}">${c.name}${c.role ? ` <span style="color:var(--text3);font-weight:400">(${c.role})</span>` : ''}</div>` : ''}
+      ${c.phone ? `<div class="cinfo"><span class="cinfo-ico">📞</span><a href="tel:${c.phone}">${c.phone}</a></div>` : ''}
+      ${c.email ? `<div class="cinfo"><span class="cinfo-ico">✉</span><a href="mailto:${c.email}">${c.email}</a></div>` : ''}
+    </div>`;
+}
+
 function renderCard(t) {
   const url = `https://clinicaltrials.gov/study/${t.nct}`;
   const mutTags  = t.muts.map(m => `<span class="tag tm">${m}</span>`).join('');
@@ -501,19 +552,34 @@ function renderCard(t) {
   const sN       = t.sites.length;
   const scls     = t.status === 'RECRUITING' ? 'rec' : 'act';
 
+  // Central contacts block
+  const hasCentral = t.centralContacts && t.centralContacts.length > 0;
+  const centralHTML = hasCentral ? `
+    <div class="central-contacts">
+      <div class="central-contacts-label">Study Contact (Central)</div>
+      ${t.centralContacts.map(c => renderContact(c)).join('')}
+    </div>` : '';
+
+  // Sites
   const sitesHTML = sN > 0
     ? t.sites.map(s => {
-        const sdCls = s.status.toUpperCase().includes('RECRUIT') ? 'r'
-                    : s.status.toUpperCase().includes('ACTIVE')  ? 'a' : 'a';
+        const sdCls   = s.status.toUpperCase().includes('RECRUIT') ? 'r' : 'a';
         const sdLabel = s.status.toUpperCase().includes('RECRUIT') ? '모집중'
                       : s.status.toUpperCase().includes('ACTIVE')  ? '진행중' : s.status;
+        const hasContacts = s.contacts && s.contacts.length > 0;
+        const siteContactsHTML = hasContacts ? `
+          <div class="site-contacts">
+            <div class="site-contacts-label">Site Contact</div>
+            ${s.contacts.map(c => renderContact(c, true)).join('')}
+          </div>` : '';
         return `
           <div class="srow2">
-            <div>
+            <div style="flex:1;min-width:0;">
               <div class="sname">${s.name}</div>
               <div class="scity">${s.city}</div>
+              ${siteContactsHTML}
             </div>
-            ${s.status ? `<span class="sdot ${sdCls}">${sdLabel}</span>` : ''}
+            ${s.status ? `<span class="sdot ${sdCls}" style="align-self:flex-start;margin-top:2px">${sdLabel}</span>` : ''}
           </div>`;
       }).join('')
     : `<div class="nosite">국내 기관 정보가 등록되지 않았습니다.
@@ -538,14 +604,15 @@ function renderCard(t) {
           ${t.start  ? `시작: ${t.start}<br>` : ''}
           국내 기관: ${sN}곳
         </div>
-        <a href="${url}" target="_blank" class="ctglink">CTG ↗</a>
+        <a href="${url}" target="_blank" class="ctglink">🔗 CTG 원본 ↗</a>
       </div>
     </div>
     <button class="stoggle" onclick="toggleSites('${t.nct}',this)">
-      <span>국내 참여 기관 ${sN}곳${sN ? ' 보기' : ' (등록 정보 없음)'}</span>
+      <span>국내 참여 기관 ${sN}곳${sN ? ' 및 연락처 보기' : ' (등록 정보 없음)'}</span>
       <span>▾</span>
     </button>
     <div class="spanel" id="sp-${t.nct}">
+      ${centralHTML}
       <div class="slist">${sitesHTML}</div>
     </div>
   </div>`;
