@@ -1,80 +1,112 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NSCLC Trial Finder · Korea</title>
+<title>NSCLC Trial Finder · Worldwide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* NOTE: clinicaltrials.gov/api/v2 called directly from browser.
-   Claude.ai preview → blocked (expected). GitHub Pages → works. */
+/* clinicaltrials.gov/api/v2 — called directly from browser.
+   Claude.ai preview → blocked. GitHub Pages / any real host → works. */
 :root {
   --bg:#0b0f1a; --bg2:#111827; --surface:#141d2e; --surface2:#1a2540;
   --border:rgba(100,140,255,.1); --border2:rgba(100,140,255,.06);
   --text:#e2e8f5; --text2:#7a90bb; --text3:#3a4a6a;
   --blue:#4d8ef0; --teal:#2dd4bf; --green:#22c55e;
-  --amber:#f59e0b; --red:#f43f5e; --purple:#a78bfa; --rose:#fb7185;
+  --amber:#f59e0b; --red:#f43f5e; --purple:#a78bfa;
+  --rose:#fb7185; --indigo:#818cf8; --sky:#38bdf8;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+body{background:var(--bg);color:var(--text);font-family:'Inter','Helvetica Neue',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
 
-header{position:sticky;top:0;z-index:100;background:rgba(11,15,26,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.hdr{max-width:1320px;margin:0 auto;padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
-.logo{font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;}
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:200;background:rgba(11,15,26,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.hdr{max-width:1380px;margin:0 auto;padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.5px;}
 .logo .d{color:var(--blue);}
-.hdr-right{display:flex;align-items:center;gap:10px;}
+.hbadges{display:flex;align-items:center;gap:8px;}
 .badge{font-family:'Geist Mono',monospace;font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);letter-spacing:.5px;}
 .badge.live{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);color:var(--green);display:flex;align-items:center;gap:5px;}
 .ldot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}60%{opacity:.7;box-shadow:0 0 0 5px transparent}}
 
-.hero{padding:44px 28px 36px;position:relative;overflow:hidden;}
+/* ── HERO ── */
+.hero{padding:44px 28px 34px;position:relative;overflow:hidden;}
 .hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(100,140,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(100,140,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
-.hglow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(77,142,240,.07) 0%,transparent 65%);pointer-events:none;}
-.hi{max-width:1320px;margin:0 auto;position:relative;z-index:1;}
+.hglow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:1000px;height:600px;background:radial-gradient(ellipse,rgba(77,142,240,.07) 0%,transparent 65%);pointer-events:none;}
+.hi{max-width:1380px;margin:0 auto;position:relative;z-index:1;}
 .hkick{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--blue);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
 .hkick::before{content:'';width:28px;height:1px;background:var(--blue);}
 h1{font-family:'DM Serif Display',serif;font-size:clamp(30px,4vw,52px);font-weight:400;line-height:1.05;color:#fff;margin-bottom:10px;}
 h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hdesc{color:var(--text2);font-size:14px;line-height:1.8;max-width:560px;}
+.hdesc{color:var(--text2);font-size:14px;line-height:1.8;max-width:640px;}
 .hdesc strong{color:var(--teal);}
 
-.main{max-width:1320px;margin:0 auto;padding:24px 28px 100px;}
+/* ── MAIN ── */
+.main{max-width:1380px;margin:0 auto;padding:20px 28px 100px;}
 
-/* SEARCH TABS */
+/* ── SEARCH MODE TABS ── */
 .mode-tabs{display:flex;border-radius:12px 12px 0 0;overflow:hidden;border:1px solid var(--border);border-bottom:none;}
-.mode-tab{flex:1;padding:12px 20px;text-align:center;cursor:pointer;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--text2);background:var(--bg2);border:none;transition:all .15s;border-right:1px solid var(--border);}
+.mode-tab{flex:1;padding:12px 18px;text-align:center;cursor:pointer;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--text2);background:var(--bg2);border:none;transition:all .15s;border-right:1px solid var(--border);}
 .mode-tab:last-child{border-right:none;}
 .mode-tab:hover{color:var(--text);background:var(--surface);}
 .mode-tab.active{color:#fff;background:var(--surface);border-bottom:2px solid var(--blue);}
 
-/* CONTROL */
-.ctrl{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:22px;margin-bottom:16px;}
-.clabel{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
-.mut-group{margin-bottom:14px;}
-.mgl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:7px;padding-left:2px;}
-.chips{display:flex;flex-wrap:wrap;gap:6px;}
-.chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;}
+/* ── CTRL ── */
+.ctrl{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:20px 22px;margin-bottom:14px;}
+
+/* ── MUT GROUPS ── */
+.mgrp{margin-bottom:14px;}
+.mgrp-lbl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:7px;padding-left:2px;}
+.chips{display:flex;flex-wrap:wrap;gap:5px;}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;}
 .chip:hover{border-color:var(--text2);color:var(--text);}
 .chip.on{border-color:var(--blue);background:rgba(77,142,240,.15);color:var(--blue);}
 
-/* FILTER STRIP */
-.fstrip{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;align-items:center;padding:12px 0;border-top:1px solid var(--border2);}
-.fgrp{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.fgrp-label{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);white-space:nowrap;}
-.ftab{padding:5px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+/* ── FILTER STRIP ── */
+.fstrip{border-top:1px solid var(--border2);padding-top:14px;margin-top:4px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;}
+.fgrp{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.fgrp-lbl{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);white-space:nowrap;min-width:max-content;}
+.ftab{padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .ftab:hover{border-color:var(--text2);color:var(--text);}
+.ftab.on.phase{border-color:var(--indigo);background:rgba(129,140,248,.12);color:var(--indigo);}
+.ftab.on.histo{border-color:var(--sky);background:rgba(56,189,248,.1);color:var(--sky);}
 .ftab.on.line{border-color:var(--teal);background:rgba(45,212,191,.1);color:var(--teal);}
 .ftab.on.brain{border-color:var(--rose);background:rgba(251,113,133,.1);color:var(--rose);}
-.fsep{width:1px;height:22px;background:var(--border);}
+.fsep{width:1px;height:22px;background:var(--border);align-self:center;}
 
+/* ── COUNTRY SECTION ── */
+.country-section{border-top:1px solid var(--border2);padding-top:14px;margin-top:2px;margin-bottom:16px;}
+.country-quick{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.cqbtn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.cqbtn:hover{border-color:var(--text2);color:var(--text);}
+.cqbtn.on{border-color:var(--amber);background:rgba(245,158,11,.12);color:var(--amber);}
+.country-search-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.csearch{flex:1;min-width:180px;max-width:320px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+.csearch:focus{border-color:var(--amber);}
+.csearch::placeholder{color:var(--text3);}
+.country-hint{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);}
+/* Europe / Region expand */
+.region-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+.rbtn2{padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.rbtn2:hover{border-color:var(--text2);color:var(--text);}
+.rbtn2.on{border-color:var(--amber);background:rgba(245,158,11,.1);color:var(--amber);}
+.region-panel{display:none;padding:10px 12px;background:var(--bg);border-radius:8px;border:1px solid var(--border2);margin-bottom:8px;}
+.region-panel.open{display:block;}
+.rp-label{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:7px;}
+.country-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.cbtn{padding:3px 10px;border-radius:4px;border:1px solid var(--border2);background:transparent;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);cursor:pointer;transition:all .12s;}
+.cbtn:hover{border-color:var(--amber);color:var(--amber);}
+.cbtn.on{border-color:var(--amber);background:rgba(245,158,11,.12);color:var(--amber);}
+
+/* ── SEARCH ROW ── */
 .srow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;}
-.sinput{flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Pretendard',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
+.sinput{flex:1;min-width:180px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
 .sinput:focus{border-color:var(--blue);}
 .sinput::placeholder{color:var(--text3);}
-.ssel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Pretendard',sans-serif;font-size:13px;color:var(--text);outline:none;cursor:pointer;}
+.ssel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;cursor:pointer;}
 .ssel option{background:var(--bg2);}
 .sbtn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .sbtn:hover:not(:disabled){background:#6ba3f9;transform:translateY(-1px);}
@@ -82,21 +114,31 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .rbtn{background:transparent;color:var(--text2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Geist Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;}
 .rbtn:hover{border-color:var(--text2);color:var(--text);}
 
-/* FILTER NOTICE */
+/* ── ACTIVE FILTERS DISPLAY ── */
+.active-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;min-height:0;}
+.af{font-family:'Geist Mono',monospace;font-size:10px;padding:3px 10px;border-radius:12px;display:flex;align-items:center;gap:5px;}
+.af.country{border:1px solid rgba(245,158,11,.3);background:rgba(245,158,11,.08);color:var(--amber);}
+.af.phase{border:1px solid rgba(129,140,248,.3);background:rgba(129,140,248,.08);color:var(--indigo);}
+.af.histo{border:1px solid rgba(56,189,248,.3);background:rgba(56,189,248,.08);color:var(--sky);}
+.af.line{border:1px solid rgba(45,212,191,.3);background:rgba(45,212,191,.08);color:var(--teal);}
+.af.brain{border:1px solid rgba(251,113,133,.3);background:rgba(251,113,133,.08);color:var(--rose);}
+
+/* ── FILTER NOTICE ── */
 .fnotice{font-family:'Geist Mono',monospace;font-size:10px;color:var(--rose);background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.2);border-radius:8px;padding:8px 14px;margin-bottom:14px;display:none;align-items:center;gap:8px;}
 .fnotice.show{display:flex;}
 
-/* STATS */
-.stats{display:flex;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;border:1px solid var(--border);}
-.stat{flex:1;background:var(--surface);padding:14px 14px;text-align:center;}
-.stn{font-family:'Geist Mono',monospace;font-size:20px;color:#fff;line-height:1;margin-bottom:3px;transition:all .3s;}
+/* ── STATS ── */
+.stats{display:flex;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;border:1px solid var(--border);}
+.stat{flex:1;background:var(--surface);padding:13px 12px;text-align:center;}
+.stn{font-family:'Geist Mono',monospace;font-size:20px;color:#fff;line-height:1;margin-bottom:3px;}
 .stn.blue{color:var(--blue);}
 .stn.green{color:var(--green);}
-.stn.teal{color:var(--teal);}
 .stn.rose{color:var(--rose);}
+.stn.teal{color:var(--teal);}
 .stn.amber{color:var(--amber);font-size:11px;}
 .stl{font-size:10px;color:var(--text3);}
 
+/* ── RESBAR ── */
 .resbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
 .resc{font-family:'Geist Mono',monospace;font-size:12px;color:var(--text2);}
 .resc strong{color:var(--text);}
@@ -104,13 +146,13 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .alink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 14px;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.5px;}
 .alink:hover{color:var(--text);border-color:var(--text2);}
 
-/* CARD */
+/* ── CARD ── */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .2s;}
 .card:hover{border-color:rgba(77,142,240,.3);box-shadow:0 0 0 1px rgba(77,142,240,.1),0 8px 32px rgba(0,0,0,.4);transform:translateY(-2px);}
 .card.brain-ok{border-left:3px solid var(--rose);}
 .ctop{padding:16px 22px 14px;border-bottom:1px solid var(--border2);display:flex;gap:14px;align-items:flex-start;}
 .cl{flex:1;min-width:0;}
-.cr{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:140px;}
+.cr{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:150px;}
 .cnct{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:5px;}
 .ctitle{font-size:14px;font-weight:600;color:#fff;line-height:1.5;margin-bottom:10px;}
 .tags{display:flex;flex-wrap:wrap;gap:5px;}
@@ -121,6 +163,7 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .tt{color:var(--text2);border-color:var(--border);}
 .tline{color:var(--teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.1);font-weight:600;}
 .tbrain{color:var(--rose);border-color:rgba(251,113,133,.3);background:rgba(251,113,133,.08);}
+.thisto{color:var(--sky);border-color:rgba(56,189,248,.3);background:rgba(56,189,248,.08);}
 .spill{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:20px;white-space:nowrap;}
 .spill.rec{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25);}
 .spill.act{background:rgba(77,142,240,.1);color:var(--blue);border:1px solid rgba(77,142,240,.25);}
@@ -128,12 +171,13 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .ctglink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);background:rgba(77,142,240,.08);border:1px solid rgba(77,142,240,.2);border-radius:5px;padding:5px 12px;text-decoration:none;transition:all .12s;white-space:nowrap;}
 .ctglink:hover{background:rgba(77,142,240,.18);}
 
+/* ── SITES PANEL ── */
 .stoggle{width:100%;padding:11px 22px;background:var(--bg2);border:none;border-top:1px solid var(--border2);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--text2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
 .stoggle:hover{background:var(--surface2);color:var(--text);}
 .spanel{display:none;padding:14px 22px 18px;}
 .spanel.open{display:block;}
 .slist{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
-.srow2{display:flex;align-items:flex-start;justify-content:space-between;padding:11px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--border2);gap:10px;}
+.srow2{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 13px;background:var(--bg);border-radius:8px;border:1px solid var(--border2);gap:10px;}
 .srow2:hover{background:rgba(77,142,240,.04);}
 .sname{font-size:13px;font-weight:500;color:#fff;}
 .scity{font-size:11px;color:var(--text3);font-family:'Geist Mono',monospace;margin-top:1px;}
@@ -153,6 +197,7 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .site-contacts{margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid var(--border2);}
 .scl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
 
+/* ── STATES ── */
 .loading,.empty,.errstate{text-align:center;padding:80px 24px;color:var(--text2);}
 .spinner{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--blue);animation:spin .8s linear infinite;margin:0 auto 18px;}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -160,6 +205,7 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .lsub{font-size:12px;color:var(--text3);}
 .lapi{margin-top:10px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);}
 
+/* ── PAGER ── */
 .pager{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:20px;flex-wrap:wrap;}
 .pbtn{font-family:'Geist Mono',monospace;font-size:11px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;}
 .pbtn:hover:not(:disabled){border-color:var(--text2);color:var(--text);}
@@ -167,18 +213,18 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .pbtn:disabled{opacity:.3;cursor:not-allowed;}
 .pinfo{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text3);padding:0 6px;}
 
-footer{background:var(--surface);border-top:1px solid var(--border);padding:22px;text-align:center;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.5px;line-height:1.8;}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:22px;text-align:center;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.5px;line-height:2;}
 footer a{color:var(--text2);text-decoration:none;}
 footer a:hover{color:var(--blue);}
 
-@media(max-width:768px){
+@media(max-width:900px){
   .hero,.main{padding-left:16px;padding-right:16px;}
   .ctop{flex-direction:column;}
   .cr{align-items:flex-start;flex-direction:row;flex-wrap:wrap;min-width:0;}
   .stats{flex-wrap:wrap;}
   .stat{min-width:calc(50% - 1px);}
-  .hdr-right .badge:not(.live){display:none;}
-  .mode-tab{font-size:10px;padding:10px 10px;}
+  .hbadges .badge:not(.live){display:none;}
+  .mode-tab{font-size:10px;padding:10px 8px;}
 }
 </style>
 </head>
@@ -186,11 +232,11 @@ footer a:hover{color:var(--blue);}
 
 <header>
   <div class="hdr">
-    <div class="logo">NSCLC<span class="d">.</span>Trials<span class="d">.</span>KR</div>
-    <div class="hdr-right">
-      <div class="badge">총 <span id="hTotal" style="color:#fff">—</span>건</div>
-      <div class="badge">모집중 <span id="hRec" style="color:var(--green)">—</span>건</div>
-      <div class="badge live"><div class="ldot"></div>CTG LIVE</div>
+    <div class="logo">NSCLC<span class="d">.</span>Trials<span class="d">.</span>Global</div>
+    <div class="hbadges">
+      <div class="badge">Total <span id="hTotal" style="color:#fff">—</span></div>
+      <div class="badge">Recruiting <span id="hRec" style="color:var(--green)">—</span></div>
+      <div class="badge live"><div class="ldot"></div>ClinicalTrials.gov LIVE</div>
     </div>
   </div>
 </header>
@@ -198,24 +244,29 @@ footer a:hover{color:var(--blue);}
 <div class="hero">
   <div class="hgrid"></div><div class="hglow"></div>
   <div class="hi">
-    <div class="hkick">South Korea · NSCLC · Targeted Therapy</div>
-    <h1>국내 NSCLC<br><em>임상시험</em> 실시간 검색</h1>
-    <p class="hdesc"><strong>ClinicalTrials.gov API</strong> 실시간 직접 조회 · Mutation/Drug 검색 · 1L/2L 필터 · 뇌전이 허용 여부 확인</p>
+    <div class="hkick">Worldwide · NSCLC · Targeted Therapy · Real-time</div>
+    <h1>NSCLC Clinical Trial<br><em>Finder</em> — Global</h1>
+    <p class="hdesc">
+      Live data from <strong>ClinicalTrials.gov API</strong> · Search by mutation or drug ·
+      Filter by country, phase, histology, treatment line &amp; brain metastasis eligibility.
+    </p>
   </div>
 </div>
 
 <div class="main">
+
   <!-- MODE TABS -->
   <div class="mode-tabs">
-    <button class="mode-tab active" id="tab-mut" onclick="switchMode('mut')">🧬 &nbsp;Mutation 검색</button>
-    <button class="mode-tab" id="tab-drug" onclick="switchMode('drug')">💊 &nbsp;Drug 검색</button>
+    <button class="mode-tab active" id="tab-mut" onclick="switchMode('mut')">🧬 &nbsp;Mutation Search</button>
+    <button class="mode-tab" id="tab-drug" onclick="switchMode('drug')">💊 &nbsp;Drug Search</button>
   </div>
 
   <div class="ctrl">
-    <!-- MUTATION PANEL -->
+
+    <!-- ══ MUTATION PANEL ══ -->
     <div id="panel-mut">
-      <div class="mut-group">
-        <div class="mgl">EGFR</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">EGFR</div>
         <div class="chips">
           <div class="chip on" data-q="EGFR" data-grp="mut">EGFR (all)</div>
           <div class="chip" data-q="EGFR exon19del" data-grp="mut">Exon19del</div>
@@ -225,8 +276,8 @@ footer a:hover{color:var(--blue);}
           <div class="chip" data-q="EGFR C797S" data-grp="mut">C797S</div>
         </div>
       </div>
-      <div class="mut-group">
-        <div class="mgl">KRAS</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">KRAS</div>
         <div class="chips">
           <div class="chip" data-q="KRAS G12C" data-grp="mut">KRAS G12C</div>
           <div class="chip" data-q="KRAS G12D" data-grp="mut">KRAS G12D</div>
@@ -234,22 +285,22 @@ footer a:hover{color:var(--blue);}
           <div class="chip" data-q="KRAS" data-grp="mut">Other KRAS</div>
         </div>
       </div>
-      <div class="mut-group">
-        <div class="mgl">Other Targets</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">Other Oncogenic Drivers</div>
         <div class="chips">
           <div class="chip" data-q="ALK" data-grp="mut">ALK</div>
           <div class="chip" data-q="ROS1" data-grp="mut">ROS1</div>
           <div class="chip" data-q="RET fusion" data-grp="mut">RET fusion</div>
           <div class="chip" data-q="MET exon14" data-grp="mut">MET ex14</div>
-          <div class="chip" data-q="HER2" data-grp="mut">HER2/ERBB2</div>
+          <div class="chip" data-q="HER2 ERBB2" data-grp="mut">HER2/ERBB2</div>
           <div class="chip" data-q="BRAF V600E" data-grp="mut">BRAF V600E</div>
           <div class="chip" data-q="NTRK" data-grp="mut">NTRK</div>
           <div class="chip" data-q="NRG1" data-grp="mut">NRG1</div>
           <div class="chip" data-q="PD-L1" data-grp="mut">PD-L1</div>
         </div>
       </div>
-      <div class="mut-group">
-        <div class="mgl">DDR / Chromatin / Cell Cycle</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">DDR / Chromatin / Cell Cycle</div>
         <div class="chips">
           <div class="chip" data-q="DDR pathway" data-grp="mut">DDR pathway</div>
           <div class="chip" data-q="BRCA" data-grp="mut">BRCA</div>
@@ -257,16 +308,16 @@ footer a:hover{color:var(--blue);}
           <div class="chip" data-q="CDK4 CDK6" data-grp="mut">CDK4/6</div>
           <div class="chip" data-q="CDK2" data-grp="mut">CDK2</div>
           <div class="chip" data-q="SMARCA4" data-grp="mut">SMARCA4</div>
-          <div class="chip" data-q="STK11" data-grp="mut">STK11/LKB1</div>
+          <div class="chip" data-q="STK11 LKB1" data-grp="mut">STK11/LKB1</div>
           <div class="chip" data-q="KEAP1" data-grp="mut">KEAP1</div>
         </div>
       </div>
     </div>
 
-    <!-- DRUG PANEL -->
+    <!-- ══ DRUG PANEL ══ -->
     <div id="panel-drug" style="display:none;">
-      <div class="mut-group">
-        <div class="mgl">EGFR inhibitors</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">EGFR Inhibitors</div>
         <div class="chips">
           <div class="chip" data-q="osimertinib" data-grp="drug">Osimertinib</div>
           <div class="chip" data-q="lazertinib" data-grp="drug">Lazertinib</div>
@@ -276,10 +327,11 @@ footer a:hover{color:var(--blue);}
           <div class="chip" data-q="gefitinib" data-grp="drug">Gefitinib</div>
           <div class="chip" data-q="afatinib" data-grp="drug">Afatinib</div>
           <div class="chip" data-q="dacomitinib" data-grp="drug">Dacomitinib</div>
+          <div class="chip" data-q="mobocertinib" data-grp="drug">Mobocertinib</div>
         </div>
       </div>
-      <div class="mut-group">
-        <div class="mgl">ALK / ROS1 / RET</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">ALK / ROS1 / RET Inhibitors</div>
         <div class="chips">
           <div class="chip" data-q="lorlatinib" data-grp="drug">Lorlatinib</div>
           <div class="chip" data-q="brigatinib" data-grp="drug">Brigatinib</div>
@@ -290,21 +342,29 @@ footer a:hover{color:var(--blue);}
           <div class="chip" data-q="pralsetinib" data-grp="drug">Pralsetinib</div>
         </div>
       </div>
-      <div class="mut-group">
-        <div class="mgl">KRAS inhibitors</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">KRAS Inhibitors</div>
         <div class="chips">
           <div class="chip" data-q="sotorasib" data-grp="drug">Sotorasib</div>
           <div class="chip" data-q="adagrasib" data-grp="drug">Adagrasib</div>
           <div class="chip" data-q="divarasib" data-grp="drug">Divarasib</div>
           <div class="chip" data-q="glecirasib" data-grp="drug">Glecirasib</div>
+          <div class="chip" data-q="MRTX1133" data-grp="drug">MRTX1133</div>
         </div>
       </div>
-      <div class="mut-group">
-        <div class="mgl">MET / HER2 / Immunotherapy / Other</div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">MET / HER2</div>
         <div class="chips">
           <div class="chip" data-q="tepotinib" data-grp="drug">Tepotinib</div>
           <div class="chip" data-q="capmatinib" data-grp="drug">Capmatinib</div>
+          <div class="chip" data-q="savolitinib" data-grp="drug">Savolitinib</div>
           <div class="chip" data-q="trastuzumab deruxtecan" data-grp="drug">T-DXd</div>
+          <div class="chip" data-q="zanidatamab" data-grp="drug">Zanidatamab</div>
+        </div>
+      </div>
+      <div class="mgrp">
+        <div class="mgrp-lbl">Immunotherapy / Other</div>
+        <div class="chips">
           <div class="chip" data-q="pembrolizumab" data-grp="drug">Pembrolizumab</div>
           <div class="chip" data-q="nivolumab" data-grp="drug">Nivolumab</div>
           <div class="chip" data-q="atezolizumab" data-grp="drug">Atezolizumab</div>
@@ -312,93 +372,194 @@ footer a:hover{color:var(--blue);}
           <div class="chip" data-q="olaparib" data-grp="drug">Olaparib</div>
           <div class="chip" data-q="palbociclib" data-grp="drug">Palbociclib</div>
           <div class="chip" data-q="ribociclib" data-grp="drug">Ribociclib</div>
+          <div class="chip" data-q="abemaciclib" data-grp="drug">Abemaciclib</div>
         </div>
       </div>
-      <div style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-top:4px;">
-        또는 아래 검색창에 약물명 직접 입력
-      </div>
+      <p style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-top:4px;">Or type a drug name in the keyword box below.</p>
     </div>
 
-    <!-- FILTER STRIP -->
+    <!-- ══ FILTER STRIP ══ -->
     <div class="fstrip">
+      <!-- Phase (multi-select) -->
       <div class="fgrp">
-        <span class="fgrp-label">치료 라인</span>
+        <span class="fgrp-lbl">Phase</span>
+        <button class="ftab phase on" data-phase="" onclick="togglePhase(this,'')">All</button>
+        <button class="ftab phase" data-phase="EARLY_PHASE1" onclick="togglePhase(this,'EARLY_PHASE1')">Early I</button>
+        <button class="ftab phase" data-phase="PHASE1" onclick="togglePhase(this,'PHASE1')">Phase I</button>
+        <button class="ftab phase" data-phase="PHASE2" onclick="togglePhase(this,'PHASE2')">Phase II</button>
+        <button class="ftab phase" data-phase="PHASE3" onclick="togglePhase(this,'PHASE3')">Phase III</button>
+        <button class="ftab phase" data-phase="PHASE4" onclick="togglePhase(this,'PHASE4')">Phase IV</button>
+      </div>
+      <div class="fsep"></div>
+      <!-- Histology -->
+      <div class="fgrp">
+        <span class="fgrp-lbl">Histology</span>
+        <button class="ftab histo on" data-val="" onclick="setFtab(this,'histo','')">All</button>
+        <button class="ftab histo" data-val="nonsq" onclick="setFtab(this,'histo','nonsq')">Non-squamous</button>
+        <button class="ftab histo" data-val="sq" onclick="setFtab(this,'histo','sq')">Squamous</button>
+      </div>
+      <div class="fsep"></div>
+      <!-- Line -->
+      <div class="fgrp">
+        <span class="fgrp-lbl">Tx Line</span>
         <button class="ftab line on" data-val="" onclick="setFtab(this,'line','')">All</button>
         <button class="ftab line" data-val="1L" onclick="setFtab(this,'line','1L')">1st line</button>
         <button class="ftab line" data-val="2L" onclick="setFtab(this,'line','2L')">2nd line+</button>
       </div>
       <div class="fsep"></div>
+      <!-- Brain met -->
       <div class="fgrp">
-        <span class="fgrp-label">뇌전이 허용</span>
+        <span class="fgrp-lbl">Brain Mets</span>
         <button class="ftab brain on" data-val="" onclick="setFtab(this,'brain','')">All</button>
-        <button class="ftab brain" data-val="allowed" onclick="setFtab(this,'brain','allowed')">허용 포함만</button>
-        <button class="ftab brain" data-val="excluded" onclick="setFtab(this,'brain','excluded')">제외만</button>
+        <button class="ftab brain" data-val="allowed" onclick="setFtab(this,'brain','allowed')">Allowed</button>
+        <button class="ftab brain" data-val="excluded" onclick="setFtab(this,'brain','excluded')">Excluded</button>
       </div>
     </div>
 
-    <!-- SEARCH ROW -->
+    <!-- ══ COUNTRY SECTION ══ -->
+    <div class="country-section">
+      <div class="mgrp-lbl" style="margin-bottom:8px;">Location</div>
+      <!-- Quick buttons -->
+      <div class="country-quick">
+        <button class="cqbtn on" data-country="" onclick="setCountryQuick(this,'')">🌍 Worldwide</button>
+        <button class="cqbtn" data-country="United States" onclick="setCountryQuick(this,'United States')">🇺🇸 United States</button>
+        <button class="cqbtn" data-country="Korea, Republic of" onclick="setCountryQuick(this,'Korea, Republic of')">🇰🇷 South Korea</button>
+        <button class="cqbtn" data-country="Japan" onclick="setCountryQuick(this,'Japan')">🇯🇵 Japan</button>
+        <button class="cqbtn" data-country="China" onclick="setCountryQuick(this,'China')">🇨🇳 China</button>
+        <button class="cqbtn" data-country="Taiwan" onclick="setCountryQuick(this,'Taiwan')">🇹🇼 Taiwan</button>
+        <button class="cqbtn" data-country="Australia" onclick="setCountryQuick(this,'Australia')">🇦🇺 Australia</button>
+        <button class="rbtn2" id="btnEu" onclick="toggleRegion('eu')">Europe ▾</button>
+        <button class="rbtn2" id="btnAsia" onclick="toggleRegion('asia')">Asia-Pacific ▾</button>
+        <button class="rbtn2" id="btnAm" onclick="toggleRegion('am')">Americas ▾</button>
+        <button class="rbtn2" id="btnOther" onclick="toggleRegion('other')">Other ▾</button>
+      </div>
+      <!-- Region panels -->
+      <div class="region-panel" id="rp-eu">
+        <div class="rp-label">Europe</div>
+        <div class="country-grid" id="cg-eu"></div>
+      </div>
+      <div class="region-panel" id="rp-asia">
+        <div class="rp-label">Asia-Pacific</div>
+        <div class="country-grid" id="cg-asia"></div>
+      </div>
+      <div class="region-panel" id="rp-am">
+        <div class="rp-label">Americas</div>
+        <div class="country-grid" id="cg-am"></div>
+      </div>
+      <div class="region-panel" id="rp-other">
+        <div class="rp-label">Other Regions</div>
+        <div class="country-grid" id="cg-other"></div>
+      </div>
+      <!-- Free search -->
+      <div class="country-search-row">
+        <input class="csearch" id="countrySearch" type="text" placeholder="Search any country..." oninput="filterCountrySearch(this.value)" onkeydown="if(event.key==='Enter'){applyCountrySearch();}">
+        <span class="country-hint" id="countryHint"></span>
+      </div>
+    </div>
+
+    <!-- ══ SEARCH ROW ══ -->
     <div class="srow">
-      <input class="sinput" id="kw" type="text" placeholder="추가 키워드 (NCT번호, 스폰서, 기관명...)">
-      <select class="ssel" id="phaseF">
-        <option value="">모든 단계</option>
-        <option value="PHASE1">Phase I</option>
-        <option value="PHASE2">Phase II</option>
-        <option value="PHASE3">Phase III</option>
-      </select>
+      <input class="sinput" id="kw" type="text" placeholder="Additional keyword (NCT number, sponsor, drug name...)">
       <select class="ssel" id="statusF">
-        <option value="RECRUITING,ACTIVE_NOT_RECRUITING" selected>모집중 + 진행중</option>
-        <option value="RECRUITING">모집중만</option>
-        <option value="ACTIVE_NOT_RECRUITING">진행중만</option>
+        <option value="RECRUITING,ACTIVE_NOT_RECRUITING" selected>Recruiting + Active</option>
+        <option value="RECRUITING">Recruiting only</option>
+        <option value="ACTIVE_NOT_RECRUITING">Active only</option>
+        <option value="NOT_YET_RECRUITING">Not yet recruiting</option>
       </select>
-      <button class="sbtn" id="sbtn" onclick="doSearch()">실시간 검색</button>
-      <button class="rbtn" onclick="doReset()">초기화</button>
+      <button class="sbtn" id="sbtn" onclick="doSearch()">Search Live</button>
+      <button class="rbtn" onclick="doReset()">Reset</button>
     </div>
   </div>
+
+  <!-- ACTIVE FILTERS -->
+  <div class="active-filters" id="activeFilters"></div>
 
   <!-- FILTER NOTICE -->
   <div class="fnotice" id="fnotice"><span>⚠</span><span id="fnoticeText"></span></div>
 
   <!-- STATS -->
   <div class="stats" id="statsEl" style="display:none;">
-    <div class="stat"><div class="stn blue" id="stT">0</div><div class="stl">API 결과</div></div>
-    <div class="stat"><div class="stn green" id="stR">0</div><div class="stl">모집 중</div></div>
-    <div class="stat"><div class="stn rose" id="stB">—</div><div class="stl">🧠 뇌전이 허용</div></div>
-    <div class="stat"><div class="stn teal" id="stS">0</div><div class="stl">국내 참여 기관</div></div>
-    <div class="stat"><div class="stn amber" id="stTime">—</div><div class="stl">조회 시각</div></div>
+    <div class="stat"><div class="stn blue" id="stT">0</div><div class="stl">API Results</div></div>
+    <div class="stat"><div class="stn green" id="stR">0</div><div class="stl">Recruiting</div></div>
+    <div class="stat"><div class="stn rose" id="stB">—</div><div class="stl">🧠 Brain Mets OK</div></div>
+    <div class="stat"><div class="stn teal" id="stS">0</div><div class="stl">Sites Shown</div></div>
+    <div class="stat"><div class="stn amber" id="stTime">—</div><div class="stl">Last Query</div></div>
   </div>
 
   <!-- RESBAR -->
   <div class="resbar" id="resbarEl" style="display:none;">
-    <div class="resc">표시 <strong id="rN">0</strong>건 · 페이지 <span id="rP">1</span>/<span id="rTP">1</span></div>
+    <div class="resc">Showing <strong id="rN">0</strong> trials · Page <span id="rP">1</span>/<span id="rTP">1</span></div>
     <div class="ract">
-      <button class="alink" onclick="exportCSV()">CSV 저장</button>
-      <a class="alink" id="ctgHref" href="https://clinicaltrials.gov" target="_blank">CTG.gov 원본 ↗</a>
+      <button class="alink" onclick="exportCSV()">Export CSV</button>
+      <a class="alink" id="ctgHref" href="https://clinicaltrials.gov" target="_blank">CTG.gov ↗</a>
     </div>
   </div>
 
   <div id="results">
     <div class="loading">
       <div class="spinner"></div>
-      <div class="ltitle">검색 버튼을 눌러주세요</div>
-      <div class="lsub">Mutation 또는 Drug을 선택하고<br>실시간 검색을 누르면 CTG.gov에서 직접 가져옵니다</div>
+      <div class="ltitle">Select a mutation or drug, then click Search Live</div>
+      <div class="lsub">Fetches real-time data directly from ClinicalTrials.gov API</div>
     </div>
   </div>
   <div class="pager" id="pagerEl"></div>
 </div>
 
 <footer>
-  NSCLC.Trials.KR &nbsp;·&nbsp;
-  Data: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (실시간) &nbsp;·&nbsp;
-  Line / Brain 필터는 eligibility text 키워드 분석 기반 — 반드시 원문 확인 &nbsp;·&nbsp;
-  연구·의뢰 목적 전용
+  NSCLC.Trials.Global &nbsp;·&nbsp;
+  Data: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (real-time, no auth required) &nbsp;·&nbsp;
+  Phase / Line / Histology / Brain Met filters use text analysis — always verify source records &nbsp;·&nbsp;
+  For research &amp; referral purposes only
 </footer>
 
 <script>
+// ════════════════════════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════════════════════════
 const CTG = 'https://clinicaltrials.gov/api/v2/studies';
 const PER = 25;
 
+// ── Country data ────────────────────────────────────────────────
+const REGIONS = {
+  eu: {
+    label: 'Europe',
+    countries: ['Albania','Austria','Belarus','Belgium','Bosnia and Herzegovina','Bulgaria','Croatia','Cyprus','Czech Republic','Denmark','Estonia','Finland','France','Georgia','Germany','Greece','Hungary','Iceland','Ireland','Italy','Latvia','Lithuania','Luxembourg','Malta','Moldova','Montenegro','Netherlands','North Macedonia','Norway','Poland','Portugal','Romania','Serbia','Slovakia','Slovenia','Spain','Sweden','Switzerland','Ukraine','United Kingdom']
+  },
+  asia: {
+    label: 'Asia-Pacific',
+    countries: ['Australia','Bangladesh','Cambodia','China','Hong Kong','India','Indonesia','Japan','Korea, Republic of','Malaysia','Myanmar','Nepal','New Zealand','Pakistan','Philippines','Singapore','Sri Lanka','Taiwan','Thailand','Vietnam']
+  },
+  am: {
+    label: 'Americas',
+    countries: ['Argentina','Bolivia','Brazil','Canada','Chile','Colombia','Costa Rica','Dominican Republic','Ecuador','El Salvador','Guatemala','Honduras','Jamaica','Mexico','Panama','Paraguay','Peru','Puerto Rico','Trinidad and Tobago','United States','Uruguay','Venezuela']
+  },
+  other: {
+    label: 'Other',
+    countries: ['Algeria','Bahrain','Cameroon','Egypt','Ethiopia','Ghana','Iran','Iraq','Israel','Jordan','Kenya','Kuwait','Lebanon','Libya','Morocco','Nigeria','Oman','Qatar','Russia','Saudi Arabia','Senegal','South Africa','Tunisia','Turkey','Uganda','United Arab Emirates','Uzbekistan','Zimbabwe']
+  }
+};
+
+// Build country grids
+Object.entries(REGIONS).forEach(([key, {countries}]) => {
+  const grid = document.getElementById('cg-'+key);
+  countries.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'cbtn';
+    btn.textContent = c;
+    btn.dataset.country = c;
+    btn.onclick = () => setCountryFromGrid(btn, c);
+    grid.appendChild(btn);
+  });
+});
+
+// ════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════
 const S = {
   mode: 'mut',
+  country: '',          // '' = worldwide
+  selectedPhases: new Set(),  // empty = all phases
+  histoFilter: '',      // '' | 'sq' | 'nonsq'
   lineFilter: '',
   brainFilter: '',
   allTrials: [],
@@ -409,48 +570,155 @@ const S = {
   busy: false
 };
 
-// ── MODE SWITCH ──────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// MODE SWITCH
+// ════════════════════════════════════════════════════════════════
 function switchMode(m) {
   S.mode = m;
   document.getElementById('panel-mut').style.display  = m==='mut'  ? '' : 'none';
   document.getElementById('panel-drug').style.display = m==='drug' ? '' : 'none';
   document.getElementById('tab-mut').classList.toggle('active',  m==='mut');
   document.getElementById('tab-drug').classList.toggle('active', m==='drug');
-  document.querySelectorAll(`.chip[data-grp="${m==='mut'?'drug':'mut'}"]`).forEach(c=>c.classList.remove('on'));
+  const other = m==='mut' ? 'drug' : 'mut';
+  document.querySelectorAll(`.chip[data-grp="${other}"]`).forEach(c=>c.classList.remove('on'));
 }
 
-// ── CHIPS ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// CHIP TOGGLE
+// ════════════════════════════════════════════════════════════════
 document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
 
-// ── FILTER TABS ──────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// PHASE (multi-select logic)
+// "All" is exclusive — selecting a specific phase deactivates All
+// ════════════════════════════════════════════════════════════════
+function togglePhase(btn, phase) {
+  if (phase === '') {
+    // Reset to All
+    S.selectedPhases.clear();
+    document.querySelectorAll('.ftab.phase').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+  } else {
+    // Deactivate "All"
+    document.querySelector('.ftab.phase[data-phase=""]').classList.remove('on');
+    btn.classList.toggle('on');
+    if (btn.classList.contains('on')) {
+      S.selectedPhases.add(phase);
+    } else {
+      S.selectedPhases.delete(phase);
+    }
+    // If nothing selected, revert to All
+    if (S.selectedPhases.size === 0) {
+      document.querySelector('.ftab.phase[data-phase=""]').classList.add('on');
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// GENERIC FILTER TAB (histo / line / brain)
+// ════════════════════════════════════════════════════════════════
 function setFtab(btn, type, val) {
+  if (type==='histo') S.histoFilter = val;
   if (type==='line')  S.lineFilter  = val;
   if (type==='brain') S.brainFilter = val;
   document.querySelectorAll(`.ftab.${type}`).forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
 }
 
-// ── BUILD URL ────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// COUNTRY
+// ════════════════════════════════════════════════════════════════
+function setCountry(country) {
+  S.country = country;
+  // Update quick buttons
+  document.querySelectorAll('.cqbtn').forEach(b=>{
+    b.classList.toggle('on', b.dataset.country === country);
+  });
+  // Update grid buttons
+  document.querySelectorAll('.cbtn').forEach(b=>{
+    b.classList.toggle('on', b.dataset.country === country);
+  });
+  // Update search input
+  document.getElementById('countrySearch').value = country;
+  const hint = document.getElementById('countryHint');
+  hint.textContent = country ? `Selected: ${country}` : 'Worldwide';
+}
+
+function setCountryQuick(btn, country) {
+  setCountry(country);
+  // Close all region panels
+  document.querySelectorAll('.region-panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.rbtn2').forEach(b=>b.classList.remove('on'));
+}
+
+function setCountryFromGrid(btn, country) {
+  setCountry(country);
+  // Remove quick btn highlights except keep region panel open
+  document.querySelectorAll('.cqbtn').forEach(b=>b.classList.remove('on'));
+}
+
+function toggleRegion(key) {
+  const panel = document.getElementById('rp-'+key);
+  const btn   = document.getElementById('btn'+key.charAt(0).toUpperCase()+key.slice(1));
+  const isOpen = panel.classList.contains('open');
+  // Close all first
+  document.querySelectorAll('.region-panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.rbtn2').forEach(b=>b.classList.remove('on'));
+  if (!isOpen) { panel.classList.add('open'); btn.classList.add('on'); }
+}
+
+function filterCountrySearch(val) {
+  const lower = val.toLowerCase().trim();
+  document.querySelectorAll('.cbtn').forEach(b=>{
+    const show = !lower || b.dataset.country.toLowerCase().includes(lower);
+    b.style.display = show ? '' : 'none';
+  });
+}
+
+function applyCountrySearch() {
+  const val = document.getElementById('countrySearch').value.trim();
+  if (!val) { setCountry(''); return; }
+  // Find match
+  const all = [...document.querySelectorAll('.cbtn')].map(b=>b.dataset.country);
+  const match = all.find(c=>c.toLowerCase()===val.toLowerCase())
+             || all.find(c=>c.toLowerCase().startsWith(val.toLowerCase()));
+  if (match) setCountry(match);
+  else setCountry(val); // accept free text
+}
+
+// ════════════════════════════════════════════════════════════════
+// BUILD API URL
+// ════════════════════════════════════════════════════════════════
 function buildURL(token) {
   const chips = [...document.querySelectorAll(`.chip[data-grp="${S.mode}"].on`)].map(c=>c.dataset.q);
   const kw    = document.getElementById('kw').value.trim();
-  const phase = document.getElementById('phaseF').value;
   const status= document.getElementById('statusF').value;
   const terms = [...chips, kw].filter(Boolean);
 
   const p = new URLSearchParams({
     'query.cond': 'Non-Small Cell Lung Cancer',
-    'query.locn': 'South Korea',
     'filter.overallStatus': status,
     'pageSize': PER,
     'countTotal': 'true',
     'format': 'json'
   });
-  if (terms.length) p.set('query.intr', terms.join(' '));
-  if (phase)        p.set('filter.phase', phase);
-  if (token)        p.set('pageToken', token);
 
-  const wp = new URLSearchParams({ cond:'Non-Small Cell Lung Cancer', locn:'South Korea' });
+  // Location: use query.locn for specific country, omit for worldwide
+  if (S.country) p.set('query.locn', S.country);
+
+  // Intervention terms
+  if (terms.length) p.set('query.intr', terms.join(' '));
+
+  // Phase: append each selected phase separately (CTG API supports repeated params)
+  if (S.selectedPhases.size > 0) {
+    S.selectedPhases.forEach(ph => p.append('filter.phase', ph));
+  }
+
+  if (token) p.set('pageToken', token);
+
+  // CTG web link
+  const wp = new URLSearchParams({ cond:'Non-Small Cell Lung Cancer' });
+  if (S.country) wp.set('locn', S.country);
   if (terms.length) wp.set('intr', terms.join(' '));
   wp.set('aggFilters','status:rec');
   document.getElementById('ctgHref').href = `https://clinicaltrials.gov/search?${wp}`;
@@ -458,14 +726,18 @@ function buildURL(token) {
   return `${CTG}?${p}`;
 }
 
-// ── FETCH ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// FETCH
+// ════════════════════════════════════════════════════════════════
 async function fetchPage(token=null) {
   const res = await fetch(buildURL(token));
   if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
   return res.json();
 }
 
-// ── PARSE ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// PARSE
+// ════════════════════════════════════════════════════════════════
 function parse(study) {
   const ps  = study.protocolSection || {};
   const id  = ps.identificationModule      || {};
@@ -481,7 +753,7 @@ function parse(study) {
   const nct    = id.nctId || '';
   const title  = id.briefTitle || '';
   const status = st.overallStatus || '';
-  const phases = (ds.phases||[]).map(p=>p.replace('PHASE','Phase ')).join('/');
+  const phases = (ds.phases||[]).map(p=>p.replace('PHASE','Phase ').replace('EARLY_PHASE1','Early Phase I')).join('/');
   const styp   = ds.studyType || '';
   const enroll = ds.enrollmentInfo?.count;
   const start  = st.startDateStruct?.date || '';
@@ -495,26 +767,41 @@ function parse(study) {
     .map(i=>i.name).filter(Boolean).slice(0,6);
 
   const centralContacts = (cl.centralContacts||[]).map(c=>({
-    name:c.name||'', role:c.role||'', phone:c.phone||'', email:c.email||''
+    name:c.name||'',role:c.role||'',phone:c.phone||'',email:c.email||''
   }));
 
-  const sites = (cl.locations||[])
-    .filter(l=>{const c=(l.country||'').toLowerCase();return c==='korea, republic of'||c.includes('korea');})
-    .map(l=>({
-      name:l.facility||'', city:l.city||'', status:l.status||'',
-      contacts:(l.contacts||[]).map(c=>({name:c.name||'',role:c.role||'',phone:c.phone||'',email:c.email||''}))
-    }));
+  // All sites (worldwide version shows all sites, filtered by selected country if any)
+  const allSites = (cl.locations||[]).map(l=>({
+    name:l.facility||'',city:l.city||'',country:l.country||'',
+    status:l.status||'',
+    contacts:(l.contacts||[]).map(c=>({name:c.name||'',role:c.role||'',phone:c.phone||'',email:c.email||''}))
+  }));
+
+  // Filter sites to show: if country selected, show only matching; otherwise show first 8
+  const shownSites = S.country
+    ? allSites.filter(l=>{
+        const c=(l.country||'').toLowerCase();
+        const q=S.country.toLowerCase();
+        return c===q||c.includes(q.split(',')[0].trim());
+      })
+    : allSites.slice(0,8);
 
   const fullTxt = (title+' '+conds.join(' ')+' '+summ).toLowerCase();
   const searchTxt = eligTxt + ' ' + fullTxt;
+
   const muts  = detectMuts(fullTxt);
   const line  = detectLine(searchTxt);
   const brain = detectBrain(searchTxt);
+  const histo = detectHisto(fullTxt + ' ' + eligTxt);
 
-  return {nct,title,status,phases,styp,enroll,start,spon,drugs,sites,centralContacts,muts,line,brain};
+  return {nct,title,status,phases,styp,enroll,start,spon,drugs,
+          sites:shownSites,allSiteCount:allSites.length,
+          centralContacts,muts,line,brain,histo};
 }
 
-// ── MUTATION DETECT ──────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// MUTATION DETECT
+// ════════════════════════════════════════════════════════════════
 const MUTS = [
   {l:'EGFR exon20ins', p:['exon 20 ins','exon20ins','exon 20 insertion','ex20ins']},
   {l:'EGFR T790M',     p:['t790m']},
@@ -559,99 +846,143 @@ function detectMuts(txt) {
   return found;
 }
 
-// ── LINE DETECT ──────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// HISTOLOGY DETECT
+// ════════════════════════════════════════════════════════════════
+function detectHisto(txt) {
+  const sqPat  = /squamous(?!\s+cell\s+carcinoma\s+of\s+(?:head|skin|cervix|esophag|anus|vulva))|squamous\s+cell\s+lung|squamous\s+nsclc|squamous\s+histology|scc\s+lung|sq\s+nsclc/i;
+  const adPat  = /adenocarcinoma|non.squamous|nonsquamous|large.cell|adenosquamous|sarcomatoid/i;
+  const isSq   = sqPat.test(txt);
+  const isNonSq= adPat.test(txt);
+  if (isSq  && !isNonSq) return 'sq';
+  if (isNonSq && !isSq)  return 'nonsq';
+  if (isSq  && isNonSq)  return 'both';
+  return 'unknown';
+}
+
+// ════════════════════════════════════════════════════════════════
+// LINE DETECT
+// ════════════════════════════════════════════════════════════════
 function detectLine(txt) {
   const r1=/first[\s-]line|1st[\s-]line|treatment[\s-]na[iï]ve|chemo[\s-]na[iï]ve|previously untreated|no prior.*treatment|frontline|treatment naive/i;
-  const r2=/second[\s-]line|2nd[\s-]line|previously treated|prior.*therapy|after.*progression|post.*osimertinib|resistant|refractory|salvage|at least one prior|1 or more prior|≥1 prior/i;
-  const is1=r1.test(txt), is2=r2.test(txt);
+  const r2=/second[\s-]line|2nd[\s-]line|previously treated|prior.*therapy|after.*progression|post.*osimertinib|resistant|refractory|salvage|at least one prior|1 or more prior|≥\s*1 prior/i;
+  const is1=r1.test(txt),is2=r2.test(txt);
   if(is1&&!is2) return '1L';
   if(is2&&!is1) return '2L';
   if(is1&&is2)  return 'both';
   return 'unknown';
 }
 
-// ── BRAIN MET DETECT ─────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// BRAIN MET DETECT
+// ════════════════════════════════════════════════════════════════
 function detectBrain(txt) {
-  const excl=/brain metastas[ei]s.*(?:excluded|not eligible|are excluded|not allowed|not permitted|must not have)|(?:exclusion.*brain|brain.*exclusion)/i;
-  const incl=/(?:stable|asymptomatic|treated|controlled|untreated).*brain metastas|brain metastas.*(?:allowed|eligible|permitted|included|stable|asymptomatic|are allowed)|leptomeningeal.*allowed|intracranial.*eligible/i;
+  const excl=/brain metastas[ei]s.*(?:excluded|not eligible|are excluded|not allowed|not permitted|must not have)|(?:exclusion.*brain|active brain metastas)/i;
+  const incl=/(?:stable|asymptomatic|treated|controlled|untreated).*brain metastas|brain metastas.*(?:allowed|eligible|permitted|included|stable|are allowed)|leptomeningeal.*allowed|intracranial.*eligible/i;
   if(excl.test(txt)) return 'excluded';
   if(incl.test(txt)) return 'allowed';
   return 'unknown';
 }
 
-// ── CLIENT FILTER ────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// CLIENT-SIDE FILTERS
+// ════════════════════════════════════════════════════════════════
 function applyFilters(trials) {
   return trials.filter(t=>{
-    if(S.lineFilter==='1L'&&t.line!=='1L'&&t.line!=='both') return false;
-    if(S.lineFilter==='2L'&&t.line!=='2L'&&t.line!=='both') return false;
-    if(S.brainFilter==='allowed'&&t.brain!=='allowed') return false;
-    if(S.brainFilter==='excluded'&&t.brain!=='excluded') return false;
+    if(S.histoFilter==='sq'    && t.histo!=='sq'    && t.histo!=='both') return false;
+    if(S.histoFilter==='nonsq' && t.histo!=='nonsq' && t.histo!=='both') return false;
+    if(S.lineFilter==='1L'  && t.line!=='1L'  && t.line!=='both') return false;
+    if(S.lineFilter==='2L'  && t.line!=='2L'  && t.line!=='both') return false;
+    if(S.brainFilter==='allowed'  && t.brain!=='allowed')  return false;
+    if(S.brainFilter==='excluded' && t.brain!=='excluded') return false;
     return true;
   });
 }
 
-// ── TAGS ─────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// TAG HELPERS
+// ════════════════════════════════════════════════════════════════
 function lineTag(l){
   if(l==='1L')   return '<span class="tag tline">1st line</span>';
   if(l==='2L')   return '<span class="tag tline">2L+</span>';
-  if(l==='both') return '<span class="tag tline">1L / 2L+</span>';
+  if(l==='both') return '<span class="tag tline">1L/2L+</span>';
   return '';
 }
 function brainTag(b){
-  if(b==='allowed')  return '<span class="tag tbrain">🧠 뇌전이 허용</span>';
-  if(b==='excluded') return '<span class="tag tt">뇌전이 제외</span>';
+  if(b==='allowed')  return '<span class="tag tbrain">🧠 Brain OK</span>';
+  if(b==='excluded') return '<span class="tag tt">Brain excl.</span>';
+  return '';
+}
+function histoTag(h){
+  if(h==='sq')    return '<span class="tag thisto">Squamous</span>';
+  if(h==='nonsq') return '<span class="tag thisto">Non-sq</span>';
+  if(h==='both')  return '<span class="tag thisto">Sq+Non-sq</span>';
   return '';
 }
 
-// ── CONTACT RENDER ───────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// CONTACT RENDER
+// ════════════════════════════════════════════════════════════════
 function renderContact(c,small=false){
   if(!c.name&&!c.phone&&!c.email) return '';
   const sz=small?'font-size:10px':'font-size:12px';
-  return `
-    <div class="contact-row">
-      ${c.name?`<div class="cname" style="${sz}">${c.name}${c.role?` <span style="color:var(--text3);font-weight:400">(${c.role})</span>`:''}</div>`:''}
-      ${c.phone?`<div class="cinfo">📞 <a href="tel:${c.phone}">${c.phone}</a></div>`:''}
-      ${c.email?`<div class="cinfo">✉ <a href="mailto:${c.email}">${c.email}</a></div>`:''}
-    </div>`;
+  return `<div class="contact-row">
+    ${c.name?`<div class="cname" style="${sz}">${c.name}${c.role?` <span style="color:var(--text3);font-weight:400">(${c.role})</span>`:''}</div>`:''}
+    ${c.phone?`<div class="cinfo">📞 <a href="tel:${c.phone}">${c.phone}</a></div>`:''}
+    ${c.email?`<div class="cinfo">✉ <a href="mailto:${c.email}">${c.email}</a></div>`:''}
+  </div>`;
 }
 
-// ── RENDER CARD ──────────────────────────────────────
-const STATUS_KO={RECRUITING:'● 모집 중',ACTIVE_NOT_RECRUITING:'◉ 진행 중',COMPLETED:'완료',TERMINATED:'조기종료',NOT_YET_RECRUITING:'준비 중'};
+// ════════════════════════════════════════════════════════════════
+// RENDER CARD
+// ════════════════════════════════════════════════════════════════
+const STATUS_LABEL={
+  RECRUITING:'● Recruiting',
+  ACTIVE_NOT_RECRUITING:'◉ Active',
+  COMPLETED:'Completed',
+  TERMINATED:'Terminated',
+  NOT_YET_RECRUITING:'Not yet open',
+  SUSPENDED:'Suspended'
+};
 
 function renderCard(t){
   const url=`https://clinicaltrials.gov/study/${t.nct}`;
   const mTags=t.muts.map(m=>`<span class="tag tm">${m}</span>`).join('');
   const dTags=t.drugs.slice(0,5).map(d=>`<span class="tag td">${d}</span>`).join('');
   const ph=t.phases||'—';
-  const typ=t.styp==='INTERVENTIONAL'?'중재':t.styp==='OBSERVATIONAL'?'관찰':'';
+  const typ=t.styp==='INTERVENTIONAL'?'Interventional':t.styp==='OBSERVATIONAL'?'Observational':'';
   const sN=t.sites.length;
+  const totalN=t.allSiteCount;
   const sc=t.status==='RECRUITING'?'rec':'act';
   const brainOk=t.brain==='allowed';
 
   const centralHTML=t.centralContacts?.length?`
     <div class="central-contacts">
-      <div class="ccl">Study Contact (Central)</div>
+      <div class="ccl">Study Contact</div>
       ${t.centralContacts.map(c=>renderContact(c)).join('')}
     </div>`:'';
 
   const sitesHTML=sN>0?t.sites.map(s=>{
-    const sc2=s.status.toUpperCase().includes('RECRUIT')?'r':'a';
-    const sl=s.status.toUpperCase().includes('RECRUIT')?'모집중':s.status.toUpperCase().includes('ACTIVE')?'진행중':s.status;
+    const sdCls=s.status.toUpperCase().includes('RECRUIT')?'r':'a';
+    const sdLbl=s.status.toUpperCase().includes('RECRUIT')?'Recruiting':s.status.toUpperCase().includes('ACTIVE')?'Active':s.status;
     const sContHTML=s.contacts?.length?`
       <div class="site-contacts">
         <div class="scl">Site Contact</div>
         ${s.contacts.map(c=>renderContact(c,true)).join('')}
       </div>`:'';
-    return `
-      <div class="srow2">
-        <div style="flex:1;min-width:0;">
-          <div class="sname">${s.name}</div>
-          <div class="scity">${s.city}</div>
-          ${sContHTML}
-        </div>
-        ${s.status?`<span class="sdot ${sc2}">${sl}</span>`:''}
-      </div>`;
-  }).join(''):`<div class="nosite">국내 기관 정보 없음. <a href="${url}" target="_blank">CTG.gov에서 확인 ↗</a></div>`;
+    return `<div class="srow2">
+      <div style="flex:1;min-width:0;">
+        <div class="sname">${s.name}</div>
+        <div class="scity">${[s.city,s.country].filter(Boolean).join(', ')}</div>
+        ${sContHTML}
+      </div>
+      ${s.status?`<span class="sdot ${sdCls}">${sdLbl}</span>`:''}
+    </div>`;
+  }).join(''):`<div class="nosite">No site data for this location. <a href="${url}" target="_blank">View on CTG.gov ↗</a></div>`;
+
+  const siteLabel = S.country
+    ? `${sN} site${sN!==1?'s':''} in ${S.country}`
+    : `${totalN} site${totalN!==1?'s':''} worldwide`;
 
   return `
   <div class="card${brainOk?' brain-ok':''}">
@@ -660,23 +991,23 @@ function renderCard(t){
         <div class="cnct">${t.nct} · ${t.spon}</div>
         <div class="ctitle">${t.title}</div>
         <div class="tags">
-          ${mTags}${dTags}${lineTag(t.line)}${brainTag(t.brain)}
+          ${mTags}${dTags}${histoTag(t.histo)}${lineTag(t.line)}${brainTag(t.brain)}
           <span class="tag tp">${ph}</span>
           ${typ?`<span class="tag tt">${typ}</span>`:''}
         </div>
       </div>
       <div class="cr">
-        <span class="spill ${sc}">${STATUS_KO[t.status]||t.status}</span>
+        <span class="spill ${sc}">${STATUS_LABEL[t.status]||t.status}</span>
         <div class="cmeta">
-          ${t.enroll?`목표 ${t.enroll.toLocaleString()}명<br>`:''}
-          ${t.start?`시작: ${t.start}<br>`:''}
-          국내 기관: ${sN}곳
+          ${t.enroll?`Target: ${t.enroll.toLocaleString()}<br>`:''}
+          ${t.start?`Start: ${t.start}<br>`:''}
+          ${siteLabel}
         </div>
-        <a href="${url}" target="_blank" class="ctglink">🔗 CTG 원본 ↗</a>
+        <a href="${url}" target="_blank" class="ctglink">🔗 CTG ↗</a>
       </div>
     </div>
     <button class="stoggle" onclick="toggleSites('${t.nct}',this)">
-      <span>국내 참여 기관 ${sN}곳${sN?' 및 연락처 보기':' (등록 정보 없음)'}</span><span>▾</span>
+      <span>${siteLabel} — view contacts</span><span>▾</span>
     </button>
     <div class="spanel" id="sp-${t.nct}">
       ${centralHTML}
@@ -691,22 +1022,43 @@ function toggleSites(nct,btn){
   btn.querySelector('span:last-child').textContent=open?'▴':'▾';
 }
 
-// ── SEARCH ───────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// ACTIVE FILTER BADGES
+// ════════════════════════════════════════════════════════════════
+function renderActiveFilters(){
+  const el=document.getElementById('activeFilters');
+  const tags=[];
+  if(S.country) tags.push(`<span class="af country">📍 ${S.country}</span>`);
+  if(S.selectedPhases.size>0) tags.push(`<span class="af phase">Phase: ${[...S.selectedPhases].map(p=>p.replace('PHASE','')).join('+')}</span>`);
+  if(S.histoFilter) tags.push(`<span class="af histo">Histology: ${S.histoFilter==='sq'?'Squamous':'Non-squamous'}</span>`);
+  if(S.lineFilter)  tags.push(`<span class="af line">Line: ${S.lineFilter}</span>`);
+  if(S.brainFilter) tags.push(`<span class="af brain">Brain Mets: ${S.brainFilter}</span>`);
+  el.innerHTML=tags.join('');
+}
+
+// ════════════════════════════════════════════════════════════════
+// MAIN SEARCH
+// ════════════════════════════════════════════════════════════════
 async function doSearch(token=null,pageNum=1){
   if(S.busy) return;
   S.busy=true;
+
+  // Sync state from UI
+  S.country = document.getElementById('countrySearch').value.trim() || S.country;
+
   const btn=document.getElementById('sbtn');
-  btn.disabled=true; btn.textContent='검색 중...';
+  btn.disabled=true; btn.textContent='Searching...';
 
   const chips=[...document.querySelectorAll(`.chip[data-grp="${S.mode}"].on`)].map(c=>c.dataset.q);
   const kw=document.getElementById('kw').value.trim();
-  const qDesc=[...chips,kw].filter(Boolean).join(' + ')||'NSCLC Korea';
+  const qDesc=[...chips,kw].filter(Boolean).join(' + ')||'NSCLC';
+  const locDesc=S.country||'Worldwide';
 
   document.getElementById('results').innerHTML=`
     <div class="loading">
       <div class="spinner"></div>
-      <div class="ltitle">ClinicalTrials.gov 실시간 조회 중</div>
-      <div class="lsub">${qDesc} · South Korea</div>
+      <div class="ltitle">Querying ClinicalTrials.gov…</div>
+      <div class="lsub">${qDesc} · ${locDesc}</div>
       <div class="lapi">clinicaltrials.gov/api/v2/studies</div>
     </div>`;
   document.getElementById('statsEl').style.display='none';
@@ -714,7 +1066,9 @@ async function doSearch(token=null,pageNum=1){
   document.getElementById('pagerEl').innerHTML='';
   document.getElementById('fnotice').classList.remove('show');
 
-  try {
+  renderActiveFilters();
+
+  try{
     const data=await fetchPage(token);
     const apiTotal=data.totalCount||0;
     const all=(data.studies||[]).map(parse);
@@ -726,27 +1080,29 @@ async function doSearch(token=null,pageNum=1){
     const filtered=applyFilters(all);
     S.filtered=filtered;
 
-    const recN=filtered.filter(t=>t.status==='RECRUITING').length;
+    const recN =filtered.filter(t=>t.status==='RECRUITING').length;
     const brainN=filtered.filter(t=>t.brain==='allowed').length;
-    const siteN=filtered.reduce((a,t)=>a+t.sites.length,0);
+    const siteN =filtered.reduce((a,t)=>a+t.sites.length,0);
 
     document.getElementById('stT').textContent=apiTotal.toLocaleString();
     document.getElementById('stR').textContent=recN;
     document.getElementById('stB').textContent=brainN;
     document.getElementById('stS').textContent=siteN;
-    document.getElementById('stTime').textContent=new Date().toLocaleTimeString('ko-KR');
+    document.getElementById('stTime').textContent=new Date().toLocaleTimeString('en-US',{hour12:false});
     document.getElementById('statsEl').style.display='flex';
     document.getElementById('hTotal').textContent=apiTotal.toLocaleString();
     document.getElementById('hRec').textContent=recN;
 
-    if(S.lineFilter||S.brainFilter){
-      const notes=[];
-      if(S.lineFilter==='1L') notes.push('1st line만 표시');
-      if(S.lineFilter==='2L') notes.push('2nd line+ 만 표시');
-      if(S.brainFilter==='allowed') notes.push('뇌전이 허용 trial만');
-      if(S.brainFilter==='excluded') notes.push('뇌전이 제외 trial만');
-      notes.push('eligibility text 키워드 분석 기반 — 반드시 원문 확인');
-      document.getElementById('fnoticeText').textContent=notes.join(' · ');
+    // Notice for client filters
+    const clientFilters=[];
+    if(S.histoFilter) clientFilters.push(`histology: ${S.histoFilter==='sq'?'squamous':'non-squamous'}`);
+    if(S.lineFilter==='1L') clientFilters.push('1st line only');
+    if(S.lineFilter==='2L') clientFilters.push('2nd line+ only');
+    if(S.brainFilter==='allowed')  clientFilters.push('brain mets allowed only');
+    if(S.brainFilter==='excluded') clientFilters.push('brain mets excluded only');
+    if(clientFilters.length>0){
+      document.getElementById('fnoticeText').textContent=
+        `Client filter active (${clientFilters.join(', ')}) — based on eligibility text analysis. Always verify source record.`;
       document.getElementById('fnotice').classList.add('show');
     }
 
@@ -760,77 +1116,98 @@ async function doSearch(token=null,pageNum=1){
       ?filtered.map(renderCard).join('')
       :`<div class="empty">
           <div style="font-size:36px;margin-bottom:14px">🔬</div>
-          <div class="ltitle">필터 조건에 맞는 결과가 없습니다</div>
-          <div class="lsub">Line 또는 Brain 필터를 변경해보세요</div>
+          <div class="ltitle">No results match current filters</div>
+          <div class="lsub">Try adjusting the Histology, Line, or Brain Met filters</div>
         </div>`;
 
     renderPager(apiTotal,pageNum,nextToken);
-  } catch(err){
+  }catch(err){
     document.getElementById('results').innerHTML=`
       <div class="errstate">
         <div style="font-size:36px;margin-bottom:14px">⚠️</div>
-        <div style="font-size:15px;font-weight:600;color:var(--red);margin-bottom:8px">API 연결 오류</div>
+        <div style="font-size:15px;font-weight:600;color:var(--red);margin-bottom:8px">API Connection Error</div>
         <div style="color:var(--text2);font-size:13px;margin-bottom:12px">${err.message}</div>
-        <div style="font-size:12px;color:var(--text3);line-height:2;background:var(--surface);border-radius:10px;padding:16px 20px;display:inline-block;text-align:left;max-width:480px;">
-          <strong style="color:var(--text)">원인:</strong> Claude.ai 미리보기는 외부 API 차단됩니다.<br>
-          <strong style="color:var(--text)">해결:</strong> GitHub Pages에 올리면 정상 작동합니다.<br>
-          이 <code style="color:var(--blue)">index.html</code> → GitHub repo → Settings → Pages.
+        <div style="font-size:12px;color:var(--text3);line-height:2;background:var(--surface);border-radius:10px;padding:16px 20px;display:inline-block;text-align:left;max-width:500px;">
+          <strong style="color:var(--text)">Cause:</strong> Claude.ai preview blocks external API calls.<br>
+          <strong style="color:var(--text)">Fix:</strong> Upload <code style="color:var(--blue)">index.html</code> to GitHub Pages.<br>
+          Settings → Pages → Deploy from branch → works instantly.
         </div>
-        <br><br><button class="sbtn" onclick="doSearch()">다시 시도</button>
+        <br><br>
+        <button class="sbtn" onclick="doSearch()">Retry</button>
       </div>`;
-  } finally {
-    S.busy=false; btn.disabled=false; btn.textContent='실시간 검색';
+  }finally{
+    S.busy=false; btn.disabled=false; btn.textContent='Search Live';
   }
 }
 
-// ── PAGINATION ───────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// PAGINATION
+// ════════════════════════════════════════════════════════════════
 function renderPager(total,cur,nextToken){
   const tp=Math.ceil(total/PER);
   if(tp<=1) return;
   const pg=document.getElementById('pagerEl');
-  let h=`<button class="pbtn" ${cur<=1?'disabled':''} onclick="goPage(${cur-1})">← 이전</button>`;
+  let h=`<button class="pbtn" ${cur<=1?'disabled':''} onclick="goPage(${cur-1})">← Prev</button>`;
   const s=Math.max(1,cur-2),e=Math.min(tp,cur+2);
   if(s>1) h+=`<button class="pbtn" onclick="goPage(1)">1</button>`;
   if(s>2) h+=`<span class="pinfo">…</span>`;
   for(let i=s;i<=e;i++) h+=`<button class="pbtn ${i===cur?'on':''}" onclick="goPage(${i})">${i}</button>`;
   if(e<tp-1) h+=`<span class="pinfo">…</span>`;
   if(e<tp)   h+=`<button class="pbtn" onclick="goPage(${tp})">${tp}</button>`;
-  h+=`<button class="pbtn" ${!nextToken?'disabled':''} onclick="goPage(${cur+1})">다음 →</button>`;
-  h+=`<span class="pinfo">${total.toLocaleString()}건 중 ${(cur-1)*PER+1}–${Math.min(cur*PER,total)}건</span>`;
+  h+=`<button class="pbtn" ${!nextToken?'disabled':''} onclick="goPage(${cur+1})">Next →</button>`;
+  h+=`<span class="pinfo">${total.toLocaleString()} trials, showing ${(cur-1)*PER+1}–${Math.min(cur*PER,total)}</span>`;
   pg.innerHTML=h;
 }
-async function goPage(n){if(n<1||S.busy) return;await doSearch(S.tokens[n-1]||null,n);window.scrollTo({top:0,behavior:'smooth'});}
+async function goPage(n){if(n<1||S.busy)return;await doSearch(S.tokens[n-1]||null,n);window.scrollTo({top:0,behavior:'smooth'});}
 
-// ── RESET ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// RESET
+// ════════════════════════════════════════════════════════════════
 function doReset(){
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
   document.querySelector('.chip[data-q="EGFR"]').classList.add('on');
   document.getElementById('kw').value='';
-  document.getElementById('phaseF').value='';
   document.getElementById('statusF').value='RECRUITING,ACTIVE_NOT_RECRUITING';
-  S.lineFilter=''; S.brainFilter='';
-  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('on'));
-  document.querySelector('.ftab.line[data-val=""]').classList.add('on');
-  document.querySelector('.ftab.brain[data-val=""]').classList.add('on');
+  // Phase
+  S.selectedPhases.clear();
+  document.querySelectorAll('.ftab.phase').forEach(b=>b.classList.remove('on'));
+  document.querySelector('.ftab.phase[data-phase=""]').classList.add('on');
+  // Other filters
+  S.histoFilter=''; S.lineFilter=''; S.brainFilter='';
+  ['histo','line','brain'].forEach(t=>{
+    document.querySelectorAll(`.ftab.${t}`).forEach(b=>b.classList.remove('on'));
+    document.querySelector(`.ftab.${t}[data-val=""]`).classList.add('on');
+  });
+  // Country
+  setCountry('');
+  document.querySelectorAll('.region-panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.rbtn2').forEach(b=>b.classList.remove('on'));
   S.tokens=[null]; S.page=1;
   document.getElementById('fnotice').classList.remove('show');
+  document.getElementById('activeFilters').innerHTML='';
 }
 
-// ── EXPORT ───────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// EXPORT CSV
+// ════════════════════════════════════════════════════════════════
 function exportCSV(){
-  const rows=[['NCT','Title','Status','Phase','Sponsor','Mutations','Drugs','Line','Brain Met','Korea Sites','Korea Cities','Start','Enrollment']];
+  const rows=[['NCT','Title','Status','Phase','Sponsor','Mutations','Drugs','Histology','Line','Brain Met','Sites (name)','Sites (country)','Start','Enrollment']];
   S.filtered.forEach(t=>rows.push([
     t.nct,`"${t.title.replace(/"/g,'""')}"`,t.status,t.phases,`"${t.spon}"`,
-    t.muts.join(';'),t.drugs.join(';'),t.line,t.brain,
+    t.muts.join(';'),t.drugs.join(';'),t.histo,t.line,t.brain,
     `"${t.sites.map(s=>s.name).join(' | ')}"`,
-    `"${t.sites.map(s=>s.city).join(' | ')}"`,
+    `"${t.sites.map(s=>s.country).join(' | ')}"`,
     t.start,t.enroll||''
   ]));
-  const blob=new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8;'});
-  Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:`NSCLC_Korea_${new Date().toISOString().slice(0,10)}.csv`}).click();
+  const blob=new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});
+  Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:`NSCLC_Global_${new Date().toISOString().slice(0,10)}.csv`}).click();
 }
 
-document.getElementById('kw').addEventListener('keydown',e=>{if(e.key==='Enter') doSearch();});
+// ════════════════════════════════════════════════════════════════
+// KEYBOARD
+// ════════════════════════════════════════════════════════════════
+document.getElementById('kw').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+document.getElementById('countrySearch').addEventListener('keydown',e=>{if(e.key==='Enter')applyCountrySearch();});
 </script>
 </body>
 </html>
