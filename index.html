@@ -7,147 +7,110 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── IMPORTANT NOTE ────────────────────────────────────────────────────────
-   This app calls clinicaltrials.gov/api/v2 DIRECTLY FROM THE BROWSER.
-   - Claude.ai artifact preview → CORS blocked → shows error (expected)
-   - GitHub Pages / any real browser → works perfectly
-   ─────────────────────────────────────────────────────────────────────── */
-
+/* NOTE: clinicaltrials.gov/api/v2 called directly from browser.
+   Claude.ai preview → blocked (expected). GitHub Pages → works. */
 :root {
   --bg:#0b0f1a; --bg2:#111827; --surface:#141d2e; --surface2:#1a2540;
   --border:rgba(100,140,255,.1); --border2:rgba(100,140,255,.06);
   --text:#e2e8f5; --text2:#7a90bb; --text3:#3a4a6a;
   --blue:#4d8ef0; --teal:#2dd4bf; --green:#22c55e;
-  --amber:#f59e0b; --red:#f43f5e; --purple:#a78bfa;
+  --amber:#f59e0b; --red:#f43f5e; --purple:#a78bfa; --rose:#fb7185;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;
-  font-size:14px;line-height:1.6;min-height:100vh;
-}
+body{background:var(--bg);color:var(--text);font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
 
-/* HEADER */
-header{
-  position:sticky;top:0;z-index:100;
-  background:rgba(11,15,26,.92);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-}
-.hdr{
-  max-width:1280px;margin:0 auto;padding:0 28px;
-  height:54px;display:flex;align-items:center;justify-content:space-between;
-}
-.logo{font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;color:var(--text);}
+header{position:sticky;top:0;z-index:100;background:rgba(11,15,26,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.hdr{max-width:1320px;margin:0 auto;padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;}
 .logo .d{color:var(--blue);}
 .hdr-right{display:flex;align-items:center;gap:10px;}
-.badge{
-  font-family:'Geist Mono',monospace;font-size:10px;
-  padding:3px 10px;border-radius:20px;border:1px solid var(--border);
-  color:var(--text2);letter-spacing:.5px;
-}
-.badge.live{
-  border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);
-  color:var(--green);display:flex;align-items:center;gap:5px;
-}
+.badge{font-family:'Geist Mono',monospace;font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);letter-spacing:.5px;}
+.badge.live{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);color:var(--green);display:flex;align-items:center;gap:5px;}
 .ldot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}60%{opacity:.7;box-shadow:0 0 0 5px transparent}}
 
-/* HERO */
-.hero{padding:56px 28px 48px;background:var(--bg);position:relative;overflow:hidden;}
+.hero{padding:44px 28px 36px;position:relative;overflow:hidden;}
 .hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(100,140,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(100,140,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
 .hglow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(77,142,240,.07) 0%,transparent 65%);pointer-events:none;}
-.hi{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
-.hkick{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--blue);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.hi{max-width:1320px;margin:0 auto;position:relative;z-index:1;}
+.hkick{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--blue);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
 .hkick::before{content:'';width:28px;height:1px;background:var(--blue);}
-h1{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,60px);font-weight:400;line-height:1.05;color:#fff;margin-bottom:14px;}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(30px,4vw,52px);font-weight:400;line-height:1.05;color:#fff;margin-bottom:10px;}
 h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hdesc{color:var(--text2);font-size:15px;line-height:1.8;max-width:600px;}
+.hdesc{color:var(--text2);font-size:14px;line-height:1.8;max-width:560px;}
 .hdesc strong{color:var(--teal);}
 
-/* MAIN */
-.main{max-width:1280px;margin:0 auto;padding:36px 28px 100px;}
+.main{max-width:1320px;margin:0 auto;padding:24px 28px 100px;}
 
-/* CONTROL PANEL */
-.ctrl{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:28px;}
+/* SEARCH TABS */
+.mode-tabs{display:flex;border-radius:12px 12px 0 0;overflow:hidden;border:1px solid var(--border);border-bottom:none;}
+.mode-tab{flex:1;padding:12px 20px;text-align:center;cursor:pointer;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--text2);background:var(--bg2);border:none;transition:all .15s;border-right:1px solid var(--border);}
+.mode-tab:last-child{border-right:none;}
+.mode-tab:hover{color:var(--text);background:var(--surface);}
+.mode-tab.active{color:#fff;background:var(--surface);border-bottom:2px solid var(--blue);}
+
+/* CONTROL */
+.ctrl{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:22px;margin-bottom:16px;}
 .clabel{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
-
-/* CHIPS */
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
-.chip{
-  padding:6px 14px;border-radius:20px;
-  border:1px solid var(--border);background:transparent;
-  font-family:'Geist Mono',monospace;font-size:11px;
-  color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;
-}
+.mut-group{margin-bottom:14px;}
+.mgl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:7px;padding-left:2px;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;}
 .chip:hover{border-color:var(--text2);color:var(--text);}
 .chip.on{border-color:var(--blue);background:rgba(77,142,240,.15);color:var(--blue);}
 
-/* SEARCH ROW */
+/* FILTER STRIP */
+.fstrip{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;align-items:center;padding:12px 0;border-top:1px solid var(--border2);}
+.fgrp{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.fgrp-label{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);white-space:nowrap;}
+.ftab{padding:5px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.ftab:hover{border-color:var(--text2);color:var(--text);}
+.ftab.on.line{border-color:var(--teal);background:rgba(45,212,191,.1);color:var(--teal);}
+.ftab.on.brain{border-color:var(--rose);background:rgba(251,113,133,.1);color:var(--rose);}
+.fsep{width:1px;height:22px;background:var(--border);}
+
 .srow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;}
-.sinput{
-  flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);
-  border-radius:8px;padding:10px 16px;
-  font-family:'Pretendard',sans-serif;font-size:14px;color:var(--text);
-  outline:none;transition:border-color .2s;
-}
+.sinput{flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Pretendard',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
 .sinput:focus{border-color:var(--blue);}
 .sinput::placeholder{color:var(--text3);}
-.ssel{
-  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
-  padding:10px 12px;font-family:'Pretendard',sans-serif;font-size:13px;
-  color:var(--text);outline:none;cursor:pointer;
-}
+.ssel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Pretendard',sans-serif;font-size:13px;color:var(--text);outline:none;cursor:pointer;}
 .ssel option{background:var(--bg2);}
-.sbtn{
-  background:var(--blue);color:#fff;border:none;border-radius:8px;
-  padding:10px 28px;font-family:'Geist Mono',monospace;font-size:12px;
-  letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;
-}
+.sbtn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .sbtn:hover:not(:disabled){background:#6ba3f9;transform:translateY(-1px);}
 .sbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.rbtn{
-  background:transparent;color:var(--text2);border:1px solid var(--border);
-  border-radius:8px;padding:10px 16px;font-family:'Geist Mono',monospace;
-  font-size:12px;cursor:pointer;transition:all .2s;
-}
+.rbtn{background:transparent;color:var(--text2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Geist Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;}
 .rbtn:hover{border-color:var(--text2);color:var(--text);}
 
+/* FILTER NOTICE */
+.fnotice{font-family:'Geist Mono',monospace;font-size:10px;color:var(--rose);background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.2);border-radius:8px;padding:8px 14px;margin-bottom:14px;display:none;align-items:center;gap:8px;}
+.fnotice.show{display:flex;}
+
 /* STATS */
-.stats{display:flex;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;border:1px solid var(--border);}
-.stat{flex:1;background:var(--surface);padding:16px 20px;text-align:center;}
-.stn{font-family:'Geist Mono',monospace;font-size:24px;color:#fff;line-height:1;margin-bottom:3px;transition:all .3s;}
+.stats{display:flex;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;border:1px solid var(--border);}
+.stat{flex:1;background:var(--surface);padding:14px 14px;text-align:center;}
+.stn{font-family:'Geist Mono',monospace;font-size:20px;color:#fff;line-height:1;margin-bottom:3px;transition:all .3s;}
 .stn.blue{color:var(--blue);}
 .stn.green{color:var(--green);}
 .stn.teal{color:var(--teal);}
-.stn.amber{color:var(--amber);font-size:13px;}
-.stl{font-size:11px;color:var(--text3);}
+.stn.rose{color:var(--rose);}
+.stn.amber{color:var(--amber);font-size:11px;}
+.stl{font-size:10px;color:var(--text3);}
 
-/* RESBAR */
-.resbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.resbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
 .resc{font-family:'Geist Mono',monospace;font-size:12px;color:var(--text2);}
 .resc strong{color:var(--text);}
 .ract{display:flex;gap:8px;}
-.alink{
-  font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);
-  background:var(--surface);border:1px solid var(--border);border-radius:6px;
-  padding:6px 14px;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.5px;
-}
+.alink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 14px;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.5px;}
 .alink:hover{color:var(--text);border-color:var(--text2);}
 
 /* CARD */
-.card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .2s;
-}
-.card:hover{
-  border-color:rgba(77,142,240,.3);
-  box-shadow:0 0 0 1px rgba(77,142,240,.1),0 8px 32px rgba(0,0,0,.4);
-  transform:translateY(-2px);
-}
-.ctop{padding:18px 22px 14px;border-bottom:1px solid var(--border2);display:flex;gap:14px;align-items:flex-start;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .2s;}
+.card:hover{border-color:rgba(77,142,240,.3);box-shadow:0 0 0 1px rgba(77,142,240,.1),0 8px 32px rgba(0,0,0,.4);transform:translateY(-2px);}
+.card.brain-ok{border-left:3px solid var(--rose);}
+.ctop{padding:16px 22px 14px;border-bottom:1px solid var(--border2);display:flex;gap:14px;align-items:flex-start;}
 .cl{flex:1;min-width:0;}
-.cr{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:130px;}
+.cr{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:140px;}
 .cnct{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:5px;}
 .ctitle{font-size:14px;font-weight:600;color:#fff;line-height:1.5;margin-bottom:10px;}
 .tags{display:flex;flex-wrap:wrap;gap:5px;}
@@ -156,65 +119,40 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .td{color:var(--amber);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.06);}
 .tp{color:var(--teal);border-color:rgba(45,212,191,.25);background:rgba(45,212,191,.06);}
 .tt{color:var(--text2);border-color:var(--border);}
+.tline{color:var(--teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.1);font-weight:600;}
+.tbrain{color:var(--rose);border-color:rgba(251,113,133,.3);background:rgba(251,113,133,.08);}
 .spill{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:20px;white-space:nowrap;}
 .spill.rec{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25);}
 .spill.act{background:rgba(77,142,240,.1);color:var(--blue);border:1px solid rgba(77,142,240,.25);}
-.cmeta{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);text-align:right;line-height:1.8;}
-.ctglink{
-  font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);
-  background:rgba(77,142,240,.08);border:1px solid rgba(77,142,240,.2);
-  border-radius:5px;padding:4px 10px;text-decoration:none;transition:all .12s;
-}
+.cmeta{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);text-align:right;line-height:1.9;}
+.ctglink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);background:rgba(77,142,240,.08);border:1px solid rgba(77,142,240,.2);border-radius:5px;padding:5px 12px;text-decoration:none;transition:all .12s;white-space:nowrap;}
 .ctglink:hover{background:rgba(77,142,240,.18);}
 
-/* SITES */
-.stoggle{
-  width:100%;padding:11px 22px;background:var(--bg2);border:none;
-  border-top:1px solid var(--border2);font-family:'Geist Mono',monospace;
-  font-size:10px;letter-spacing:.5px;color:var(--text2);cursor:pointer;
-  display:flex;justify-content:space-between;align-items:center;transition:background .15s;
-}
+.stoggle{width:100%;padding:11px 22px;background:var(--bg2);border:none;border-top:1px solid var(--border2);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--text2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
 .stoggle:hover{background:var(--surface2);color:var(--text);}
-.spanel{display:none;padding:12px 22px 16px;}
+.spanel{display:none;padding:14px 22px 18px;}
 .spanel.open{display:block;}
-.slist{display:flex;flex-direction:column;gap:6px;margin-top:4px;}
-.srow2{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 13px;background:var(--bg);border-radius:8px;
-  border:1px solid var(--border2);gap:10px;flex-wrap:wrap;
-}
+.slist{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.srow2{display:flex;align-items:flex-start;justify-content:space-between;padding:11px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--border2);gap:10px;}
 .srow2:hover{background:rgba(77,142,240,.04);}
 .sname{font-size:13px;font-weight:500;color:#fff;}
 .scity{font-size:11px;color:var(--text3);font-family:'Geist Mono',monospace;margin-top:1px;}
-.sdot{font-family:'Geist Mono',monospace;font-size:9px;padding:3px 9px;border-radius:10px;}
+.sdot{font-family:'Geist Mono',monospace;font-size:9px;padding:3px 9px;border-radius:10px;flex-shrink:0;margin-top:2px;}
 .sdot.r{background:rgba(34,197,94,.1);color:var(--green);}
 .sdot.a{background:rgba(77,142,240,.1);color:var(--blue);}
 .nosite{color:var(--text3);font-size:12px;padding:6px 0;}
 .nosite a{color:var(--blue);}
-
-/* CONTACTS */
-.central-contacts{
-  margin-bottom:14px;padding:12px 14px;
-  background:rgba(77,142,240,.05);border:1px solid rgba(77,142,240,.15);
-  border-radius:8px;
-}
-.central-contacts-label{
-  font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;
-  color:var(--blue);text-transform:uppercase;margin-bottom:8px;
-}
-.contact-row{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:flex-start;margin-bottom:6px;}
+.central-contacts{margin-bottom:14px;padding:12px 14px;background:rgba(77,142,240,.05);border:1px solid rgba(77,142,240,.15);border-radius:8px;}
+.ccl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
+.contact-row{display:flex;flex-wrap:wrap;gap:5px 18px;align-items:flex-start;margin-bottom:6px;}
 .contact-row:last-child{margin-bottom:0;}
 .cname{font-size:12px;font-weight:600;color:#fff;width:100%;}
 .cinfo{display:flex;align-items:center;gap:5px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);}
 .cinfo a{color:var(--blue);text-decoration:none;}
 .cinfo a:hover{text-decoration:underline;}
-.cinfo-ico{font-size:10px;color:var(--text3);}
 .site-contacts{margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid var(--border2);}
-.site-contacts-label{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
-.scontact-row{display:flex;flex-wrap:wrap;gap:3px 16px;margin-bottom:4px;}
-.scontact-row:last-child{margin-bottom:0;}
+.scl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
 
-/* STATES */
 .loading,.empty,.errstate{text-align:center;padding:80px 24px;color:var(--text2);}
 .spinner{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--blue);animation:spin .8s linear infinite;margin:0 auto 18px;}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -222,34 +160,25 @@ h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal
 .lsub{font-size:12px;color:var(--text3);}
 .lapi{margin-top:10px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);}
 
-/* PAGINATION */
 .pager{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:20px;flex-wrap:wrap;}
-.pbtn{
-  font-family:'Geist Mono',monospace;font-size:11px;padding:7px 14px;
-  border-radius:6px;border:1px solid var(--border);background:var(--surface);
-  color:var(--text2);cursor:pointer;transition:all .15s;
-}
+.pbtn{font-family:'Geist Mono',monospace;font-size:11px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;}
 .pbtn:hover:not(:disabled){border-color:var(--text2);color:var(--text);}
 .pbtn.on{background:var(--blue);border-color:var(--blue);color:#fff;}
 .pbtn:disabled{opacity:.3;cursor:not-allowed;}
 .pinfo{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text3);padding:0 6px;}
 
-footer{
-  background:var(--surface);border-top:1px solid var(--border);
-  padding:24px;text-align:center;font-family:'Geist Mono',monospace;
-  font-size:10px;color:var(--text3);letter-spacing:.5px;
-}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:22px;text-align:center;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.5px;line-height:1.8;}
 footer a{color:var(--text2);text-decoration:none;}
 footer a:hover{color:var(--blue);}
 
 @media(max-width:768px){
-  .hero{padding:40px 16px;}
-  .main{padding:24px 16px 60px;}
+  .hero,.main{padding-left:16px;padding-right:16px;}
   .ctop{flex-direction:column;}
-  .cr{align-items:flex-start;flex-direction:row;flex-wrap:wrap;}
+  .cr{align-items:flex-start;flex-direction:row;flex-wrap:wrap;min-width:0;}
   .stats{flex-wrap:wrap;}
   .stat{min-width:calc(50% - 1px);}
   .hdr-right .badge:not(.live){display:none;}
+  .mode-tab{font-size:10px;padding:10px 10px;}
 }
 </style>
 </head>
@@ -261,53 +190,155 @@ footer a:hover{color:var(--blue);}
     <div class="hdr-right">
       <div class="badge">총 <span id="hTotal" style="color:#fff">—</span>건</div>
       <div class="badge">모집중 <span id="hRec" style="color:var(--green)">—</span>건</div>
-      <div class="badge live"><div class="ldot"></div>ClinicalTrials.gov LIVE</div>
+      <div class="badge live"><div class="ldot"></div>CTG LIVE</div>
     </div>
   </div>
 </header>
 
 <div class="hero">
-  <div class="hgrid"></div>
-  <div class="hglow"></div>
+  <div class="hgrid"></div><div class="hglow"></div>
   <div class="hi">
     <div class="hkick">South Korea · NSCLC · Targeted Therapy</div>
     <h1>국내 NSCLC<br><em>임상시험</em> 실시간 검색</h1>
-    <p class="hdesc">
-      <strong>ClinicalTrials.gov API</strong>에서 실시간으로 직접 조회합니다.<br>
-      Mutation 선택 → 국내 모집 중인 전체 trial과 참여 기관을 즉시 확인.
-    </p>
+    <p class="hdesc"><strong>ClinicalTrials.gov API</strong> 실시간 직접 조회 · Mutation/Drug 검색 · 1L/2L 필터 · 뇌전이 허용 여부 확인</p>
   </div>
 </div>
 
 <div class="main">
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-mut" onclick="switchMode('mut')">🧬 &nbsp;Mutation 검색</button>
+    <button class="mode-tab" id="tab-drug" onclick="switchMode('drug')">💊 &nbsp;Drug 검색</button>
+  </div>
 
-  <!-- CONTROL PANEL -->
   <div class="ctrl">
-    <div class="clabel">Mutation / Drug 선택 (중복 선택 가능)</div>
-    <div class="chips" id="chips">
-      <div class="chip on" data-q="EGFR">EGFR</div>
-      <div class="chip" data-q="ALK">ALK</div>
-      <div class="chip" data-q="KRAS G12C">KRAS G12C</div>
-      <div class="chip" data-q="KRAS G12D">KRAS G12D</div>
-      <div class="chip" data-q="ROS1">ROS1</div>
-      <div class="chip" data-q="RET fusion">RET fusion</div>
-      <div class="chip" data-q="MET exon14">MET ex14</div>
-      <div class="chip" data-q="HER2">HER2</div>
-      <div class="chip" data-q="BRAF V600E">BRAF V600E</div>
-      <div class="chip" data-q="NTRK">NTRK</div>
-      <div class="chip" data-q="PD-L1">PD-L1</div>
-      <div class="chip" data-q="PARP">PARP/DDR</div>
-      <div class="chip" data-q="NRG1">NRG1</div>
-      <div class="chip" data-q="osimertinib">Osimertinib</div>
-      <div class="chip" data-q="lazertinib">Lazertinib</div>
-      <div class="chip" data-q="amivantamab">Amivantamab</div>
-      <div class="chip" data-q="tepotinib">Tepotinib</div>
-      <div class="chip" data-q="capmatinib">Capmatinib</div>
+    <!-- MUTATION PANEL -->
+    <div id="panel-mut">
+      <div class="mut-group">
+        <div class="mgl">EGFR</div>
+        <div class="chips">
+          <div class="chip on" data-q="EGFR" data-grp="mut">EGFR (all)</div>
+          <div class="chip" data-q="EGFR exon19del" data-grp="mut">Exon19del</div>
+          <div class="chip" data-q="EGFR L858R" data-grp="mut">L858R</div>
+          <div class="chip" data-q="EGFR T790M" data-grp="mut">T790M</div>
+          <div class="chip" data-q="EGFR exon20 insertion" data-grp="mut">Exon20ins</div>
+          <div class="chip" data-q="EGFR C797S" data-grp="mut">C797S</div>
+        </div>
+      </div>
+      <div class="mut-group">
+        <div class="mgl">KRAS</div>
+        <div class="chips">
+          <div class="chip" data-q="KRAS G12C" data-grp="mut">KRAS G12C</div>
+          <div class="chip" data-q="KRAS G12D" data-grp="mut">KRAS G12D</div>
+          <div class="chip" data-q="KRAS G12V" data-grp="mut">KRAS G12V</div>
+          <div class="chip" data-q="KRAS" data-grp="mut">Other KRAS</div>
+        </div>
+      </div>
+      <div class="mut-group">
+        <div class="mgl">Other Targets</div>
+        <div class="chips">
+          <div class="chip" data-q="ALK" data-grp="mut">ALK</div>
+          <div class="chip" data-q="ROS1" data-grp="mut">ROS1</div>
+          <div class="chip" data-q="RET fusion" data-grp="mut">RET fusion</div>
+          <div class="chip" data-q="MET exon14" data-grp="mut">MET ex14</div>
+          <div class="chip" data-q="HER2" data-grp="mut">HER2/ERBB2</div>
+          <div class="chip" data-q="BRAF V600E" data-grp="mut">BRAF V600E</div>
+          <div class="chip" data-q="NTRK" data-grp="mut">NTRK</div>
+          <div class="chip" data-q="NRG1" data-grp="mut">NRG1</div>
+          <div class="chip" data-q="PD-L1" data-grp="mut">PD-L1</div>
+        </div>
+      </div>
+      <div class="mut-group">
+        <div class="mgl">DDR / Chromatin / Cell Cycle</div>
+        <div class="chips">
+          <div class="chip" data-q="DDR pathway" data-grp="mut">DDR pathway</div>
+          <div class="chip" data-q="BRCA" data-grp="mut">BRCA</div>
+          <div class="chip" data-q="ATM" data-grp="mut">ATM</div>
+          <div class="chip" data-q="CDK4 CDK6" data-grp="mut">CDK4/6</div>
+          <div class="chip" data-q="CDK2" data-grp="mut">CDK2</div>
+          <div class="chip" data-q="SMARCA4" data-grp="mut">SMARCA4</div>
+          <div class="chip" data-q="STK11" data-grp="mut">STK11/LKB1</div>
+          <div class="chip" data-q="KEAP1" data-grp="mut">KEAP1</div>
+        </div>
+      </div>
     </div>
 
+    <!-- DRUG PANEL -->
+    <div id="panel-drug" style="display:none;">
+      <div class="mut-group">
+        <div class="mgl">EGFR inhibitors</div>
+        <div class="chips">
+          <div class="chip" data-q="osimertinib" data-grp="drug">Osimertinib</div>
+          <div class="chip" data-q="lazertinib" data-grp="drug">Lazertinib</div>
+          <div class="chip" data-q="amivantamab" data-grp="drug">Amivantamab</div>
+          <div class="chip" data-q="patritumab deruxtecan" data-grp="drug">Patritumab-DXd</div>
+          <div class="chip" data-q="erlotinib" data-grp="drug">Erlotinib</div>
+          <div class="chip" data-q="gefitinib" data-grp="drug">Gefitinib</div>
+          <div class="chip" data-q="afatinib" data-grp="drug">Afatinib</div>
+          <div class="chip" data-q="dacomitinib" data-grp="drug">Dacomitinib</div>
+        </div>
+      </div>
+      <div class="mut-group">
+        <div class="mgl">ALK / ROS1 / RET</div>
+        <div class="chips">
+          <div class="chip" data-q="lorlatinib" data-grp="drug">Lorlatinib</div>
+          <div class="chip" data-q="brigatinib" data-grp="drug">Brigatinib</div>
+          <div class="chip" data-q="alectinib" data-grp="drug">Alectinib</div>
+          <div class="chip" data-q="crizotinib" data-grp="drug">Crizotinib</div>
+          <div class="chip" data-q="entrectinib" data-grp="drug">Entrectinib</div>
+          <div class="chip" data-q="selpercatinib" data-grp="drug">Selpercatinib</div>
+          <div class="chip" data-q="pralsetinib" data-grp="drug">Pralsetinib</div>
+        </div>
+      </div>
+      <div class="mut-group">
+        <div class="mgl">KRAS inhibitors</div>
+        <div class="chips">
+          <div class="chip" data-q="sotorasib" data-grp="drug">Sotorasib</div>
+          <div class="chip" data-q="adagrasib" data-grp="drug">Adagrasib</div>
+          <div class="chip" data-q="divarasib" data-grp="drug">Divarasib</div>
+          <div class="chip" data-q="glecirasib" data-grp="drug">Glecirasib</div>
+        </div>
+      </div>
+      <div class="mut-group">
+        <div class="mgl">MET / HER2 / Immunotherapy / Other</div>
+        <div class="chips">
+          <div class="chip" data-q="tepotinib" data-grp="drug">Tepotinib</div>
+          <div class="chip" data-q="capmatinib" data-grp="drug">Capmatinib</div>
+          <div class="chip" data-q="trastuzumab deruxtecan" data-grp="drug">T-DXd</div>
+          <div class="chip" data-q="pembrolizumab" data-grp="drug">Pembrolizumab</div>
+          <div class="chip" data-q="nivolumab" data-grp="drug">Nivolumab</div>
+          <div class="chip" data-q="atezolizumab" data-grp="drug">Atezolizumab</div>
+          <div class="chip" data-q="durvalumab" data-grp="drug">Durvalumab</div>
+          <div class="chip" data-q="olaparib" data-grp="drug">Olaparib</div>
+          <div class="chip" data-q="palbociclib" data-grp="drug">Palbociclib</div>
+          <div class="chip" data-q="ribociclib" data-grp="drug">Ribociclib</div>
+        </div>
+      </div>
+      <div style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-top:4px;">
+        또는 아래 검색창에 약물명 직접 입력
+      </div>
+    </div>
+
+    <!-- FILTER STRIP -->
+    <div class="fstrip">
+      <div class="fgrp">
+        <span class="fgrp-label">치료 라인</span>
+        <button class="ftab line on" data-val="" onclick="setFtab(this,'line','')">All</button>
+        <button class="ftab line" data-val="1L" onclick="setFtab(this,'line','1L')">1st line</button>
+        <button class="ftab line" data-val="2L" onclick="setFtab(this,'line','2L')">2nd line+</button>
+      </div>
+      <div class="fsep"></div>
+      <div class="fgrp">
+        <span class="fgrp-label">뇌전이 허용</span>
+        <button class="ftab brain on" data-val="" onclick="setFtab(this,'brain','')">All</button>
+        <button class="ftab brain" data-val="allowed" onclick="setFtab(this,'brain','allowed')">허용 포함만</button>
+        <button class="ftab brain" data-val="excluded" onclick="setFtab(this,'brain','excluded')">제외만</button>
+      </div>
+    </div>
+
+    <!-- SEARCH ROW -->
     <div class="srow">
-      <input class="sinput" id="kw" type="text"
-        placeholder="추가 키워드 (약물명, NCT번호, 스폰서, 기관명 등...)">
+      <input class="sinput" id="kw" type="text" placeholder="추가 키워드 (NCT번호, 스폰서, 기관명...)">
       <select class="ssel" id="phaseF">
         <option value="">모든 단계</option>
         <option value="PHASE1">Phase I</option>
@@ -324,17 +355,21 @@ footer a:hover{color:var(--blue);}
     </div>
   </div>
 
+  <!-- FILTER NOTICE -->
+  <div class="fnotice" id="fnotice"><span>⚠</span><span id="fnoticeText"></span></div>
+
   <!-- STATS -->
   <div class="stats" id="statsEl" style="display:none;">
-    <div class="stat"><div class="stn blue" id="stT">0</div><div class="stl">검색된 Trial</div></div>
+    <div class="stat"><div class="stn blue" id="stT">0</div><div class="stl">API 결과</div></div>
     <div class="stat"><div class="stn green" id="stR">0</div><div class="stl">모집 중</div></div>
+    <div class="stat"><div class="stn rose" id="stB">—</div><div class="stl">🧠 뇌전이 허용</div></div>
     <div class="stat"><div class="stn teal" id="stS">0</div><div class="stl">국내 참여 기관</div></div>
     <div class="stat"><div class="stn amber" id="stTime">—</div><div class="stl">조회 시각</div></div>
   </div>
 
   <!-- RESBAR -->
   <div class="resbar" id="resbarEl" style="display:none;">
-    <div class="resc">총 <strong id="rN">0</strong>건 · 페이지 <span id="rP">1</span>/<span id="rTP">1</span></div>
+    <div class="resc">표시 <strong id="rN">0</strong>건 · 페이지 <span id="rP">1</span>/<span id="rTP">1</span></div>
     <div class="ract">
       <button class="alink" onclick="exportCSV()">CSV 저장</button>
       <a class="alink" id="ctgHref" href="https://clinicaltrials.gov" target="_blank">CTG.gov 원본 ↗</a>
@@ -345,7 +380,7 @@ footer a:hover{color:var(--blue);}
     <div class="loading">
       <div class="spinner"></div>
       <div class="ltitle">검색 버튼을 눌러주세요</div>
-      <div class="lsub">Mutation을 선택하고 실시간 검색을 누르면<br>ClinicalTrials.gov에서 직접 데이터를 가져옵니다</div>
+      <div class="lsub">Mutation 또는 Drug을 선택하고<br>실시간 검색을 누르면 CTG.gov에서 직접 가져옵니다</div>
     </div>
   </div>
   <div class="pager" id="pagerEl"></div>
@@ -353,46 +388,55 @@ footer a:hover{color:var(--blue);}
 
 <footer>
   NSCLC.Trials.KR &nbsp;·&nbsp;
-  Data source: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (실시간 · 인증 불필요)
-  &nbsp;·&nbsp; 연구·의뢰 목적 전용 &nbsp;·&nbsp; 참여 전 반드시 원본에서 최신 정보 확인
+  Data: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (실시간) &nbsp;·&nbsp;
+  Line / Brain 필터는 eligibility text 키워드 분석 기반 — 반드시 원문 확인 &nbsp;·&nbsp;
+  연구·의뢰 목적 전용
 </footer>
 
 <script>
-// ══════════════════════════════════════════════════════
-// CONSTANTS
-// ══════════════════════════════════════════════════════
 const CTG = 'https://clinicaltrials.gov/api/v2/studies';
 const PER = 25;
 
-// ══════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════
 const S = {
-  trials: [],
+  mode: 'mut',
+  lineFilter: '',
+  brainFilter: '',
+  allTrials: [],
+  filtered: [],
   total: 0,
   page: 1,
-  tokens: [null],   // pageToken per page: tokens[0]=null(first page), tokens[1]=token for page 2...
+  tokens: [null],
   busy: false
 };
 
-// ══════════════════════════════════════════════════════
-// CHIP TOGGLE
-// ══════════════════════════════════════════════════════
-document.querySelectorAll('.chip').forEach(c =>
-  c.addEventListener('click', () => c.classList.toggle('on'))
-);
+// ── MODE SWITCH ──────────────────────────────────────
+function switchMode(m) {
+  S.mode = m;
+  document.getElementById('panel-mut').style.display  = m==='mut'  ? '' : 'none';
+  document.getElementById('panel-drug').style.display = m==='drug' ? '' : 'none';
+  document.getElementById('tab-mut').classList.toggle('active',  m==='mut');
+  document.getElementById('tab-drug').classList.toggle('active', m==='drug');
+  document.querySelectorAll(`.chip[data-grp="${m==='mut'?'drug':'mut'}"]`).forEach(c=>c.classList.remove('on'));
+}
 
-// ══════════════════════════════════════════════════════
-// BUILD FETCH URL
-// ══════════════════════════════════════════════════════
+// ── CHIPS ────────────────────────────────────────────
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+
+// ── FILTER TABS ──────────────────────────────────────
+function setFtab(btn, type, val) {
+  if (type==='line')  S.lineFilter  = val;
+  if (type==='brain') S.brainFilter = val;
+  document.querySelectorAll(`.ftab.${type}`).forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ── BUILD URL ────────────────────────────────────────
 function buildURL(token) {
-  const onChips = [...document.querySelectorAll('.chip.on')].map(c => c.dataset.q);
-  const kw      = document.getElementById('kw').value.trim();
-  const phase   = document.getElementById('phaseF').value;
-  const status  = document.getElementById('statusF').value;
-
-  // Combine chip terms + free text as intervention/term query
-  const termParts = [...onChips, kw].filter(Boolean);
+  const chips = [...document.querySelectorAll(`.chip[data-grp="${S.mode}"].on`)].map(c=>c.dataset.q);
+  const kw    = document.getElementById('kw').value.trim();
+  const phase = document.getElementById('phaseF').value;
+  const status= document.getElementById('statusF').value;
+  const terms = [...chips, kw].filter(Boolean);
 
   const p = new URLSearchParams({
     'query.cond': 'Non-Small Cell Lung Cancer',
@@ -402,214 +446,237 @@ function buildURL(token) {
     'countTotal': 'true',
     'format': 'json'
   });
-  if (termParts.length) p.set('query.intr', termParts.join(' '));
-  if (phase)            p.set('filter.phase', phase);
-  if (token)            p.set('pageToken', token);
+  if (terms.length) p.set('query.intr', terms.join(' '));
+  if (phase)        p.set('filter.phase', phase);
+  if (token)        p.set('pageToken', token);
 
-  // Update CTG web link
   const wp = new URLSearchParams({ cond:'Non-Small Cell Lung Cancer', locn:'South Korea' });
-  if (termParts.length) wp.set('intr', termParts.join(' '));
-  if (status.includes('RECRUITING')) wp.set('aggFilters','status:rec');
+  if (terms.length) wp.set('intr', terms.join(' '));
+  wp.set('aggFilters','status:rec');
   document.getElementById('ctgHref').href = `https://clinicaltrials.gov/search?${wp}`;
 
   return `${CTG}?${p}`;
 }
 
-// ══════════════════════════════════════════════════════
-// FETCH
-// ══════════════════════════════════════════════════════
-async function fetchPage(token = null) {
+// ── FETCH ────────────────────────────────────────────
+async function fetchPage(token=null) {
   const res = await fetch(buildURL(token));
   if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
   return res.json();
 }
 
-// ══════════════════════════════════════════════════════
-// PARSE ONE STUDY
-// ══════════════════════════════════════════════════════
+// ── PARSE ────────────────────────────────────────────
 function parse(study) {
   const ps  = study.protocolSection || {};
-  const id  = ps.identificationModule  || {};
-  const st  = ps.statusModule          || {};
-  const ds  = ps.designModule          || {};
-  const sp  = ps.sponsorCollaboratorsModule || {};
-  const cnd = ps.conditionsModule      || {};
-  const arm = ps.armsInterventionsModule|| {};
-  const cl  = ps.contactsLocationsModule|| {};
-  const dsc = ps.descriptionModule     || {};
+  const id  = ps.identificationModule      || {};
+  const st  = ps.statusModule              || {};
+  const ds  = ps.designModule              || {};
+  const sp  = ps.sponsorCollaboratorsModule|| {};
+  const cnd = ps.conditionsModule          || {};
+  const arm = ps.armsInterventionsModule   || {};
+  const cl  = ps.contactsLocationsModule   || {};
+  const dsc = ps.descriptionModule         || {};
+  const eli = ps.eligibilityModule         || {};
 
   const nct    = id.nctId || '';
   const title  = id.briefTitle || '';
   const status = st.overallStatus || '';
-  const phases = (ds.phases || []).map(p => p.replace('PHASE','Phase ')).join('/');
+  const phases = (ds.phases||[]).map(p=>p.replace('PHASE','Phase ')).join('/');
   const styp   = ds.studyType || '';
   const enroll = ds.enrollmentInfo?.count;
   const start  = st.startDateStruct?.date || '';
   const spon   = sp.leadSponsor?.name || '';
   const conds  = cnd.conditions || [];
   const summ   = dsc.briefSummary || '';
+  const eligTxt= (eli.eligibilityCriteria||'').toLowerCase();
 
-  const drugs = (arm.interventions || [])
-    .filter(i => ['DRUG','BIOLOGICAL','COMBINATION_PRODUCT'].includes(i.type))
-    .map(i => i.name).filter(Boolean).slice(0, 6);
+  const drugs = (arm.interventions||[])
+    .filter(i=>['DRUG','BIOLOGICAL','COMBINATION_PRODUCT'].includes(i.type))
+    .map(i=>i.name).filter(Boolean).slice(0,6);
 
-  // Central (study-level) contacts
-  const centralContacts = (cl.centralContacts || []).map(c => ({
-    name:  c.name  || '',
-    role:  c.role  || '',
-    phone: c.phone || '',
-    email: c.email || ''
+  const centralContacts = (cl.centralContacts||[]).map(c=>({
+    name:c.name||'', role:c.role||'', phone:c.phone||'', email:c.email||''
   }));
 
-  // Korea sites + their site-level contacts
-  const sites = (cl.locations || [])
-    .filter(l => {
-      const c = (l.country || '').toLowerCase();
-      return c === 'korea, republic of' || c.includes('korea');
-    })
-    .map(l => ({
-      name:     l.facility || '',
-      city:     l.city     || '',
-      status:   l.status   || '',
-      contacts: (l.contacts || []).map(c => ({
-        name:  c.name  || '',
-        role:  c.role  || '',
-        phone: c.phone || '',
-        email: c.email || ''
-      }))
+  const sites = (cl.locations||[])
+    .filter(l=>{const c=(l.country||'').toLowerCase();return c==='korea, republic of'||c.includes('korea');})
+    .map(l=>({
+      name:l.facility||'', city:l.city||'', status:l.status||'',
+      contacts:(l.contacts||[]).map(c=>({name:c.name||'',role:c.role||'',phone:c.phone||'',email:c.email||''}))
     }));
 
-  const muts = detectMuts((title + ' ' + conds.join(' ') + ' ' + summ).toLowerCase());
+  const fullTxt = (title+' '+conds.join(' ')+' '+summ).toLowerCase();
+  const searchTxt = eligTxt + ' ' + fullTxt;
+  const muts  = detectMuts(fullTxt);
+  const line  = detectLine(searchTxt);
+  const brain = detectBrain(searchTxt);
 
-  return { nct, title, status, phases, styp, enroll, start, spon, drugs, sites, centralContacts, muts };
+  return {nct,title,status,phases,styp,enroll,start,spon,drugs,sites,centralContacts,muts,line,brain};
 }
 
-// ══════════════════════════════════════════════════════
-// MUTATION AUTO-DETECT
-// ══════════════════════════════════════════════════════
+// ── MUTATION DETECT ──────────────────────────────────
 const MUTS = [
-  { l:'EGFR exon20ins', p:['exon 20 ins','exon20ins','exon 20 insertion','ex20ins'] },
-  { l:'EGFR T790M',     p:['t790m'] },
-  { l:'EGFR L858R',     p:['l858r'] },
-  { l:'EGFR C797S',     p:['c797s'] },
-  { l:'EGFR',           p:['egfr','epidermal growth factor receptor'] },
-  { l:'ALK',            p:[' alk ','alk fusion','alk rearrang','alk-'] },
-  { l:'KRAS G12C',      p:['kras g12c','g12c'] },
-  { l:'KRAS G12D',      p:['kras g12d','g12d'] },
-  { l:'KRAS',           p:['kras'] },
-  { l:'ROS1',           p:['ros1','ros-1'] },
-  { l:'RET fusion',     p:['ret fusion','ret rearrang','ret-positive'] },
-  { l:'MET ex14',       p:['met ex14','met exon 14','met exon14','metex14'] },
-  { l:'MET amp',        p:['met amplif','met overexpress'] },
-  { l:'HER2',           p:['her2','erbb2'] },
-  { l:'BRAF V600E',     p:['braf v600','v600e'] },
-  { l:'NTRK',           p:['ntrk','larotrectinib','entrectinib','trkfusion'] },
-  { l:'PD-L1',          p:['pd-l1','pdl1','programmed death-ligand'] },
-  { l:'PARP/DDR',       p:['parp inhibit','brca','atm alter','ddr defic','olaparib','niraparib','rucaparib'] },
-  { l:'NRG1',           p:['nrg1','zenocutuzumab'] },
+  {l:'EGFR exon20ins', p:['exon 20 ins','exon20ins','exon 20 insertion','ex20ins']},
+  {l:'EGFR T790M',     p:['t790m']},
+  {l:'EGFR L858R',     p:['l858r']},
+  {l:'EGFR exon19del', p:['exon19del','exon 19 del','19del']},
+  {l:'EGFR C797S',     p:['c797s']},
+  {l:'EGFR',           p:['egfr','epidermal growth factor receptor']},
+  {l:'ALK',            p:['alk fusion','alk rearrang','alk-positive',' alk ']},
+  {l:'KRAS G12C',      p:['kras g12c','g12c']},
+  {l:'KRAS G12D',      p:['kras g12d','g12d']},
+  {l:'KRAS G12V',      p:['kras g12v','g12v']},
+  {l:'KRAS',           p:['kras']},
+  {l:'ROS1',           p:['ros1','ros-1']},
+  {l:'RET fusion',     p:['ret fusion','ret rearrang','ret-positive']},
+  {l:'MET ex14',       p:['met ex14','met exon14','met exon 14']},
+  {l:'MET amp',        p:['met amplif','met overexpress']},
+  {l:'HER2',           p:['her2','erbb2']},
+  {l:'BRAF V600E',     p:['braf v600','v600e']},
+  {l:'NTRK',           p:['ntrk','larotrectinib','entrectinib']},
+  {l:'PD-L1',          p:['pd-l1','pdl1','programmed death-ligand']},
+  {l:'DDR/BRCA',       p:['brca1','brca2',' brca ','ddr pathway','homologous recombination']},
+  {l:'ATM',            p:[' atm ','atm alter','atm mutati']},
+  {l:'PARP',           p:['parp inhibit','olaparib','niraparib','rucaparib','talazoparib']},
+  {l:'CDK4/6',         p:['cdk4','cdk6','palbociclib','ribociclib','abemaciclib']},
+  {l:'CDK2',           p:['cdk2',' cdk 2']},
+  {l:'SMARCA4',        p:['smarca4','smarca-4']},
+  {l:'STK11/LKB1',    p:['stk11','lkb1']},
+  {l:'KEAP1',          p:['keap1']},
+  {l:'NRG1',           p:['nrg1','zenocutuzumab']},
 ];
 
 function detectMuts(txt) {
-  const found = [], seen = new Set();
-  for (const { l, p } of MUTS) {
-    if (p.some(x => txt.includes(x))) {
-      // Skip generic if specific subtype already found
-      const base = l.split(' ')[0];
-      if (l === base && seen.has(base + '_sub')) continue;
-      found.push(l);
-      seen.add(l);
-      if (l.includes(' ')) seen.add(base + '_sub');
+  const found=[], seen=new Set();
+  for(const{l,p} of MUTS){
+    if(p.some(x=>txt.includes(x))){
+      const base=l.split(' ')[0].split('/')[0];
+      if(l===base&&seen.has(base+'_sub')) continue;
+      found.push(l); seen.add(l);
+      if(l.includes(' ')||l.includes('/')) seen.add(base+'_sub');
     }
   }
   return found;
 }
 
-// ══════════════════════════════════════════════════════
-// RENDER CARD
-// ══════════════════════════════════════════════════════
-const STATUS_KO = {
-  RECRUITING:'● 모집 중', ACTIVE_NOT_RECRUITING:'◉ 진행 중',
-  COMPLETED:'완료', TERMINATED:'조기종료', NOT_YET_RECRUITING:'준비 중'
-};
+// ── LINE DETECT ──────────────────────────────────────
+function detectLine(txt) {
+  const r1=/first[\s-]line|1st[\s-]line|treatment[\s-]na[iï]ve|chemo[\s-]na[iï]ve|previously untreated|no prior.*treatment|frontline|treatment naive/i;
+  const r2=/second[\s-]line|2nd[\s-]line|previously treated|prior.*therapy|after.*progression|post.*osimertinib|resistant|refractory|salvage|at least one prior|1 or more prior|≥1 prior/i;
+  const is1=r1.test(txt), is2=r2.test(txt);
+  if(is1&&!is2) return '1L';
+  if(is2&&!is1) return '2L';
+  if(is1&&is2)  return 'both';
+  return 'unknown';
+}
 
-function renderContact(c, small = false) {
-  if (!c.name && !c.phone && !c.email) return '';
-  const sz = small ? 'font-size:10px' : 'font-size:12px';
+// ── BRAIN MET DETECT ─────────────────────────────────
+function detectBrain(txt) {
+  const excl=/brain metastas[ei]s.*(?:excluded|not eligible|are excluded|not allowed|not permitted|must not have)|(?:exclusion.*brain|brain.*exclusion)/i;
+  const incl=/(?:stable|asymptomatic|treated|controlled|untreated).*brain metastas|brain metastas.*(?:allowed|eligible|permitted|included|stable|asymptomatic|are allowed)|leptomeningeal.*allowed|intracranial.*eligible/i;
+  if(excl.test(txt)) return 'excluded';
+  if(incl.test(txt)) return 'allowed';
+  return 'unknown';
+}
+
+// ── CLIENT FILTER ────────────────────────────────────
+function applyFilters(trials) {
+  return trials.filter(t=>{
+    if(S.lineFilter==='1L'&&t.line!=='1L'&&t.line!=='both') return false;
+    if(S.lineFilter==='2L'&&t.line!=='2L'&&t.line!=='both') return false;
+    if(S.brainFilter==='allowed'&&t.brain!=='allowed') return false;
+    if(S.brainFilter==='excluded'&&t.brain!=='excluded') return false;
+    return true;
+  });
+}
+
+// ── TAGS ─────────────────────────────────────────────
+function lineTag(l){
+  if(l==='1L')   return '<span class="tag tline">1st line</span>';
+  if(l==='2L')   return '<span class="tag tline">2L+</span>';
+  if(l==='both') return '<span class="tag tline">1L / 2L+</span>';
+  return '';
+}
+function brainTag(b){
+  if(b==='allowed')  return '<span class="tag tbrain">🧠 뇌전이 허용</span>';
+  if(b==='excluded') return '<span class="tag tt">뇌전이 제외</span>';
+  return '';
+}
+
+// ── CONTACT RENDER ───────────────────────────────────
+function renderContact(c,small=false){
+  if(!c.name&&!c.phone&&!c.email) return '';
+  const sz=small?'font-size:10px':'font-size:12px';
   return `
     <div class="contact-row">
-      ${c.name ? `<div class="cname" style="${sz}">${c.name}${c.role ? ` <span style="color:var(--text3);font-weight:400">(${c.role})</span>` : ''}</div>` : ''}
-      ${c.phone ? `<div class="cinfo"><span class="cinfo-ico">📞</span><a href="tel:${c.phone}">${c.phone}</a></div>` : ''}
-      ${c.email ? `<div class="cinfo"><span class="cinfo-ico">✉</span><a href="mailto:${c.email}">${c.email}</a></div>` : ''}
+      ${c.name?`<div class="cname" style="${sz}">${c.name}${c.role?` <span style="color:var(--text3);font-weight:400">(${c.role})</span>`:''}</div>`:''}
+      ${c.phone?`<div class="cinfo">📞 <a href="tel:${c.phone}">${c.phone}</a></div>`:''}
+      ${c.email?`<div class="cinfo">✉ <a href="mailto:${c.email}">${c.email}</a></div>`:''}
     </div>`;
 }
 
-function renderCard(t) {
-  const url = `https://clinicaltrials.gov/study/${t.nct}`;
-  const mutTags  = t.muts.map(m => `<span class="tag tm">${m}</span>`).join('');
-  const drugTags = t.drugs.slice(0,5).map(d => `<span class="tag td">${d}</span>`).join('');
-  const phLabel  = t.phases || '—';
-  const typLabel = t.styp === 'INTERVENTIONAL' ? '중재' : t.styp === 'OBSERVATIONAL' ? '관찰' : '';
-  const sN       = t.sites.length;
-  const scls     = t.status === 'RECRUITING' ? 'rec' : 'act';
+// ── RENDER CARD ──────────────────────────────────────
+const STATUS_KO={RECRUITING:'● 모집 중',ACTIVE_NOT_RECRUITING:'◉ 진행 중',COMPLETED:'완료',TERMINATED:'조기종료',NOT_YET_RECRUITING:'준비 중'};
 
-  // Central contacts block
-  const hasCentral = t.centralContacts && t.centralContacts.length > 0;
-  const centralHTML = hasCentral ? `
+function renderCard(t){
+  const url=`https://clinicaltrials.gov/study/${t.nct}`;
+  const mTags=t.muts.map(m=>`<span class="tag tm">${m}</span>`).join('');
+  const dTags=t.drugs.slice(0,5).map(d=>`<span class="tag td">${d}</span>`).join('');
+  const ph=t.phases||'—';
+  const typ=t.styp==='INTERVENTIONAL'?'중재':t.styp==='OBSERVATIONAL'?'관찰':'';
+  const sN=t.sites.length;
+  const sc=t.status==='RECRUITING'?'rec':'act';
+  const brainOk=t.brain==='allowed';
+
+  const centralHTML=t.centralContacts?.length?`
     <div class="central-contacts">
-      <div class="central-contacts-label">Study Contact (Central)</div>
-      ${t.centralContacts.map(c => renderContact(c)).join('')}
-    </div>` : '';
+      <div class="ccl">Study Contact (Central)</div>
+      ${t.centralContacts.map(c=>renderContact(c)).join('')}
+    </div>`:'';
 
-  // Sites
-  const sitesHTML = sN > 0
-    ? t.sites.map(s => {
-        const sdCls   = s.status.toUpperCase().includes('RECRUIT') ? 'r' : 'a';
-        const sdLabel = s.status.toUpperCase().includes('RECRUIT') ? '모집중'
-                      : s.status.toUpperCase().includes('ACTIVE')  ? '진행중' : s.status;
-        const hasContacts = s.contacts && s.contacts.length > 0;
-        const siteContactsHTML = hasContacts ? `
-          <div class="site-contacts">
-            <div class="site-contacts-label">Site Contact</div>
-            ${s.contacts.map(c => renderContact(c, true)).join('')}
-          </div>` : '';
-        return `
-          <div class="srow2">
-            <div style="flex:1;min-width:0;">
-              <div class="sname">${s.name}</div>
-              <div class="scity">${s.city}</div>
-              ${siteContactsHTML}
-            </div>
-            ${s.status ? `<span class="sdot ${sdCls}" style="align-self:flex-start;margin-top:2px">${sdLabel}</span>` : ''}
-          </div>`;
-      }).join('')
-    : `<div class="nosite">국내 기관 정보가 등록되지 않았습니다.
-        <a href="${url}" target="_blank">CTG.gov에서 확인 ↗</a></div>`;
+  const sitesHTML=sN>0?t.sites.map(s=>{
+    const sc2=s.status.toUpperCase().includes('RECRUIT')?'r':'a';
+    const sl=s.status.toUpperCase().includes('RECRUIT')?'모집중':s.status.toUpperCase().includes('ACTIVE')?'진행중':s.status;
+    const sContHTML=s.contacts?.length?`
+      <div class="site-contacts">
+        <div class="scl">Site Contact</div>
+        ${s.contacts.map(c=>renderContact(c,true)).join('')}
+      </div>`:'';
+    return `
+      <div class="srow2">
+        <div style="flex:1;min-width:0;">
+          <div class="sname">${s.name}</div>
+          <div class="scity">${s.city}</div>
+          ${sContHTML}
+        </div>
+        ${s.status?`<span class="sdot ${sc2}">${sl}</span>`:''}
+      </div>`;
+  }).join(''):`<div class="nosite">국내 기관 정보 없음. <a href="${url}" target="_blank">CTG.gov에서 확인 ↗</a></div>`;
 
   return `
-  <div class="card">
+  <div class="card${brainOk?' brain-ok':''}">
     <div class="ctop">
       <div class="cl">
         <div class="cnct">${t.nct} · ${t.spon}</div>
         <div class="ctitle">${t.title}</div>
         <div class="tags">
-          ${mutTags}${drugTags}
-          <span class="tag tp">${phLabel}</span>
-          ${typLabel ? `<span class="tag tt">${typLabel}</span>` : ''}
+          ${mTags}${dTags}${lineTag(t.line)}${brainTag(t.brain)}
+          <span class="tag tp">${ph}</span>
+          ${typ?`<span class="tag tt">${typ}</span>`:''}
         </div>
       </div>
       <div class="cr">
-        <span class="spill ${scls}">${STATUS_KO[t.status] || t.status}</span>
+        <span class="spill ${sc}">${STATUS_KO[t.status]||t.status}</span>
         <div class="cmeta">
-          ${t.enroll ? `목표 ${t.enroll.toLocaleString()}명<br>` : ''}
-          ${t.start  ? `시작: ${t.start}<br>` : ''}
+          ${t.enroll?`목표 ${t.enroll.toLocaleString()}명<br>`:''}
+          ${t.start?`시작: ${t.start}<br>`:''}
           국내 기관: ${sN}곳
         </div>
         <a href="${url}" target="_blank" class="ctglink">🔗 CTG 원본 ↗</a>
       </div>
     </div>
     <button class="stoggle" onclick="toggleSites('${t.nct}',this)">
-      <span>국내 참여 기관 ${sN}곳${sN ? ' 및 연락처 보기' : ' (등록 정보 없음)'}</span>
-      <span>▾</span>
+      <span>국내 참여 기관 ${sN}곳${sN?' 및 연락처 보기':' (등록 정보 없음)'}</span><span>▾</span>
     </button>
     <div class="spanel" id="sp-${t.nct}">
       ${centralHTML}
@@ -618,168 +685,152 @@ function renderCard(t) {
   </div>`;
 }
 
-function toggleSites(nct, btn) {
-  const p = document.getElementById('sp-' + nct);
-  const open = p.classList.toggle('open');
-  btn.querySelector('span:last-child').textContent = open ? '▴' : '▾';
+function toggleSites(nct,btn){
+  const p=document.getElementById('sp-'+nct);
+  const open=p.classList.toggle('open');
+  btn.querySelector('span:last-child').textContent=open?'▴':'▾';
 }
 
-// ══════════════════════════════════════════════════════
-// MAIN SEARCH
-// ══════════════════════════════════════════════════════
-async function doSearch(token = null, pageNum = 1) {
-  if (S.busy) return;
-  S.busy = true;
+// ── SEARCH ───────────────────────────────────────────
+async function doSearch(token=null,pageNum=1){
+  if(S.busy) return;
+  S.busy=true;
+  const btn=document.getElementById('sbtn');
+  btn.disabled=true; btn.textContent='검색 중...';
 
-  const btn = document.getElementById('sbtn');
-  btn.disabled = true;
-  btn.textContent = '검색 중...';
+  const chips=[...document.querySelectorAll(`.chip[data-grp="${S.mode}"].on`)].map(c=>c.dataset.q);
+  const kw=document.getElementById('kw').value.trim();
+  const qDesc=[...chips,kw].filter(Boolean).join(' + ')||'NSCLC Korea';
 
-  const onChips   = [...document.querySelectorAll('.chip.on')].map(c => c.dataset.q);
-  const kw        = document.getElementById('kw').value.trim();
-  const queryDesc = [...onChips, kw].filter(Boolean).join(' + ') || 'NSCLC Korea';
-
-  document.getElementById('results').innerHTML = `
+  document.getElementById('results').innerHTML=`
     <div class="loading">
       <div class="spinner"></div>
       <div class="ltitle">ClinicalTrials.gov 실시간 조회 중</div>
-      <div class="lsub">${queryDesc} · South Korea</div>
+      <div class="lsub">${qDesc} · South Korea</div>
       <div class="lapi">clinicaltrials.gov/api/v2/studies</div>
     </div>`;
-  document.getElementById('statsEl').style.display   = 'none';
-  document.getElementById('resbarEl').style.display  = 'none';
-  document.getElementById('pagerEl').innerHTML       = '';
+  document.getElementById('statsEl').style.display='none';
+  document.getElementById('resbarEl').style.display='none';
+  document.getElementById('pagerEl').innerHTML='';
+  document.getElementById('fnotice').classList.remove('show');
 
   try {
-    const data      = await fetchPage(token);
-    const total     = data.totalCount || 0;
-    const trials    = (data.studies || []).map(parse);
-    const nextToken = data.nextPageToken || null;
+    const data=await fetchPage(token);
+    const apiTotal=data.totalCount||0;
+    const all=(data.studies||[]).map(parse);
+    const nextToken=data.nextPageToken||null;
 
-    S.trials = trials;
-    S.total  = total;
-    S.page   = pageNum;
-    if (nextToken && !S.tokens[pageNum]) S.tokens[pageNum] = nextToken;
+    S.allTrials=all; S.total=apiTotal; S.page=pageNum;
+    if(nextToken&&!S.tokens[pageNum]) S.tokens[pageNum]=nextToken;
 
-    // Stats
-    const recN  = trials.filter(t => t.status === 'RECRUITING').length;
-    const siteN = trials.reduce((a, t) => a + t.sites.length, 0);
+    const filtered=applyFilters(all);
+    S.filtered=filtered;
 
-    document.getElementById('stT').textContent    = total.toLocaleString();
-    document.getElementById('stR').textContent    = recN;
-    document.getElementById('stS').textContent    = siteN;
-    document.getElementById('stTime').textContent = new Date().toLocaleTimeString('ko-KR');
-    document.getElementById('statsEl').style.display = 'flex';
+    const recN=filtered.filter(t=>t.status==='RECRUITING').length;
+    const brainN=filtered.filter(t=>t.brain==='allowed').length;
+    const siteN=filtered.reduce((a,t)=>a+t.sites.length,0);
 
-    document.getElementById('hTotal').textContent = total.toLocaleString();
-    document.getElementById('hRec').textContent   = recN;
+    document.getElementById('stT').textContent=apiTotal.toLocaleString();
+    document.getElementById('stR').textContent=recN;
+    document.getElementById('stB').textContent=brainN;
+    document.getElementById('stS').textContent=siteN;
+    document.getElementById('stTime').textContent=new Date().toLocaleTimeString('ko-KR');
+    document.getElementById('statsEl').style.display='flex';
+    document.getElementById('hTotal').textContent=apiTotal.toLocaleString();
+    document.getElementById('hRec').textContent=recN;
 
-    const totalPages = Math.ceil(total / PER);
-    document.getElementById('rN').textContent  = total.toLocaleString();
-    document.getElementById('rP').textContent  = pageNum;
-    document.getElementById('rTP').textContent = totalPages;
-    document.getElementById('resbarEl').style.display = 'flex';
+    if(S.lineFilter||S.brainFilter){
+      const notes=[];
+      if(S.lineFilter==='1L') notes.push('1st line만 표시');
+      if(S.lineFilter==='2L') notes.push('2nd line+ 만 표시');
+      if(S.brainFilter==='allowed') notes.push('뇌전이 허용 trial만');
+      if(S.brainFilter==='excluded') notes.push('뇌전이 제외 trial만');
+      notes.push('eligibility text 키워드 분석 기반 — 반드시 원문 확인');
+      document.getElementById('fnoticeText').textContent=notes.join(' · ');
+      document.getElementById('fnotice').classList.add('show');
+    }
 
-    document.getElementById('results').innerHTML =
-      trials.length
-        ? trials.map(renderCard).join('')
-        : `<div class="empty">
-             <div style="font-size:36px;margin-bottom:14px">🔬</div>
-             <div class="ltitle">검색 결과가 없습니다</div>
-             <div class="lsub">다른 mutation이나 키워드로 검색해보세요</div>
-           </div>`;
+    const tp=Math.ceil(apiTotal/PER);
+    document.getElementById('rN').textContent=filtered.length;
+    document.getElementById('rP').textContent=pageNum;
+    document.getElementById('rTP').textContent=tp;
+    document.getElementById('resbarEl').style.display='flex';
 
-    renderPager(total, pageNum, nextToken);
+    document.getElementById('results').innerHTML=filtered.length
+      ?filtered.map(renderCard).join('')
+      :`<div class="empty">
+          <div style="font-size:36px;margin-bottom:14px">🔬</div>
+          <div class="ltitle">필터 조건에 맞는 결과가 없습니다</div>
+          <div class="lsub">Line 또는 Brain 필터를 변경해보세요</div>
+        </div>`;
 
-  } catch (err) {
-    // Show honest error — do NOT show fake demo data
-    document.getElementById('results').innerHTML = `
+    renderPager(apiTotal,pageNum,nextToken);
+  } catch(err){
+    document.getElementById('results').innerHTML=`
       <div class="errstate">
         <div style="font-size:36px;margin-bottom:14px">⚠️</div>
         <div style="font-size:15px;font-weight:600;color:var(--red);margin-bottom:8px">API 연결 오류</div>
         <div style="color:var(--text2);font-size:13px;margin-bottom:12px">${err.message}</div>
         <div style="font-size:12px;color:var(--text3);line-height:2;background:var(--surface);border-radius:10px;padding:16px 20px;display:inline-block;text-align:left;max-width:480px;">
-          <strong style="color:var(--text)">원인:</strong> Claude.ai 미리보기 환경은 외부 API 호출이 차단됩니다.<br>
-          <strong style="color:var(--text)">해결:</strong> 이 파일을 <strong style="color:var(--teal)">GitHub Pages</strong>에 올리면 정상 작동합니다.<br>
-          <strong style="color:var(--text)">방법:</strong> GitHub 저장소에 이 <code style="color:var(--blue)">index.html</code>을 올리고<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Settings → Pages → Deploy from branch 설정.
+          <strong style="color:var(--text)">원인:</strong> Claude.ai 미리보기는 외부 API 차단됩니다.<br>
+          <strong style="color:var(--text)">해결:</strong> GitHub Pages에 올리면 정상 작동합니다.<br>
+          이 <code style="color:var(--blue)">index.html</code> → GitHub repo → Settings → Pages.
         </div>
-        <br><br>
-        <button class="sbtn" onclick="doSearch()">다시 시도</button>
+        <br><br><button class="sbtn" onclick="doSearch()">다시 시도</button>
       </div>`;
   } finally {
-    S.busy = false;
-    btn.disabled = false;
-    btn.textContent = '실시간 검색';
+    S.busy=false; btn.disabled=false; btn.textContent='실시간 검색';
   }
 }
 
-// ══════════════════════════════════════════════════════
-// PAGINATION
-// ══════════════════════════════════════════════════════
-function renderPager(total, cur, nextToken) {
-  const tp  = Math.ceil(total / PER);
-  if (tp <= 1) return;
-  const pg  = document.getElementById('pagerEl');
-  let   html = `<button class="pbtn" ${cur<=1?'disabled':''} onclick="goPage(${cur-1})">← 이전</button>`;
-  const s = Math.max(1, cur-2), e = Math.min(tp, cur+2);
-  if (s > 1)  html += `<button class="pbtn" onclick="goPage(1)">1</button>`;
-  if (s > 2)  html += `<span class="pinfo">…</span>`;
-  for (let i=s;i<=e;i++) html += `<button class="pbtn ${i===cur?'on':''}" onclick="goPage(${i})">${i}</button>`;
-  if (e < tp-1) html += `<span class="pinfo">…</span>`;
-  if (e < tp)   html += `<button class="pbtn" onclick="goPage(${tp})">${tp}</button>`;
-  html += `<button class="pbtn" ${!nextToken?'disabled':''} onclick="goPage(${cur+1})">다음 →</button>`;
-  html += `<span class="pinfo">${total.toLocaleString()}건 중 ${(cur-1)*PER+1}–${Math.min(cur*PER,total)}건 표시</span>`;
-  pg.innerHTML = html;
+// ── PAGINATION ───────────────────────────────────────
+function renderPager(total,cur,nextToken){
+  const tp=Math.ceil(total/PER);
+  if(tp<=1) return;
+  const pg=document.getElementById('pagerEl');
+  let h=`<button class="pbtn" ${cur<=1?'disabled':''} onclick="goPage(${cur-1})">← 이전</button>`;
+  const s=Math.max(1,cur-2),e=Math.min(tp,cur+2);
+  if(s>1) h+=`<button class="pbtn" onclick="goPage(1)">1</button>`;
+  if(s>2) h+=`<span class="pinfo">…</span>`;
+  for(let i=s;i<=e;i++) h+=`<button class="pbtn ${i===cur?'on':''}" onclick="goPage(${i})">${i}</button>`;
+  if(e<tp-1) h+=`<span class="pinfo">…</span>`;
+  if(e<tp)   h+=`<button class="pbtn" onclick="goPage(${tp})">${tp}</button>`;
+  h+=`<button class="pbtn" ${!nextToken?'disabled':''} onclick="goPage(${cur+1})">다음 →</button>`;
+  h+=`<span class="pinfo">${total.toLocaleString()}건 중 ${(cur-1)*PER+1}–${Math.min(cur*PER,total)}건</span>`;
+  pg.innerHTML=h;
 }
+async function goPage(n){if(n<1||S.busy) return;await doSearch(S.tokens[n-1]||null,n);window.scrollTo({top:0,behavior:'smooth'});}
 
-async function goPage(n) {
-  if (n < 1 || S.busy) return;
-  await doSearch(S.tokens[n-1] || null, n);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ══════════════════════════════════════════════════════
-// RESET
-// ══════════════════════════════════════════════════════
-function doReset() {
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+// ── RESET ────────────────────────────────────────────
+function doReset(){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
   document.querySelector('.chip[data-q="EGFR"]').classList.add('on');
-  document.getElementById('kw').value = '';
-  document.getElementById('phaseF').value = '';
-  document.getElementById('statusF').value = 'RECRUITING,ACTIVE_NOT_RECRUITING';
-  S.tokens = [null];
-  S.page   = 1;
+  document.getElementById('kw').value='';
+  document.getElementById('phaseF').value='';
+  document.getElementById('statusF').value='RECRUITING,ACTIVE_NOT_RECRUITING';
+  S.lineFilter=''; S.brainFilter='';
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('on'));
+  document.querySelector('.ftab.line[data-val=""]').classList.add('on');
+  document.querySelector('.ftab.brain[data-val=""]').classList.add('on');
+  S.tokens=[null]; S.page=1;
+  document.getElementById('fnotice').classList.remove('show');
 }
 
-// ══════════════════════════════════════════════════════
-// EXPORT CSV
-// ══════════════════════════════════════════════════════
-function exportCSV() {
-  const rows = [['NCT','Title','Status','Phase','Sponsor','Mutations','Drugs','Korea Sites (name)','Korea Sites (city)','Start Date','Enrollment']];
-  S.trials.forEach(t => rows.push([
-    t.nct,
-    `"${t.title.replace(/"/g,'""')}"`,
-    t.status, t.phases, `"${t.spon}"`,
-    t.muts.join(';'),
-    t.drugs.join(';'),
+// ── EXPORT ───────────────────────────────────────────
+function exportCSV(){
+  const rows=[['NCT','Title','Status','Phase','Sponsor','Mutations','Drugs','Line','Brain Met','Korea Sites','Korea Cities','Start','Enrollment']];
+  S.filtered.forEach(t=>rows.push([
+    t.nct,`"${t.title.replace(/"/g,'""')}"`,t.status,t.phases,`"${t.spon}"`,
+    t.muts.join(';'),t.drugs.join(';'),t.line,t.brain,
     `"${t.sites.map(s=>s.name).join(' | ')}"`,
     `"${t.sites.map(s=>s.city).join(' | ')}"`,
-    t.start, t.enroll || ''
+    t.start,t.enroll||''
   ]));
-  const blob = new Blob(['\uFEFF' + rows.map(r => r.join(',')).join('\n')], { type: 'text/csv;charset=utf-8;' });
-  Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(blob),
-    download: `NSCLC_Korea_${new Date().toISOString().slice(0,10)}.csv`
-  }).click();
+  const blob=new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8;'});
+  Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:`NSCLC_Korea_${new Date().toISOString().slice(0,10)}.csv`}).click();
 }
 
-// ══════════════════════════════════════════════════════
-// KEYBOARD
-// ══════════════════════════════════════════════════════
-document.getElementById('kw').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch();
-});
+document.getElementById('kw').addEventListener('keydown',e=>{if(e.key==='Enter') doSearch();});
 </script>
 </body>
 </html>
