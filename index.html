@@ -2,210 +2,216 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>폐암 임상시험 찾기 · 국내</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist+Mono:wght@400;500&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* clinicaltrials.gov/api/v2 — 브라우저 직접 호출.
-   Claude.ai 미리보기 → 차단(정상). GitHub Pages → 정상 작동. */
-:root {
-  --bg:#0b0f1a; --bg2:#111827; --surface:#141d2e; --surface2:#1a2540;
-  --border:rgba(100,140,255,.1); --border2:rgba(100,140,255,.06);
-  --text:#e2e8f5; --text2:#7a90bb; --text3:#3a4a6a;
-  --blue:#4d8ef0; --teal:#2dd4bf; --green:#22c55e;
-  --amber:#f59e0b; --red:#f43f5e; --purple:#a78bfa;
-  --rose:#fb7185; --orange:#fb923c;
+/* CTG API — Claude.ai 미리보기 차단(정상). GitHub Pages에서 동작. */
+:root{
+  --bg:#0b0f1a;--bg2:#111827;--surf:#141d2e;--surf2:#1a2540;
+  --bdr:rgba(100,140,255,.1);--bdr2:rgba(100,140,255,.06);
+  --t:#e2e8f5;--t2:#7a90bb;--t3:#3a4a6a;
+  --blue:#4d8ef0;--teal:#2dd4bf;--green:#22c55e;
+  --amber:#f59e0b;--red:#f43f5e;--purple:#a78bfa;
+  --rose:#fb7185;--orange:#fb923c;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+body{background:var(--bg);color:var(--t);font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;font-size:14px;line-height:1.6;}
 
-header{position:sticky;top:0;z-index:200;background:rgba(11,15,26,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.hdr{max-width:1320px;margin:0 auto;padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;}
-.logo{font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.3px;}
-.logo .d{color:var(--blue);}
-.hbadges{display:flex;align-items:center;gap:8px;}
-.badge{font-family:'Geist Mono',monospace;font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);letter-spacing:.3px;}
-.badge.live{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);color:var(--green);display:flex;align-items:center;gap:5px;}
-.ldot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}60%{opacity:.7;box-shadow:0 0 0 5px transparent}}
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(11,15,26,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);}
+.hdr{max-width:1300px;margin:0 auto;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Geist Mono',monospace;font-size:13px;font-weight:500;}
+.logo span{color:var(--blue);}
+.hbadges{display:flex;gap:7px;align-items:center;}
+.hbdg{font-family:'Geist Mono',monospace;font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--bdr);color:var(--t2);}
+.hbdg.live{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);color:var(--green);display:flex;align-items:center;gap:5px;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.5)}60%{opacity:.7;box-shadow:0 0 0 4px transparent}}
 
-.hero{padding:44px 28px 34px;position:relative;overflow:hidden;}
+/* HERO */
+.hero{padding:40px 24px 30px;position:relative;overflow:hidden;}
 .hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(100,140,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(100,140,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
-.hglow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:1000px;height:600px;background:radial-gradient(ellipse,rgba(77,142,240,.07) 0%,transparent 65%);pointer-events:none;}
-.hi{max-width:1320px;margin:0 auto;position:relative;z-index:1;}
-.hkick{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--blue);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
-.hkick::before{content:'';width:28px;height:1px;background:var(--blue);}
-h1{font-family:'DM Serif Display',serif;font-size:clamp(30px,4vw,52px);font-weight:400;line-height:1.05;color:#fff;margin-bottom:10px;}
+.hglow{position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:900px;height:500px;background:radial-gradient(ellipse,rgba(77,142,240,.07) 0%,transparent 65%);pointer-events:none;}
+.hi{max-width:1300px;margin:0 auto;position:relative;z-index:1;}
+.hkick{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--blue);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.hkick::before{content:'';width:24px;height:1px;background:var(--blue);}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,50px);line-height:1.05;color:#fff;margin-bottom:10px;}
 h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hdesc{color:var(--text2);font-size:14px;line-height:1.9;max-width:600px;}
+.hdesc{color:var(--t2);font-size:13px;line-height:1.9;max-width:580px;}
 .hdesc strong{color:var(--teal);}
 
-.main{max-width:1320px;margin:0 auto;padding:20px 28px 100px;}
+.main{max-width:1300px;margin:0 auto;padding:20px 24px 80px;}
 
-/* ── CELL TYPE TABS ── */
-.celltype-row{display:flex;}
+/* CANCER TYPE TABS — top level */
+.ct-tabs{display:flex;}
 .ct-tab{
-  flex:1;padding:16px 20px;text-align:center;cursor:pointer;
-  font-size:14px;font-weight:600;color:var(--text2);
-  background:var(--bg2);border:1px solid var(--border);
+  flex:1;padding:14px 18px;text-align:center;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--t2);
+  background:var(--bg2);border:1px solid var(--bdr);
   border-bottom:none;border-right:none;transition:all .15s;line-height:1.4;
 }
 .ct-tab:first-child{border-radius:12px 0 0 0;}
-.ct-tab:last-child{border-right:1px solid var(--border);border-radius:0 12px 0 0;}
-.ct-tab:hover{color:var(--text);background:var(--surface);}
-.ct-tab.active.nsclc{color:#fff;background:var(--surface);border-bottom:3px solid var(--blue);}
-.ct-tab.active.sclc {color:#fff;background:var(--surface);border-bottom:3px solid var(--orange);}
-.ct-sub{font-size:11px;font-weight:400;color:var(--text3);margin-top:2px;}
-.ct-tab.active .ct-sub{color:var(--text2);}
+.ct-tab:last-child {border-right:1px solid var(--bdr);border-radius:0 12px 0 0;}
+.ct-tab:hover{color:var(--t);background:var(--surf);}
+.ct-tab[data-active="1"].nsclc{color:#fff;background:var(--surf);border-bottom:3px solid var(--blue);}
+.ct-tab[data-active="1"].sclc {color:#fff;background:var(--surf);border-bottom:3px solid var(--orange);}
+.ct-sub{font-size:11px;font-weight:400;color:var(--t3);margin-top:2px;}
+.ct-tab[data-active="1"] .ct-sub{color:var(--t2);}
 
-/* ── SEARCH MODE TABS ── */
-.mode-tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-top:none;border-bottom:none;}
-.mode-tab{flex:1;padding:10px 18px;text-align:center;cursor:pointer;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--text2);background:transparent;border:none;border-right:1px solid var(--border);transition:all .15s;}
+/* SEARCH MODE TABS */
+.mode-tabs{display:flex;background:var(--surf);border:1px solid var(--bdr);border-top:none;border-bottom:none;}
+.mode-tab{flex:1;padding:10px 16px;text-align:center;cursor:pointer;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.8px;color:var(--t2);border:none;background:transparent;border-right:1px solid var(--bdr);transition:all .15s;}
 .mode-tab:last-child{border-right:none;}
-.mode-tab:hover{color:var(--text);}
-.mode-tab.active{color:var(--blue);border-bottom:2px solid var(--blue);}
-.mode-tab.active.sclc-mode{color:var(--orange);border-bottom-color:var(--orange);}
+.mode-tab:hover{color:var(--t);}
+.mode-tab[data-active="1"]{border-bottom:2px solid var(--blue);}
+#tab-mut[data-ct="sclc"][data-active="1"]{border-bottom-color:var(--orange);}
+#tab-drug[data-ct="sclc"][data-active="1"]{border-bottom-color:var(--orange);}
 
-/* ── CTRL ── */
-.ctrl{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:20px 22px;margin-bottom:14px;}
-.mgrp{margin-bottom:14px;}
-.mgrp-lbl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:7px;padding-left:2px;}
+/* CTRL BOX */
+.ctrl{background:var(--surf);border:1px solid var(--bdr);border-top:none;border-radius:0 0 12px 12px;padding:18px 20px;margin-bottom:14px;}
+
+/* CHIP GROUPS */
+.mgrp{margin-bottom:13px;}
+.mgrp:last-child{margin-bottom:0;}
+.mgrp-lbl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;margin-bottom:6px;}
 .chips{display:flex;flex-wrap:wrap;gap:5px;}
-.chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;}
-.chip:hover{border-color:var(--text2);color:var(--text);}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--bdr);background:transparent;font-family:'Geist Mono',monospace;font-size:11px;color:var(--t2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;}
+.chip:hover{border-color:var(--t2);color:var(--t);}
+/* NSCLC on state */
 .chip.on{border-color:var(--blue);background:rgba(77,142,240,.15);color:var(--blue);}
-.chip.on.sclc-chip{border-color:var(--orange);background:rgba(251,146,60,.15);color:var(--orange);}
+/* SCLC on state — applied via JS when ct=sclc */
+.chip.on-s{border-color:var(--orange);background:rgba(251,146,60,.15);color:var(--orange);}
 
-/* ── FILTER STRIP ── */
-.fstrip{border-top:1px solid var(--border2);padding-top:14px;margin-top:4px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;}
+/* FILTER STRIP */
+.fstrip{border-top:1px solid var(--bdr2);padding-top:13px;margin-top:0;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
 .fgrp{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-.fgrp-lbl{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);white-space:nowrap;}
-.ftab{padding:5px 13px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
-.ftab:hover{border-color:var(--text2);color:var(--text);}
-.ftab.on.line {border-color:var(--teal);background:rgba(45,212,191,.1);color:var(--teal);}
-.ftab.on.brain{border-color:var(--rose);background:rgba(251,113,133,.1);color:var(--rose);}
-.fsep{width:1px;height:22px;background:var(--border);align-self:center;}
+.flbl{font-family:'Geist Mono',monospace;font-size:10px;color:var(--t3);white-space:nowrap;}
+.ftab{padding:4px 12px;border-radius:6px;border:1px solid var(--bdr);background:transparent;font-family:'Geist Mono',monospace;font-size:10px;color:var(--t2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.ftab:hover{border-color:var(--t2);color:var(--t);}
+.ftab.fon-line {border-color:var(--teal);background:rgba(45,212,191,.1);color:var(--teal);}
+.ftab.fon-brain{border-color:var(--rose);background:rgba(251,113,133,.1);color:var(--rose);}
+.fsep{width:1px;height:20px;background:var(--bdr);}
 
-/* ── SEARCH ROW ── */
-.srow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;}
-.sinput{flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Pretendard',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
+/* SEARCH ROW */
+.srow{display:flex;gap:8px;flex-wrap:wrap;}
+.sinput{flex:1;min-width:180px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:9px 14px;font-family:'Pretendard',sans-serif;font-size:13px;color:var(--t);outline:none;transition:border-color .2s;}
 .sinput:focus{border-color:var(--blue);}
-.sinput::placeholder{color:var(--text3);}
-.ssel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Pretendard',sans-serif;font-size:13px;color:var(--text);outline:none;cursor:pointer;}
+.sinput::placeholder{color:var(--t3);}
+.ssel{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:9px 10px;font-family:'Pretendard',sans-serif;font-size:13px;color:var(--t);outline:none;cursor:pointer;}
 .ssel option{background:var(--bg2);}
-.sbtn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.sbtn:hover:not(:disabled){background:#6ba3f9;transform:translateY(-1px);}
-.sbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.sbtn.sclc-btn{background:var(--orange);}
-.sbtn.sclc-btn:hover:not(:disabled){background:#fca661;}
-.rbtn{background:transparent;color:var(--text2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Geist Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;}
-.rbtn:hover{border-color:var(--text2);color:var(--text);}
+.sbtn{color:#fff;border:none;border-radius:8px;padding:9px 26px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;background:var(--blue);}
+.sbtn:hover:not(:disabled){filter:brightness(1.15);transform:translateY(-1px);}
+.sbtn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+.sbtn.s{background:var(--orange);}
+.rbtn{background:transparent;color:var(--t2);border:1px solid var(--bdr);border-radius:8px;padding:9px 14px;font-family:'Geist Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;}
+.rbtn:hover{border-color:var(--t2);color:var(--t);}
 
-/* ── FILTER NOTICE ── */
-.fnotice{font-family:'Geist Mono',monospace;font-size:10px;color:var(--rose);background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.2);border-radius:8px;padding:8px 14px;margin-bottom:14px;display:none;align-items:center;gap:8px;line-height:1.7;}
+/* FILTER NOTICE */
+.fnotice{display:none;font-family:'Geist Mono',monospace;font-size:10px;color:var(--rose);background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.2);border-radius:8px;padding:8px 13px;margin-bottom:12px;align-items:center;gap:8px;line-height:1.7;}
 .fnotice.show{display:flex;}
 
-/* ── STATS ── */
-.stats{display:flex;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;border:1px solid var(--border);}
-.stat{flex:1;background:var(--surface);padding:13px 12px;text-align:center;}
-.stn{font-family:'Geist Mono',monospace;font-size:20px;color:#fff;line-height:1;margin-bottom:3px;}
-.stn.blue  {color:var(--blue);}
-.stn.green {color:var(--green);}
-.stn.rose  {color:var(--rose);}
-.stn.teal  {color:var(--teal);}
-.stn.amber {color:var(--amber);font-size:11px;}
-.stl{font-size:10px;color:var(--text3);}
+/* STATS */
+.stats{display:flex;gap:1px;background:var(--bdr);border-radius:10px;overflow:hidden;margin-bottom:16px;border:1px solid var(--bdr);}
+.stat{flex:1;background:var(--surf);padding:12px 10px;text-align:center;}
+.stn{font-family:'Geist Mono',monospace;font-size:20px;line-height:1;margin-bottom:2px;}
+.stn.bl{color:var(--blue);}
+.stn.gr{color:var(--green);}
+.stn.rs{color:var(--rose);}
+.stn.tl{color:var(--teal);}
+.stn.am{color:var(--amber);font-size:11px;}
+.stl{font-size:10px;color:var(--t3);}
 
-/* ── RESBAR ── */
-.resbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
-.resc{font-family:'Geist Mono',monospace;font-size:12px;color:var(--text2);}
-.resc strong{color:var(--text);}
-.ract{display:flex;gap:8px;}
-.alink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 14px;cursor:pointer;transition:all .15s;text-decoration:none;letter-spacing:.4px;}
-.alink:hover{color:var(--text);border-color:var(--text2);}
+/* RESBAR */
+.resbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.resc{font-family:'Geist Mono',monospace;font-size:12px;color:var(--t2);}
+.resc strong{color:var(--t);}
+.ract{display:flex;gap:7px;}
+.alink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--t2);background:var(--surf);border:1px solid var(--bdr);border-radius:6px;padding:5px 12px;cursor:pointer;transition:all .15s;text-decoration:none;}
+.alink:hover{color:var(--t);border-color:var(--t2);}
 
-/* ── CARD ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .2s;}
-.card:hover{border-color:rgba(77,142,240,.3);box-shadow:0 0 0 1px rgba(77,142,240,.1),0 8px 32px rgba(0,0,0,.4);transform:translateY(-2px);}
+/* CARD */
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:all .18s;}
+.card:hover{border-color:rgba(77,142,240,.3);box-shadow:0 6px 28px rgba(0,0,0,.4);transform:translateY(-2px);}
 .card.brain-ok{border-left:3px solid var(--rose);}
-.card.sclc-card{border-top:2px solid rgba(251,146,60,.4);}
-.card.sclc-card:hover{border-color:rgba(251,146,60,.4);}
-.ctop{padding:16px 22px 14px;border-bottom:1px solid var(--border2);display:flex;gap:14px;align-items:flex-start;}
+.card.sclc-card{border-top:2px solid rgba(251,146,60,.35);}
+.ctop{padding:14px 20px 12px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;}
 .cl{flex:1;min-width:0;}
-.cr{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:140px;}
-.cnct{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:5px;}
-.ctitle{font-size:14px;font-weight:600;color:#fff;line-height:1.5;margin-bottom:10px;}
-.tags{display:flex;flex-wrap:wrap;gap:5px;}
-.tag{font-family:'Geist Mono',monospace;font-size:10px;padding:3px 9px;border-radius:4px;border:1px solid;}
-.tm   {color:var(--purple);border-color:rgba(167,139,250,.25);background:rgba(167,139,250,.06);}
-.td   {color:var(--amber); border-color:rgba(245,158,11,.25); background:rgba(245,158,11,.06);}
-.tp   {color:var(--teal);  border-color:rgba(45,212,191,.25); background:rgba(45,212,191,.06);}
-.tt   {color:var(--text2); border-color:var(--border);}
-.tline{color:var(--teal);  border-color:rgba(45,212,191,.35); background:rgba(45,212,191,.1);font-weight:600;}
-.tbrain{color:var(--rose); border-color:rgba(251,113,133,.3); background:rgba(251,113,133,.08);}
-.t-nsclc{color:var(--blue);  border-color:rgba(77,142,240,.3);  background:rgba(77,142,240,.07);}
-.t-sclc {color:var(--orange);border-color:rgba(251,146,60,.3);  background:rgba(251,146,60,.08);}
-.spill{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.cr{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:130px;}
+.cnct{font-family:'Geist Mono',monospace;font-size:10px;color:var(--t3);margin-bottom:4px;}
+.ctitle{font-size:14px;font-weight:600;color:#fff;line-height:1.45;margin-bottom:8px;}
+.tags{display:flex;flex-wrap:wrap;gap:4px;}
+.tag{font-family:'Geist Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid;}
+.tm{color:var(--purple);border-color:rgba(167,139,250,.25);background:rgba(167,139,250,.06);}
+.td{color:var(--amber);border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.06);}
+.tp{color:var(--teal);border-color:rgba(45,212,191,.25);background:rgba(45,212,191,.06);}
+.tt{color:var(--t2);border-color:var(--bdr);}
+.tline{color:var(--teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.1);font-weight:600;}
+.tbrain{color:var(--rose);border-color:rgba(251,113,133,.3);background:rgba(251,113,133,.08);}
+.t-nsclc{color:var(--blue);border-color:rgba(77,142,240,.3);background:rgba(77,142,240,.07);}
+.t-sclc{color:var(--orange);border-color:rgba(251,146,60,.3);background:rgba(251,146,60,.08);}
+.spill{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;padding:3px 9px;border-radius:20px;white-space:nowrap;}
 .spill.rec{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25);}
 .spill.act{background:rgba(77,142,240,.1);color:var(--blue);border:1px solid rgba(77,142,240,.25);}
-.cmeta{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);text-align:right;line-height:1.9;}
-.ctglink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);background:rgba(77,142,240,.08);border:1px solid rgba(77,142,240,.2);border-radius:5px;padding:5px 12px;text-decoration:none;transition:all .12s;white-space:nowrap;}
+.cmeta{font-family:'Geist Mono',monospace;font-size:10px;color:var(--t3);text-align:right;line-height:1.9;}
+.ctglink{font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);background:rgba(77,142,240,.08);border:1px solid rgba(77,142,240,.2);border-radius:5px;padding:4px 10px;text-decoration:none;transition:all .12s;white-space:nowrap;}
 .ctglink:hover{background:rgba(77,142,240,.18);}
 
-/* ── SITES ── */
-.stoggle{width:100%;padding:11px 22px;background:var(--bg2);border:none;border-top:1px solid var(--border2);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--text2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
-.stoggle:hover{background:var(--surface2);color:var(--text);}
-.spanel{display:none;padding:14px 22px 18px;}
+/* SITES */
+.stoggle{width:100%;padding:10px 20px;background:var(--bg2);border:none;border-top:1px solid var(--bdr2);font-family:'Geist Mono',monospace;font-size:10px;color:var(--t2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
+.stoggle:hover{background:var(--surf2);color:var(--t);}
+.spanel{display:none;padding:12px 20px 16px;}
 .spanel.open{display:block;}
-.slist{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
-.srow2{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 13px;background:var(--bg);border-radius:8px;border:1px solid var(--border2);gap:10px;}
+.slist{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.srow2{display:flex;align-items:flex-start;justify-content:space-between;padding:9px 11px;background:var(--bg);border-radius:7px;border:1px solid var(--bdr2);gap:10px;}
 .srow2:hover{background:rgba(77,142,240,.04);}
 .sname{font-size:13px;font-weight:500;color:#fff;}
-.scity{font-size:11px;color:var(--text3);font-family:'Geist Mono',monospace;margin-top:1px;}
-.sdot{font-family:'Geist Mono',monospace;font-size:9px;padding:3px 9px;border-radius:10px;flex-shrink:0;margin-top:2px;}
+.scity{font-size:11px;color:var(--t3);font-family:'Geist Mono',monospace;margin-top:1px;}
+.sdot{font-family:'Geist Mono',monospace;font-size:9px;padding:2px 8px;border-radius:10px;flex-shrink:0;margin-top:2px;}
 .sdot.r{background:rgba(34,197,94,.1);color:var(--green);}
 .sdot.a{background:rgba(77,142,240,.1);color:var(--blue);}
-.nosite{color:var(--text3);font-size:12px;padding:6px 0;}
+.nosite{color:var(--t3);font-size:12px;padding:4px 0;}
 .nosite a{color:var(--blue);}
-.central-contacts{margin-bottom:14px;padding:12px 14px;background:rgba(77,142,240,.05);border:1px solid rgba(77,142,240,.15);border-radius:8px;}
-.ccl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
-.contact-row{display:flex;flex-wrap:wrap;gap:5px 18px;align-items:flex-start;margin-bottom:6px;}
-.contact-row:last-child{margin-bottom:0;}
-.cname{font-size:12px;font-weight:600;color:#fff;width:100%;}
-.cinfo{display:flex;align-items:center;gap:5px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text2);}
+.cc-wrap{margin-bottom:12px;padding:10px 12px;background:rgba(77,142,240,.05);border:1px solid rgba(77,142,240,.15);border-radius:7px;}
+.ccl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:7px;}
+.crow{display:flex;flex-wrap:wrap;gap:4px 16px;margin-bottom:5px;}
+.crow:last-child{margin-bottom:0;}
+.cname2{font-size:12px;font-weight:600;color:#fff;width:100%;}
+.cinfo{display:flex;align-items:center;gap:4px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--t2);}
 .cinfo a{color:var(--blue);text-decoration:none;}
 .cinfo a:hover{text-decoration:underline;}
-.site-contacts{margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid var(--border2);}
-.scl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
+.sc-wrap{margin-top:7px;padding:7px 9px;background:rgba(255,255,255,.03);border-radius:5px;border:1px solid var(--bdr2);}
+.scl2{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--t3);text-transform:uppercase;margin-bottom:4px;}
 
-.loading,.empty,.errstate{text-align:center;padding:80px 24px;color:var(--text2);}
-.spinner{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--blue);animation:spin .8s linear infinite;margin:0 auto 18px;}
+/* STATES */
+.state{text-align:center;padding:70px 20px;color:var(--t2);}
+.spinner{width:34px;height:34px;border-radius:50%;border:2px solid var(--bdr);border-top-color:var(--blue);animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ltitle{font-size:15px;font-weight:500;color:#fff;margin-bottom:8px;}
-.lsub{font-size:12px;color:var(--text3);}
-.lapi{margin-top:10px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);}
+.stitle{font-size:15px;font-weight:500;color:#fff;margin-bottom:7px;}
+.ssub{font-size:12px;color:var(--t3);line-height:1.8;}
+.sapi{margin-top:8px;font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);}
 
-.pager{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:20px;flex-wrap:wrap;}
-.pbtn{font-family:'Geist Mono',monospace;font-size:11px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;}
-.pbtn:hover:not(:disabled){border-color:var(--text2);color:var(--text);}
+/* PAGER */
+.pager{display:flex;gap:5px;align-items:center;justify-content:center;margin-top:18px;flex-wrap:wrap;}
+.pbtn{font-family:'Geist Mono',monospace;font-size:11px;padding:6px 13px;border-radius:6px;border:1px solid var(--bdr);background:var(--surf);color:var(--t2);cursor:pointer;transition:all .15s;}
+.pbtn:hover:not(:disabled){border-color:var(--t2);color:var(--t);}
 .pbtn.on{background:var(--blue);border-color:var(--blue);color:#fff;}
 .pbtn:disabled{opacity:.3;cursor:not-allowed;}
-.pinfo{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text3);padding:0 6px;}
+.pinfo{font-family:'Geist Mono',monospace;font-size:11px;color:var(--t3);padding:0 5px;}
 
-footer{background:var(--surface);border-top:1px solid var(--border);padding:22px;text-align:center;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.4px;line-height:2;}
-footer a{color:var(--text2);text-decoration:none;}
+footer{background:var(--surf);border-top:1px solid var(--bdr);padding:20px;text-align:center;font-family:'Geist Mono',monospace;font-size:10px;color:var(--t3);line-height:2.2;}
+footer a{color:var(--t2);text-decoration:none;}
 footer a:hover{color:var(--blue);}
 
-@media(max-width:768px){
-  .hero,.main{padding-left:16px;padding-right:16px;}
+@media(max-width:700px){
+  .hero,.main{padding-left:14px;padding-right:14px;}
   .ctop{flex-direction:column;}
   .cr{align-items:flex-start;flex-direction:row;flex-wrap:wrap;min-width:0;}
   .stats{flex-wrap:wrap;}
   .stat{min-width:calc(50% - 1px);}
-  .hbadges .badge:not(.live){display:none;}
-  .ct-tab{font-size:12px;padding:12px 10px;}
+  .hbadges .hbdg:not(.live){display:none;}
+  .ct-tab{font-size:12px;padding:11px 8px;}
 }
 </style>
 </head>
@@ -213,11 +219,11 @@ footer a:hover{color:var(--blue);}
 
 <header>
   <div class="hdr">
-    <div class="logo">폐암<span class="d">.</span>임상시험<span class="d">.</span>KR</div>
+    <div class="logo">폐암<span>.</span>임상시험<span>.</span>KR</div>
     <div class="hbadges">
-      <div class="badge">총 <span id="hTotal" style="color:#fff">—</span>건</div>
-      <div class="badge">모집중 <span id="hRec" style="color:var(--green)">—</span>건</div>
-      <div class="badge live"><div class="ldot"></div>CTG LIVE</div>
+      <div class="hbdg">총 <span id="hTotal" style="color:#fff">—</span>건</div>
+      <div class="hbdg">모집중 <span id="hRec" style="color:var(--green)">—</span>건</div>
+      <div class="hbdg live"><div class="dot"></div>CTG LIVE</div>
     </div>
   </div>
 </header>
@@ -227,581 +233,570 @@ footer a:hover{color:var(--blue);}
   <div class="hi">
     <div class="hkick">South Korea · Lung Cancer · Real-time</div>
     <h1>국내 폐암<br><em>임상시험</em> 실시간 검색</h1>
-    <p class="hdesc">
-      <strong>ClinicalTrials.gov API</strong> 실시간 직접 조회 ·
-      NSCLC / SCLC 완전 분리 검색 ·<br>
-      Mutation / Drug 선택 · 치료 라인 · 뇌전이 허용 여부 필터
-    </p>
+    <p class="hdesc"><strong>ClinicalTrials.gov API</strong> 실시간 직접 조회 · NSCLC / SCLC 완전 분리 · Mutation / Drug 선택 · 치료 라인 · 뇌전이 필터</p>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- ══ CELL TYPE TABS ══ -->
-  <div class="celltype-row">
-    <button class="ct-tab active nsclc" id="ct-nsclc" onclick="setCellType('nsclc')">
-      🔬 비소세포폐암 (NSCLC)
-      <div class="ct-sub">Non-Small Cell Lung Cancer</div>
-    </button>
-    <button class="ct-tab sclc" id="ct-sclc" onclick="setCellType('sclc')">
-      ⚡ 소세포폐암 (SCLC)
-      <div class="ct-sub">Small Cell Lung Cancer</div>
-    </button>
-  </div>
-
-  <!-- ══ SEARCH MODE TABS ══ -->
-  <div class="mode-tabs">
-    <button class="mode-tab active" id="tab-mut" onclick="switchMode('mut')">🧬 &nbsp;Mutation 검색</button>
-    <button class="mode-tab" id="tab-drug" onclick="switchMode('drug')">💊 &nbsp;Drug 검색</button>
-  </div>
-
-  <div class="ctrl">
-
-    <!-- ══ MUTATION PANEL ══ -->
-    <div id="panel-mut">
-
-      <!-- NSCLC 변이 -->
-      <div id="mut-nsclc">
-        <div class="mgrp">
-          <div class="mgrp-lbl">EGFR</div>
-          <div class="chips">
-            <div class="chip on" data-q="EGFR" data-grp="mut">EGFR (전체)</div>
-            <div class="chip" data-q="EGFR exon19del" data-grp="mut">Exon19del</div>
-            <div class="chip" data-q="EGFR L858R" data-grp="mut">L858R</div>
-            <div class="chip" data-q="EGFR T790M" data-grp="mut">T790M</div>
-            <div class="chip" data-q="EGFR exon20 insertion" data-grp="mut">Exon20ins</div>
-            <div class="chip" data-q="EGFR C797S" data-grp="mut">C797S</div>
-          </div>
-        </div>
-        <div class="mgrp">
-          <div class="mgrp-lbl">KRAS</div>
-          <div class="chips">
-            <div class="chip" data-q="KRAS G12C" data-grp="mut">KRAS G12C</div>
-            <div class="chip" data-q="KRAS G12D" data-grp="mut">KRAS G12D</div>
-            <div class="chip" data-q="KRAS G12V" data-grp="mut">KRAS G12V</div>
-            <div class="chip" data-q="KRAS" data-grp="mut">Other KRAS</div>
-          </div>
-        </div>
-        <div class="mgrp">
-          <div class="mgrp-lbl">기타 드라이버 변이</div>
-          <div class="chips">
-            <div class="chip" data-q="ALK" data-grp="mut">ALK</div>
-            <div class="chip" data-q="ROS1" data-grp="mut">ROS1</div>
-            <div class="chip" data-q="RET fusion" data-grp="mut">RET fusion</div>
-            <div class="chip" data-q="MET exon14" data-grp="mut">MET ex14</div>
-            <div class="chip" data-q="HER2 ERBB2" data-grp="mut">HER2/ERBB2</div>
-            <div class="chip" data-q="BRAF V600E" data-grp="mut">BRAF V600E</div>
-            <div class="chip" data-q="NTRK" data-grp="mut">NTRK</div>
-            <div class="chip" data-q="NRG1" data-grp="mut">NRG1</div>
-            <div class="chip" data-q="PD-L1" data-grp="mut">PD-L1</div>
-          </div>
-        </div>
-        <div class="mgrp">
-          <div class="mgrp-lbl">DDR / 크로마틴 / 세포주기</div>
-          <div class="chips">
-            <div class="chip" data-q="DDR pathway" data-grp="mut">DDR pathway</div>
-            <div class="chip" data-q="BRCA" data-grp="mut">BRCA</div>
-            <div class="chip" data-q="ATM" data-grp="mut">ATM</div>
-            <div class="chip" data-q="CDK4 CDK6" data-grp="mut">CDK4/6</div>
-            <div class="chip" data-q="CDK2" data-grp="mut">CDK2</div>
-            <div class="chip" data-q="SMARCA4" data-grp="mut">SMARCA4</div>
-            <div class="chip" data-q="STK11 LKB1" data-grp="mut">STK11/LKB1</div>
-            <div class="chip" data-q="KEAP1" data-grp="mut">KEAP1</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SCLC 바이오마커 -->
-      <div id="mut-sclc" style="display:none;">
-        <div class="mgrp">
-          <div class="mgrp-lbl">SCLC 바이오마커 / 경로</div>
-          <div class="chips">
-            <div class="chip sclc-chip on" data-q="small cell lung cancer" data-grp="mut">SCLC (전체)</div>
-            <div class="chip sclc-chip" data-q="DLL3" data-grp="mut">DLL3</div>
-            <div class="chip sclc-chip" data-q="PARP" data-grp="mut">PARP</div>
-            <div class="chip sclc-chip" data-q="ATM" data-grp="mut">ATM</div>
-            <div class="chip sclc-chip" data-q="BCL2" data-grp="mut">BCL-2</div>
-            <div class="chip sclc-chip" data-q="PD-L1" data-grp="mut">PD-L1</div>
-            <div class="chip sclc-chip" data-q="ASCL1" data-grp="mut">ASCL1</div>
-            <div class="chip sclc-chip" data-q="NEUROD1" data-grp="mut">NEUROD1</div>
-            <div class="chip sclc-chip" data-q="MYC amplification" data-grp="mut">MYC 증폭</div>
-            <div class="chip sclc-chip" data-q="CDK2" data-grp="mut">CDK2</div>
-            <div class="chip sclc-chip" data-q="extensive stage" data-grp="mut">Extensive stage</div>
-            <div class="chip sclc-chip" data-q="limited stage" data-grp="mut">Limited stage</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ DRUG PANEL ══ -->
-    <div id="panel-drug" style="display:none;">
-
-      <!-- NSCLC 약물 -->
-      <div id="drug-nsclc">
-        <div class="mgrp">
-          <div class="mgrp-lbl">EGFR 억제제</div>
-          <div class="chips">
-            <div class="chip" data-q="osimertinib" data-grp="drug">Osimertinib</div>
-            <div class="chip" data-q="lazertinib" data-grp="drug">Lazertinib</div>
-            <div class="chip" data-q="amivantamab" data-grp="drug">Amivantamab</div>
-            <div class="chip" data-q="patritumab deruxtecan" data-grp="drug">Patritumab-DXd</div>
-            <div class="chip" data-q="erlotinib" data-grp="drug">Erlotinib</div>
-            <div class="chip" data-q="gefitinib" data-grp="drug">Gefitinib</div>
-            <div class="chip" data-q="afatinib" data-grp="drug">Afatinib</div>
-            <div class="chip" data-q="dacomitinib" data-grp="drug">Dacomitinib</div>
-          </div>
-        </div>
-        <div class="mgrp">
-          <div class="mgrp-lbl">ALK / ROS1 / RET 억제제</div>
-          <div class="chips">
-            <div class="chip" data-q="lorlatinib" data-grp="drug">Lorlatinib</div>
-            <div class="chip" data-q="brigatinib" data-grp="drug">Brigatinib</div>
-            <div class="chip" data-q="alectinib" data-grp="drug">Alectinib</div>
-            <div class="chip" data-q="entrectinib" data-grp="drug">Entrectinib</div>
-            <div class="chip" data-q="selpercatinib" data-grp="drug">Selpercatinib</div>
-            <div class="chip" data-q="pralsetinib" data-grp="drug">Pralsetinib</div>
-          </div>
-        </div>
-        <div class="mgrp">
-          <div class="mgrp-lbl">KRAS / MET / HER2 / 기타</div>
-          <div class="chips">
-            <div class="chip" data-q="sotorasib" data-grp="drug">Sotorasib</div>
-            <div class="chip" data-q="adagrasib" data-grp="drug">Adagrasib</div>
-            <div class="chip" data-q="tepotinib" data-grp="drug">Tepotinib</div>
-            <div class="chip" data-q="capmatinib" data-grp="drug">Capmatinib</div>
-            <div class="chip" data-q="trastuzumab deruxtecan" data-grp="drug">T-DXd</div>
-            <div class="chip" data-q="pembrolizumab" data-grp="drug">Pembrolizumab</div>
-            <div class="chip" data-q="nivolumab" data-grp="drug">Nivolumab</div>
-            <div class="chip" data-q="atezolizumab" data-grp="drug">Atezolizumab</div>
-            <div class="chip" data-q="olaparib" data-grp="drug">Olaparib</div>
-            <div class="chip" data-q="palbociclib" data-grp="drug">Palbociclib</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SCLC 약물 -->
-      <div id="drug-sclc" style="display:none;">
-        <div class="mgrp">
-          <div class="mgrp-lbl">SCLC 주요 약물</div>
-          <div class="chips">
-            <div class="chip sclc-chip" data-q="tarlatamab" data-grp="drug">Tarlatamab (DLL3)</div>
-            <div class="chip sclc-chip" data-q="rovalpituzumab" data-grp="drug">Rovalpituzumab</div>
-            <div class="chip sclc-chip" data-q="atezolizumab" data-grp="drug">Atezolizumab</div>
-            <div class="chip sclc-chip" data-q="durvalumab" data-grp="drug">Durvalumab</div>
-            <div class="chip sclc-chip" data-q="pembrolizumab" data-grp="drug">Pembrolizumab</div>
-            <div class="chip sclc-chip" data-q="nivolumab" data-grp="drug">Nivolumab</div>
-            <div class="chip sclc-chip" data-q="olaparib" data-grp="drug">Olaparib</div>
-            <div class="chip sclc-chip" data-q="talazoparib" data-grp="drug">Talazoparib</div>
-            <div class="chip sclc-chip" data-q="venetoclax" data-grp="drug">Venetoclax</div>
-            <div class="chip sclc-chip" data-q="trilaciclib" data-grp="drug">Trilaciclib</div>
-            <div class="chip sclc-chip" data-q="lurbinectedin" data-grp="drug">Lurbinectedin</div>
-            <div class="chip sclc-chip" data-q="topotecan" data-grp="drug">Topotecan</div>
-            <div class="chip sclc-chip" data-q="irinotecan" data-grp="drug">Irinotecan</div>
-          </div>
-        </div>
-      </div>
-
-      <p style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--text3);margin-top:6px;">
-        또는 아래 검색창에 약물명 직접 입력
-      </p>
-    </div>
-
-    <!-- ══ FILTER STRIP ══ -->
-    <div class="fstrip">
-      <div class="fgrp">
-        <span class="fgrp-lbl">치료 라인</span>
-        <button class="ftab line on" data-val="" onclick="setFtab(this,'line','')">전체</button>
-        <button class="ftab line" data-val="1L" onclick="setFtab(this,'line','1L')">1차 치료</button>
-        <button class="ftab line" data-val="2L" onclick="setFtab(this,'line','2L')">2차 이후</button>
-      </div>
-      <div class="fsep"></div>
-      <div class="fgrp">
-        <span class="fgrp-lbl">뇌전이 허용</span>
-        <button class="ftab brain on" data-val="" onclick="setFtab(this,'brain','')">전체</button>
-        <button class="ftab brain" data-val="allowed" onclick="setFtab(this,'brain','allowed')">허용 포함만</button>
-        <button class="ftab brain" data-val="excluded" onclick="setFtab(this,'brain','excluded')">제외만</button>
-      </div>
-    </div>
-
-    <!-- ══ SEARCH ROW ══ -->
-    <div class="srow">
-      <input class="sinput" id="kw" type="text" placeholder="추가 키워드 (NCT번호, 스폰서, 기관명, 약물명...)">
-      <select class="ssel" id="statusF">
-        <option value="RECRUITING,ACTIVE_NOT_RECRUITING" selected>모집중 + 진행중</option>
-        <option value="RECRUITING">모집중만</option>
-        <option value="ACTIVE_NOT_RECRUITING">진행중만</option>
-        <option value="NOT_YET_RECRUITING">준비 중</option>
-      </select>
-      <button class="sbtn" id="sbtn" onclick="doSearch()">실시간 검색</button>
-      <button class="rbtn" onclick="doReset()">초기화</button>
-    </div>
-  </div>
-
-  <!-- FILTER NOTICE -->
-  <div class="fnotice" id="fnotice"><span>⚠</span><span id="fnoticeText"></span></div>
-
-  <!-- STATS -->
-  <div class="stats" id="statsEl" style="display:none;">
-    <div class="stat"><div class="stn blue" id="stT">0</div><div class="stl">API 결과</div></div>
-    <div class="stat"><div class="stn green" id="stR">0</div><div class="stl">모집 중</div></div>
-    <div class="stat"><div class="stn rose" id="stB">—</div><div class="stl">🧠 뇌전이 허용</div></div>
-    <div class="stat"><div class="stn teal" id="stS">0</div><div class="stl">국내 참여 기관</div></div>
-    <div class="stat"><div class="stn amber" id="stTime">—</div><div class="stl">조회 시각</div></div>
-  </div>
-
-  <!-- RESBAR -->
-  <div class="resbar" id="resbarEl" style="display:none;">
-    <div class="resc">표시 <strong id="rN">0</strong>건 · 페이지 <span id="rP">1</span>/<span id="rTP">1</span></div>
-    <div class="ract">
-      <button class="alink" onclick="exportCSV()">CSV 저장</button>
-      <a class="alink" id="ctgHref" href="https://clinicaltrials.gov" target="_blank">CTG.gov 원본 ↗</a>
-    </div>
-  </div>
-
-  <div id="results">
-    <div class="loading">
-      <div class="spinner"></div>
-      <div class="ltitle">암종을 선택하고 검색 버튼을 눌러주세요</div>
-      <div class="lsub">
-        NSCLC 탭 또는 SCLC 탭에서 Mutation / Drug을 선택 후<br>
-        실시간 검색을 누르면 ClinicalTrials.gov에서 직접 가져옵니다
-      </div>
-    </div>
-  </div>
-  <div class="pager" id="pagerEl"></div>
+<!-- ① 암종 탭 -->
+<div class="ct-tabs">
+  <button class="ct-tab nsclc" data-active="1" id="tab-nsclc" onclick="setCT('nsclc')">
+    🔬 비소세포폐암 (NSCLC)
+    <div class="ct-sub">Non-Small Cell Lung Cancer</div>
+  </button>
+  <button class="ct-tab sclc" data-active="0" id="tab-sclc" onclick="setCT('sclc')">
+    ⚡ 소세포폐암 (SCLC)
+    <div class="ct-sub">Small Cell Lung Cancer</div>
+  </button>
 </div>
 
+<!-- ② 검색 모드 탭 -->
+<div class="mode-tabs">
+  <button class="mode-tab" data-active="1" data-ct="nsclc" id="tab-mut"  onclick="setMode('mut')">🧬 &nbsp;Mutation 검색</button>
+  <button class="mode-tab" data-active="0" data-ct="nsclc" id="tab-drug" onclick="setMode('drug')">💊 &nbsp;Drug 검색</button>
+</div>
+
+<div class="ctrl">
+
+  <!-- NSCLC Mutation -->
+  <div id="p-nsclc-mut">
+    <div class="mgrp">
+      <div class="mgrp-lbl">EGFR</div>
+      <div class="chips">
+        <div class="chip on" data-q="EGFR">EGFR (전체)</div>
+        <div class="chip" data-q="EGFR exon19del">Exon19del</div>
+        <div class="chip" data-q="EGFR L858R">L858R</div>
+        <div class="chip" data-q="EGFR T790M">T790M</div>
+        <div class="chip" data-q="EGFR exon20 insertion">Exon20ins</div>
+        <div class="chip" data-q="EGFR C797S">C797S</div>
+      </div>
+    </div>
+    <div class="mgrp">
+      <div class="mgrp-lbl">KRAS</div>
+      <div class="chips">
+        <div class="chip" data-q="KRAS G12C">KRAS G12C</div>
+        <div class="chip" data-q="KRAS G12D">KRAS G12D</div>
+        <div class="chip" data-q="KRAS G12V">KRAS G12V</div>
+        <div class="chip" data-q="KRAS">Other KRAS</div>
+      </div>
+    </div>
+    <div class="mgrp">
+      <div class="mgrp-lbl">기타 드라이버 변이</div>
+      <div class="chips">
+        <div class="chip" data-q="ALK">ALK</div>
+        <div class="chip" data-q="ROS1">ROS1</div>
+        <div class="chip" data-q="RET fusion">RET fusion</div>
+        <div class="chip" data-q="MET exon14">MET ex14</div>
+        <div class="chip" data-q="HER2 ERBB2">HER2/ERBB2</div>
+        <div class="chip" data-q="BRAF V600E">BRAF V600E</div>
+        <div class="chip" data-q="NTRK">NTRK</div>
+        <div class="chip" data-q="NRG1">NRG1</div>
+        <div class="chip" data-q="PD-L1">PD-L1</div>
+      </div>
+    </div>
+    <div class="mgrp">
+      <div class="mgrp-lbl">DDR / 크로마틴 / 세포주기</div>
+      <div class="chips">
+        <div class="chip" data-q="BRCA">BRCA</div>
+        <div class="chip" data-q="ATM">ATM</div>
+        <div class="chip" data-q="DDR pathway">DDR pathway</div>
+        <div class="chip" data-q="CDK4 CDK6">CDK4/6</div>
+        <div class="chip" data-q="CDK2">CDK2</div>
+        <div class="chip" data-q="SMARCA4">SMARCA4</div>
+        <div class="chip" data-q="STK11 LKB1">STK11/LKB1</div>
+        <div class="chip" data-q="KEAP1">KEAP1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NSCLC Drug -->
+  <div id="p-nsclc-drug" style="display:none;">
+    <div class="mgrp">
+      <div class="mgrp-lbl">EGFR 억제제</div>
+      <div class="chips">
+        <div class="chip" data-q="osimertinib">Osimertinib</div>
+        <div class="chip" data-q="lazertinib">Lazertinib</div>
+        <div class="chip" data-q="amivantamab">Amivantamab</div>
+        <div class="chip" data-q="patritumab deruxtecan">Patritumab-DXd</div>
+        <div class="chip" data-q="erlotinib">Erlotinib</div>
+        <div class="chip" data-q="gefitinib">Gefitinib</div>
+        <div class="chip" data-q="afatinib">Afatinib</div>
+        <div class="chip" data-q="dacomitinib">Dacomitinib</div>
+      </div>
+    </div>
+    <div class="mgrp">
+      <div class="mgrp-lbl">ALK / ROS1 / RET</div>
+      <div class="chips">
+        <div class="chip" data-q="lorlatinib">Lorlatinib</div>
+        <div class="chip" data-q="brigatinib">Brigatinib</div>
+        <div class="chip" data-q="alectinib">Alectinib</div>
+        <div class="chip" data-q="entrectinib">Entrectinib</div>
+        <div class="chip" data-q="selpercatinib">Selpercatinib</div>
+        <div class="chip" data-q="pralsetinib">Pralsetinib</div>
+      </div>
+    </div>
+    <div class="mgrp">
+      <div class="mgrp-lbl">KRAS / MET / HER2 / 기타</div>
+      <div class="chips">
+        <div class="chip" data-q="sotorasib">Sotorasib</div>
+        <div class="chip" data-q="adagrasib">Adagrasib</div>
+        <div class="chip" data-q="tepotinib">Tepotinib</div>
+        <div class="chip" data-q="capmatinib">Capmatinib</div>
+        <div class="chip" data-q="trastuzumab deruxtecan">T-DXd</div>
+        <div class="chip" data-q="pembrolizumab">Pembrolizumab</div>
+        <div class="chip" data-q="nivolumab">Nivolumab</div>
+        <div class="chip" data-q="atezolizumab">Atezolizumab</div>
+        <div class="chip" data-q="olaparib">Olaparib</div>
+        <div class="chip" data-q="palbociclib">Palbociclib</div>
+      </div>
+    </div>
+    <p style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--t3);margin-top:4px;">또는 아래 검색창에 약물명 직접 입력</p>
+  </div>
+
+  <!-- SCLC Mutation -->
+  <div id="p-sclc-mut" style="display:none;">
+    <div class="mgrp">
+      <div class="mgrp-lbl">SCLC 바이오마커 / 경로</div>
+      <div class="chips">
+        <div class="chip" data-q="DLL3">DLL3</div>
+        <div class="chip" data-q="PARP inhibitor">PARP</div>
+        <div class="chip" data-q="BCL2">BCL-2</div>
+        <div class="chip" data-q="PD-L1">PD-L1</div>
+        <div class="chip" data-q="ATM">ATM</div>
+        <div class="chip" data-q="ASCL1">ASCL1</div>
+        <div class="chip" data-q="NEUROD1">NEUROD1</div>
+        <div class="chip" data-q="MYC amplification">MYC 증폭</div>
+        <div class="chip" data-q="CDK2">CDK2</div>
+        <div class="chip" data-q="extensive stage">Extensive stage</div>
+        <div class="chip" data-q="limited stage">Limited stage</div>
+      </div>
+    </div>
+    <p style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--t3);margin-top:4px;">칩 미선택 시 전체 SCLC 임상시험 검색</p>
+  </div>
+
+  <!-- SCLC Drug -->
+  <div id="p-sclc-drug" style="display:none;">
+    <div class="mgrp">
+      <div class="mgrp-lbl">SCLC 주요 약물</div>
+      <div class="chips">
+        <div class="chip" data-q="tarlatamab">Tarlatamab</div>
+        <div class="chip" data-q="rovalpituzumab">Rovalpituzumab</div>
+        <div class="chip" data-q="atezolizumab">Atezolizumab</div>
+        <div class="chip" data-q="durvalumab">Durvalumab</div>
+        <div class="chip" data-q="pembrolizumab">Pembrolizumab</div>
+        <div class="chip" data-q="nivolumab">Nivolumab</div>
+        <div class="chip" data-q="olaparib">Olaparib</div>
+        <div class="chip" data-q="talazoparib">Talazoparib</div>
+        <div class="chip" data-q="venetoclax">Venetoclax</div>
+        <div class="chip" data-q="trilaciclib">Trilaciclib</div>
+        <div class="chip" data-q="lurbinectedin">Lurbinectedin</div>
+        <div class="chip" data-q="topotecan">Topotecan</div>
+        <div class="chip" data-q="irinotecan">Irinotecan</div>
+      </div>
+    </div>
+    <p style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--t3);margin-top:4px;">또는 아래 검색창에 약물명 직접 입력</p>
+  </div>
+
+  <!-- FILTER STRIP -->
+  <div class="fstrip">
+    <div class="fgrp">
+      <span class="flbl">치료 라인</span>
+      <button class="ftab fon-line" id="fl-a" onclick="setLine(this,'')">전체</button>
+      <button class="ftab" id="fl-1" onclick="setLine(this,'1L')">1차 치료</button>
+      <button class="ftab" id="fl-2" onclick="setLine(this,'2L')">2차 이후</button>
+    </div>
+    <div class="fsep"></div>
+    <div class="fgrp">
+      <span class="flbl">뇌전이</span>
+      <button class="ftab fon-brain" id="fb-a" onclick="setBrain(this,'')">전체</button>
+      <button class="ftab" id="fb-y" onclick="setBrain(this,'allowed')">허용 포함만</button>
+      <button class="ftab" id="fb-n" onclick="setBrain(this,'excluded')">제외만</button>
+    </div>
+  </div>
+
+  <!-- SEARCH ROW -->
+  <div class="srow">
+    <input class="sinput" id="kw" type="text" placeholder="추가 키워드 (NCT번호, 스폰서, 기관명, 약물명...)">
+    <select class="ssel" id="statusSel">
+      <option value="RECRUITING,ACTIVE_NOT_RECRUITING" selected>모집중 + 진행중</option>
+      <option value="RECRUITING">모집중만</option>
+      <option value="ACTIVE_NOT_RECRUITING">진행중만</option>
+      <option value="NOT_YET_RECRUITING">준비 중</option>
+    </select>
+    <button class="sbtn" id="sbtn" onclick="doSearch()">실시간 검색</button>
+    <button class="rbtn" onclick="doReset()">초기화</button>
+  </div>
+
+</div><!-- /ctrl -->
+
+<!-- FILTER NOTICE -->
+<div class="fnotice" id="fnotice">⚠ <span id="fnotice-txt"></span></div>
+
+<!-- STATS -->
+<div class="stats" id="statsEl" style="display:none;">
+  <div class="stat"><div class="stn bl" id="stT">0</div><div class="stl">API 결과</div></div>
+  <div class="stat"><div class="stn gr" id="stR">0</div><div class="stl">모집 중</div></div>
+  <div class="stat"><div class="stn rs" id="stB">—</div><div class="stl">🧠 뇌전이 허용</div></div>
+  <div class="stat"><div class="stn tl" id="stS">0</div><div class="stl">국내 참여 기관</div></div>
+  <div class="stat"><div class="stn am" id="stTime">—</div><div class="stl">조회 시각</div></div>
+</div>
+
+<!-- RESBAR -->
+<div class="resbar" id="resbarEl" style="display:none;">
+  <div class="resc">표시 <strong id="rN">0</strong>건 · 페이지 <span id="rP">1</span> / <span id="rTP">1</span></div>
+  <div class="ract">
+    <button class="alink" onclick="exportCSV()">CSV 저장</button>
+    <a class="alink" id="ctgLink" href="https://clinicaltrials.gov" target="_blank">CTG.gov ↗</a>
+  </div>
+</div>
+
+<div id="results">
+  <div class="state">
+    <div class="spinner"></div>
+    <div class="stitle">암종 탭을 선택하고 검색 버튼을 눌러주세요</div>
+    <div class="ssub">NSCLC 또는 SCLC 탭 → Mutation / Drug 선택 → 실시간 검색</div>
+  </div>
+</div>
+<div class="pager" id="pagerEl"></div>
+
+</div><!-- /main -->
+
 <footer>
-  폐암.임상시험.KR &nbsp;·&nbsp;
-  Data: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (실시간) &nbsp;·&nbsp;
-  NSCLC/SCLC API 레벨 완전 분리 &nbsp;·&nbsp;
-  라인/뇌전이 필터는 eligibility text 분석 기반 — 반드시 원문 확인 &nbsp;·&nbsp;
-  연구·의뢰 목적 전용
+  폐암.임상시험.KR &nbsp;·&nbsp; Data: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (실시간) &nbsp;·&nbsp;
+  NSCLC / SCLC API 레벨 분리 &nbsp;·&nbsp; 라인·뇌전이 필터는 eligibility text 분석 기반 — 반드시 원문 확인
 </footer>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════════════════
-const CTG = 'https://clinicaltrials.gov/api/v2/studies';
-const PER = 25;
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+var CT   = 'nsclc';   // 'nsclc' | 'sclc'
+var MODE = 'mut';     // 'mut'   | 'drug'
+var LINE  = '';
+var BRAIN = '';
+var FILTERED = [];
+var TOKENS   = [null];
+var BUSY     = false;
+var PER      = 25;
+var CTG_BASE = 'https://clinicaltrials.gov/api/v2/studies';
 
-// SCLC exclusion keywords — trials containing these in title/conditions
-// are excluded when searching NSCLC, and vice versa
-const NSCLC_EXCL = ['small cell','sclc','limited stage small','extensive stage small'];
-const SCLC_EXCL  = ['non-small cell','nsclc','non small cell'];
-
-// ══════════════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════════════
-const S = {
-  cellType:    'nsclc',  // 'nsclc' | 'sclc'
-  mode:        'mut',
-  lineFilter:  '',
-  brainFilter: '',
-  allTrials:   [],
-  filtered:    [],
-  total:       0,
-  page:        1,
-  tokens:      [null],
-  busy:        false
-};
-
-// ══════════════════════════════════════════════════════════════
-// CELL TYPE SWITCH
-// ══════════════════════════════════════════════════════════════
-function setCellType(ct) {
-  S.cellType = ct;
-  const isSclc = ct === 'sclc';
+/* ══════════════════════════════════════════════════════
+   CANCER TYPE SWITCH
+══════════════════════════════════════════════════════ */
+function setCT(ct) {
+  CT = ct;
 
   // Tab appearance
-  const tabNsclc = document.getElementById('ct-nsclc');
-  const tabSclc  = document.getElementById('ct-sclc');
-  tabNsclc.classList.remove('active','nsclc','sclc');
-  tabSclc.classList.remove('active','nsclc','sclc');
-  if (isSclc) tabSclc.classList.add('active','sclc');
-  else        tabNsclc.classList.add('active','nsclc');
-
-  // Show correct chip groups
-  document.getElementById('mut-nsclc').style.display  = isSclc ? 'none' : '';
-  document.getElementById('mut-sclc').style.display   = isSclc ? '' : 'none';
-  document.getElementById('drug-nsclc').style.display = isSclc ? 'none' : '';
-  document.getElementById('drug-sclc').style.display  = isSclc ? '' : 'none';
+  var tN = document.getElementById('tab-nsclc');
+  var tS = document.getElementById('tab-sclc');
+  tN.setAttribute('data-active', ct === 'nsclc' ? '1' : '0');
+  tS.setAttribute('data-active', ct === 'sclc'  ? '1' : '0');
 
   // Search button color
-  const sbtn = document.getElementById('sbtn');
-  sbtn.classList.toggle('sclc-btn', isSclc);
+  var sb = document.getElementById('sbtn');
+  sb.className = ct === 'sclc' ? 'sbtn s' : 'sbtn';
 
-  // Mode tab accent color
-  document.getElementById('tab-mut').classList.toggle('sclc-mode', isSclc);
-  document.getElementById('tab-drug').classList.toggle('sclc-mode', isSclc);
+  // Mode tab ct attribute (for CSS color)
+  document.getElementById('tab-mut').setAttribute('data-ct', ct);
+  document.getElementById('tab-drug').setAttribute('data-ct', ct);
 
-  // Reset chips, activate default
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
-  if (isSclc) {
-    document.querySelector('.chip[data-q="small cell lung cancer"]')?.classList.add('on');
-  } else {
-    document.querySelector('.chip[data-q="EGFR"]')?.classList.add('on');
+  // Show correct panels (based on current MODE too)
+  showPanels(ct, MODE);
+
+  // Reset all chips, activate default
+  resetChips(ct, MODE);
+
+  // Reset pagination
+  TOKENS = [null];
+}
+
+/* ══════════════════════════════════════════════════════
+   MODE SWITCH
+══════════════════════════════════════════════════════ */
+function setMode(m) {
+  MODE = m;
+  document.getElementById('tab-mut') .setAttribute('data-active', m === 'mut'  ? '1' : '0');
+  document.getElementById('tab-drug').setAttribute('data-active', m === 'drug' ? '1' : '0');
+  showPanels(CT, m);
+  resetChips(CT, m);
+}
+
+/* ══════════════════════════════════════════════════════
+   PANEL SHOW/HIDE — only one panel visible at a time
+══════════════════════════════════════════════════════ */
+function showPanels(ct, mode) {
+  var panels = {
+    'p-nsclc-mut':  ct === 'nsclc' && mode === 'mut',
+    'p-nsclc-drug': ct === 'nsclc' && mode === 'drug',
+    'p-sclc-mut':   ct === 'sclc'  && mode === 'mut',
+    'p-sclc-drug':  ct === 'sclc'  && mode === 'drug'
+  };
+  Object.keys(panels).forEach(function(id) {
+    document.getElementById(id).style.display = panels[id] ? '' : 'none';
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   CHIP RESET — clear all, activate first chip of visible panel
+══════════════════════════════════════════════════════ */
+function resetChips(ct, mode) {
+  // Clear all chips everywhere
+  document.querySelectorAll('.chip').forEach(function(c) {
+    c.classList.remove('on', 'on-s');
+  });
+
+  // Find the active panel and activate its first chip
+  var panelId = 'p-' + ct + '-' + mode;
+  var panel = document.getElementById(panelId);
+  if (!panel) return;
+  var first = panel.querySelector('.chip');
+  if (first) {
+    if (ct === 'sclc') {
+      first.classList.add('on-s');
+    } else {
+      first.classList.add('on');
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   CHIP CLICK — attach after DOM ready
+══════════════════════════════════════════════════════ */
+document.querySelectorAll('.chip').forEach(function(c) {
+  c.addEventListener('click', function() {
+    var onCls = CT === 'sclc' ? 'on-s' : 'on';
+    var offCls = CT === 'sclc' ? 'on' : 'on-s';
+    if (c.classList.contains(onCls)) {
+      c.classList.remove(onCls);
+    } else {
+      c.classList.remove('on', 'on-s');
+      c.classList.add(onCls);
+    }
+  });
+});
+
+/* ══════════════════════════════════════════════════════
+   FILTER TABS
+══════════════════════════════════════════════════════ */
+function setLine(btn, val) {
+  LINE = val;
+  ['fl-a','fl-1','fl-2'].forEach(function(id) {
+    document.getElementById(id).classList.remove('fon-line');
+  });
+  btn.classList.add('fon-line');
+}
+function setBrain(btn, val) {
+  BRAIN = val;
+  ['fb-a','fb-y','fb-n'].forEach(function(id) {
+    document.getElementById(id).classList.remove('fon-brain');
+  });
+  btn.classList.add('fon-brain');
+}
+
+/* ══════════════════════════════════════════════════════
+   BUILD API URL
+   KEY: query.cond drives NSCLC vs SCLC separation at DB level.
+   No client-side crossover filter needed.
+══════════════════════════════════════════════════════ */
+function buildURL(token) {
+  var kw     = document.getElementById('kw').value.trim();
+  var status = document.getElementById('statusSel').value;
+
+  // Gather active chip queries from the VISIBLE panel only
+  var panelId = 'p-' + CT + '-' + MODE;
+  var panel   = document.getElementById(panelId);
+  var chips   = [];
+  if (panel) {
+    panel.querySelectorAll('.chip.on, .chip.on-s').forEach(function(c) {
+      var q = (c.dataset.q || '').trim();
+      if (q) chips.push(q);
+    });
   }
 
-  S.tokens = [null]; S.page = 1;
-}
+  var terms = chips.concat(kw ? [kw] : []);
 
-// ══════════════════════════════════════════════════════════════
-// SEARCH MODE SWITCH
-// ══════════════════════════════════════════════════════════════
-function switchMode(m) {
-  S.mode = m;
-  document.getElementById('panel-mut').style.display  = m === 'mut'  ? '' : 'none';
-  document.getElementById('panel-drug').style.display = m === 'drug' ? '' : 'none';
-  document.getElementById('tab-mut').classList.toggle('active',  m === 'mut');
-  document.getElementById('tab-drug').classList.toggle('active', m === 'drug');
-}
-
-// ══════════════════════════════════════════════════════════════
-// CHIPS
-// ══════════════════════════════════════════════════════════════
-document.querySelectorAll('.chip').forEach(c =>
-  c.addEventListener('click', () => c.classList.toggle('on'))
-);
-
-// ══════════════════════════════════════════════════════════════
-// FILTER TABS
-// ══════════════════════════════════════════════════════════════
-function setFtab(btn, type, val) {
-  if (type === 'line')  S.lineFilter  = val;
-  if (type === 'brain') S.brainFilter = val;
-  document.querySelectorAll(`.ftab.${type}`).forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-}
-
-// ══════════════════════════════════════════════════════════════
-// BUILD API URL
-// The key: query.cond is set to the exact cancer type.
-// CTG natively separates NSCLC vs SCLC at the database level.
-// We also apply a client-side post-filter for any crossover results.
-// ══════════════════════════════════════════════════════════════
-function buildURL(token) {
-  const chips  = [...document.querySelectorAll('.chip.on')].map(c => c.dataset.q);
-  const kw     = document.getElementById('kw').value.trim();
-  const status = document.getElementById('statusF').value;
-
-  // API condition query — hard-separated
-  const condQuery = S.cellType === 'sclc'
+  var cond = CT === 'sclc'
     ? 'Small Cell Lung Cancer'
     : 'Non-Small Cell Lung Cancer';
 
-  const terms = [...chips.filter(q => q && q !== 'small cell lung cancer'), kw].filter(Boolean);
-
-  const p = new URLSearchParams({
-    'query.cond':          condQuery,
-    'query.locn':          'South Korea',
+  var p = new URLSearchParams({
+    'query.cond':           cond,
+    'query.locn':           'South Korea',
     'filter.overallStatus': status,
-    'pageSize':            PER,
-    'countTotal':          'true',
-    'format':              'json'
+    'pageSize':             PER,
+    'countTotal':           'true',
+    'format':               'json'
   });
-  if (terms.length) p.set('query.intr', terms.join(' '));
-  if (token)        p.set('pageToken', token);
 
-  // CTG web link
-  const wp = new URLSearchParams({ cond: condQuery, locn: 'South Korea' });
+  if (terms.length > 0) p.set('query.intr', terms.join(' '));
+  if (token)            p.set('pageToken', token);
+
+  // Update CTG web link
+  var wp = new URLSearchParams({ cond: cond, locn: 'South Korea' });
   if (terms.length) wp.set('intr', terms.join(' '));
-  wp.set('aggFilters','status:rec');
-  document.getElementById('ctgHref').href = `https://clinicaltrials.gov/search?${wp}`;
+  wp.set('aggFilters', 'status:rec');
+  document.getElementById('ctgLink').href = 'https://clinicaltrials.gov/search?' + wp;
 
-  return `${CTG}?${p}`;
+  return CTG_BASE + '?' + p;
 }
 
-// ══════════════════════════════════════════════════════════════
-// FETCH
-// ══════════════════════════════════════════════════════════════
-async function fetchPage(token = null) {
-  const res = await fetch(buildURL(token));
-  if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-  return res.json();
-}
-
-// ══════════════════════════════════════════════════════════════
-// PARSE
-// ══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
+   PARSE
+══════════════════════════════════════════════════════ */
 function parse(study) {
-  const ps  = study.protocolSection        || {};
-  const id  = ps.identificationModule      || {};
-  const st  = ps.statusModule              || {};
-  const ds  = ps.designModule              || {};
-  const sp  = ps.sponsorCollaboratorsModule|| {};
-  const cnd = ps.conditionsModule          || {};
-  const arm = ps.armsInterventionsModule   || {};
-  const cl  = ps.contactsLocationsModule   || {};
-  const dsc = ps.descriptionModule         || {};
-  const eli = ps.eligibilityModule         || {};
+  var ps  = study.protocolSection        || {};
+  var id  = ps.identificationModule      || {};
+  var st  = ps.statusModule              || {};
+  var ds  = ps.designModule              || {};
+  var sp  = ps.sponsorCollaboratorsModule|| {};
+  var cnd = ps.conditionsModule          || {};
+  var arm = ps.armsInterventionsModule   || {};
+  var cl  = ps.contactsLocationsModule   || {};
+  var dsc = ps.descriptionModule         || {};
+  var eli = ps.eligibilityModule         || {};
 
-  const nct    = id.nctId || '';
-  const title  = id.briefTitle || '';
-  const status = st.overallStatus || '';
-  const phases = (ds.phases||[]).map(p => p.replace('PHASE','Phase ').replace('EARLY_PHASE1','Early Ph.I')).join('/');
-  const styp   = ds.studyType || '';
-  const enroll = ds.enrollmentInfo?.count;
-  const start  = st.startDateStruct?.date || '';
-  const spon   = sp.leadSponsor?.name || '';
-  const conds  = cnd.conditions || [];
-  const summ   = dsc.briefSummary || '';
-  const eligTxt= (eli.eligibilityCriteria || '').toLowerCase();
+  var nct    = id.nctId || '';
+  var title  = id.briefTitle || '';
+  var status = st.overallStatus || '';
+  var phases = (ds.phases||[]).map(function(p){
+    return p.replace('EARLY_PHASE1','Early Ph.I').replace('PHASE','Phase ');
+  }).join('/');
+  var styp   = ds.studyType || '';
+  var enroll = (ds.enrollmentInfo||{}).count;
+  var start  = (st.startDateStruct||{}).date || '';
+  var spon   = (sp.leadSponsor||{}).name || '';
+  var summ   = dsc.briefSummary || '';
+  var elig   = ((eli.eligibilityCriteria)||'').toLowerCase();
 
-  const drugs = (arm.interventions||[])
-    .filter(i => ['DRUG','BIOLOGICAL','COMBINATION_PRODUCT'].includes(i.type))
-    .map(i => i.name).filter(Boolean).slice(0, 6);
+  var drugs = (arm.interventions||[])
+    .filter(function(i){ return ['DRUG','BIOLOGICAL','COMBINATION_PRODUCT'].includes(i.type); })
+    .map(function(i){ return i.name; }).filter(Boolean).slice(0,6);
 
-  const centralContacts = (cl.centralContacts||[]).map(c => ({
-    name:c.name||'', role:c.role||'', phone:c.phone||'', email:c.email||''
-  }));
+  var cc = (cl.centralContacts||[]).map(function(c){
+    return {name:c.name||'',role:c.role||'',phone:c.phone||'',email:c.email||''};
+  });
 
-  const sites = (cl.locations||[])
-    .filter(l => {
-      const c = (l.country||'').toLowerCase();
+  var sites = (cl.locations||[])
+    .filter(function(l){
+      var c = (l.country||'').toLowerCase();
       return c === 'korea, republic of' || c.includes('korea');
     })
-    .map(l => ({
-      name:l.facility||'', city:l.city||'', status:l.status||'',
-      contacts:(l.contacts||[]).map(c => ({
-        name:c.name||'', role:c.role||'', phone:c.phone||'', email:c.email||''
-      }))
-    }));
+    .map(function(l){
+      return {
+        name:l.facility||'', city:l.city||'', status:l.status||'',
+        contacts:(l.contacts||[]).map(function(c){
+          return {name:c.name||'',role:c.role||'',phone:c.phone||'',email:c.email||''};
+        })
+      };
+    });
 
-  const fullTxt  = (title + ' ' + conds.join(' ') + ' ' + summ).toLowerCase();
-  const combined = eligTxt + ' ' + fullTxt;
+  var full = (title+' '+(cnd.conditions||[]).join(' ')+' '+summ).toLowerCase();
+  var combo = elig + ' ' + full;
 
-  const muts  = detectMuts(fullTxt);
-  const line  = detectLine(combined);
-  const brain = detectBrain(combined);
-  // isCrossover: does this SCLC result mention NSCLC or vice versa?
-  const isCrossover = detectCrossover(fullTxt);
-
-  return {nct,title,status,phases,styp,enroll,start,spon,drugs,
-          sites,centralContacts,muts,line,brain,isCrossover};
+  return {
+    nct:nct, title:title, status:status, phases:phases, styp:styp,
+    enroll:enroll, start:start, spon:spon, drugs:drugs, sites:sites, cc:cc,
+    muts: detectMuts(full),
+    line: detectLine(combo),
+    brain: detectBrain(combo)
+  };
 }
 
-// ══════════════════════════════════════════════════════════════
-// CROSSOVER DETECTION
-// Detects if a result clearly belongs to the OTHER cancer type.
-// E.g., an NSCLC trial mentioning "small cell" in the exclusion criteria
-// is fine — but one where the PRIMARY condition is SCLC should be filtered.
-// ══════════════════════════════════════════════════════════════
-function detectCrossover(txt) {
-  if (S.cellType === 'nsclc') {
-    // When searching NSCLC, exclude trials primarily about SCLC
-    // Check title/conditions (first 200 chars of fullTxt is usually most informative)
-    return NSCLC_EXCL.some(kw => txt.includes(kw));
-  } else {
-    // When searching SCLC, exclude trials primarily about NSCLC
-    return SCLC_EXCL.some(kw => txt.includes(kw));
-  }
-}
-
-// ══════════════════════════════════════════════════════════════
-// MUTATION DETECT
-// ══════════════════════════════════════════════════════════════
-const MUTS_NSCLC = [
-  {l:'EGFR exon20ins', p:['exon 20 ins','exon20ins','exon 20 insertion','ex20ins']},
-  {l:'EGFR T790M',     p:['t790m']},
-  {l:'EGFR L858R',     p:['l858r']},
-  {l:'EGFR exon19del', p:['exon19del','exon 19 del','19del']},
-  {l:'EGFR C797S',     p:['c797s']},
-  {l:'EGFR',           p:['egfr','epidermal growth factor receptor']},
-  {l:'ALK',            p:['alk fusion','alk rearrang','alk-positive',' alk ']},
-  {l:'KRAS G12C',      p:['kras g12c','g12c']},
-  {l:'KRAS G12D',      p:['kras g12d','g12d']},
-  {l:'KRAS G12V',      p:['kras g12v','g12v']},
-  {l:'KRAS',           p:['kras']},
-  {l:'ROS1',           p:['ros1','ros-1']},
-  {l:'RET fusion',     p:['ret fusion','ret rearrang','ret-positive']},
-  {l:'MET ex14',       p:['met ex14','met exon14','met exon 14']},
-  {l:'MET amp',        p:['met amplif','met overexpress']},
-  {l:'HER2',           p:['her2','erbb2']},
-  {l:'BRAF V600E',     p:['braf v600','v600e']},
-  {l:'NTRK',           p:['ntrk','larotrectinib','entrectinib']},
-  {l:'PD-L1',          p:['pd-l1','pdl1','programmed death-ligand']},
-  {l:'DDR/BRCA',       p:['brca1','brca2',' brca ','ddr pathway','homologous recombination']},
-  {l:'ATM',            p:[' atm ','atm alter','atm mutati']},
-  {l:'PARP',           p:['parp inhibit','olaparib','niraparib','rucaparib','talazoparib']},
-  {l:'CDK4/6',         p:['cdk4','cdk6','palbociclib','ribociclib','abemaciclib']},
-  {l:'CDK2',           p:['cdk2',' cdk 2']},
-  {l:'SMARCA4',        p:['smarca4','smarca-4']},
-  {l:'STK11/LKB1',    p:['stk11','lkb1']},
-  {l:'KEAP1',          p:['keap1']},
-  {l:'NRG1',           p:['nrg1','zenocutuzumab']},
+/* ══════════════════════════════════════════════════════
+   DETECT MUTATIONS
+══════════════════════════════════════════════════════ */
+var MUTS_N = [
+  {l:'EGFR ex20ins',p:['exon 20 ins','exon20ins','ex20ins','exon 20 insertion']},
+  {l:'EGFR T790M', p:['t790m']},
+  {l:'EGFR L858R', p:['l858r']},
+  {l:'EGFR ex19del',p:['exon19del','exon 19 del','19del']},
+  {l:'EGFR C797S', p:['c797s']},
+  {l:'EGFR',       p:['egfr']},
+  {l:'ALK',        p:['alk fusion','alk rearrang','alk-positive',' alk ']},
+  {l:'KRAS G12C',  p:['kras g12c','g12c']},
+  {l:'KRAS G12D',  p:['kras g12d','g12d']},
+  {l:'KRAS G12V',  p:['kras g12v','g12v']},
+  {l:'KRAS',       p:['kras']},
+  {l:'ROS1',       p:['ros1','ros-1']},
+  {l:'RET',        p:['ret fusion','ret rearrang','ret-positive']},
+  {l:'MET ex14',   p:['met ex14','met exon14','met exon 14']},
+  {l:'MET amp',    p:['met amplif','met overexpress']},
+  {l:'HER2',       p:['her2','erbb2']},
+  {l:'BRAF V600E', p:['braf v600','v600e']},
+  {l:'NTRK',       p:['ntrk','larotrectinib','entrectinib']},
+  {l:'PD-L1',      p:['pd-l1','pdl1']},
+  {l:'BRCA/DDR',   p:['brca1','brca2',' brca ','ddr pathway','homologous recomb']},
+  {l:'ATM',        p:[' atm ','atm alter']},
+  {l:'CDK4/6',     p:['cdk4','cdk6','palbociclib','ribociclib','abemaciclib']},
+  {l:'CDK2',       p:['cdk2']},
+  {l:'SMARCA4',    p:['smarca4']},
+  {l:'STK11',      p:['stk11','lkb1']},
+  {l:'KEAP1',      p:['keap1']},
+  {l:'NRG1',       p:['nrg1']},
 ];
-const MUTS_SCLC = [
-  {l:'DLL3',      p:['dll3','delta-like ligand 3','tarlatamab']},
-  {l:'PARP',      p:['parp inhibit','olaparib','niraparib','talazoparib']},
-  {l:'BCL-2',     p:['bcl-2','bcl2','venetoclax']},
-  {l:'PD-L1',     p:['pd-l1','pdl1']},
-  {l:'ATM',       p:[' atm ','atm alter']},
-  {l:'ASCL1',     p:['ascl1','ascl-1']},
-  {l:'NEUROD1',   p:['neurod1','neurod-1']},
-  {l:'MYC amp',   p:['myc amplif','c-myc','l-myc','n-myc']},
-  {l:'CDK2',      p:['cdk2']},
+var MUTS_S = [
+  {l:'DLL3',   p:['dll3','delta-like ligand 3','tarlatamab']},
+  {l:'PARP',   p:['parp','olaparib','talazoparib']},
+  {l:'BCL-2',  p:['bcl-2','bcl2','venetoclax']},
+  {l:'PD-L1',  p:['pd-l1','pdl1']},
+  {l:'ATM',    p:[' atm ','atm alter']},
+  {l:'ASCL1',  p:['ascl1']},
+  {l:'NEUROD1',p:['neurod1']},
+  {l:'MYC',    p:['myc amplif','c-myc','l-myc','n-myc']},
+  {l:'CDK2',   p:['cdk2']},
 ];
-
 function detectMuts(txt) {
-  const list = S.cellType === 'sclc' ? MUTS_SCLC : MUTS_NSCLC;
-  const found=[], seen=new Set();
-  for (const {l,p} of list) {
-    if (p.some(x => txt.includes(x))) {
-      const base = l.split(' ')[0].split('/')[0];
-      if (l===base && seen.has(base+'_sub')) continue;
-      found.push(l); seen.add(l);
-      if (l.includes(' ') || l.includes('/')) seen.add(base+'_sub');
+  var list = CT === 'sclc' ? MUTS_S : MUTS_N;
+  var found=[], seen={};
+  list.forEach(function(m){
+    if (m.p.some(function(x){ return txt.includes(x); })) {
+      var base = m.l.split(' ')[0].split('/')[0];
+      if (m.l === base && seen[base+'_sub']) return;
+      found.push(m.l);
+      seen[m.l] = 1;
+      if (m.l.includes(' ') || m.l.includes('/')) seen[base+'_sub'] = 1;
     }
-  }
+  });
   return found;
 }
 
-// ══════════════════════════════════════════════════════════════
-// LINE DETECT
-// ══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
+   DETECT LINE / BRAIN
+══════════════════════════════════════════════════════ */
 function detectLine(txt) {
-  const r1 = /first[\s-]line|1st[\s-]line|treatment[\s-]na[iï]ve|chemo[\s-]na[iï]ve|previously untreated|no prior.*treatment|frontline|treatment naive/i;
-  const r2 = /second[\s-]line|2nd[\s-]line|previously treated|prior.*therapy|after.*progression|post.*osimertinib|resistant|refractory|salvage|at least one prior|1 or more prior|≥\s*1 prior/i;
-  const is1=r1.test(txt), is2=r2.test(txt);
-  if (is1&&!is2) return '1L';
-  if (is2&&!is1) return '2L';
-  if (is1&&is2)  return 'both';
+  var r1 = /first[- ]line|1st[- ]line|treatment.?na[iï]ve|chemo.?na[iï]ve|previously untreated|no prior.{0,20}treatment|frontline/i;
+  var r2 = /second[- ]line|2nd[- ]line|previously treated|prior.{0,20}(therapy|treatment)|after.{0,30}progression|post.{0,20}osimertinib|resistant|refractory|salvage|at least one prior|≥\s*1 prior/i;
+  var a = r1.test(txt), b = r2.test(txt);
+  if (a&&!b) return '1L';
+  if (b&&!a) return '2L';
+  if (a&&b)  return 'both';
   return 'unknown';
 }
-
-// ══════════════════════════════════════════════════════════════
-// BRAIN MET DETECT
-// ══════════════════════════════════════════════════════════════
 function detectBrain(txt) {
-  const excl = /brain metastas[ei]s.*(?:excluded|not eligible|are excluded|not allowed|not permitted|must not have)|(?:exclusion.*brain|active brain metastas)/i;
-  const incl = /(?:stable|asymptomatic|treated|controlled|untreated).*brain metastas|brain metastas.*(?:allowed|eligible|permitted|included|stable|are allowed)|leptomeningeal.*allowed|intracranial.*eligible/i;
+  var excl = /brain metastas.{0,60}(excluded|not eligible|not allowed|not permitted|must not have)|active brain metastas|exclusion.{0,40}brain metastas/i;
+  var incl = /(stable|asymptomatic|treated|controlled|untreated).{0,30}brain metastas|brain metastas.{0,40}(allowed|eligible|permitted|included|stable)|leptomeningeal.{0,20}(allowed|eligible)/i;
   if (excl.test(txt)) return 'excluded';
   if (incl.test(txt)) return 'allowed';
   return 'unknown';
 }
 
-// ══════════════════════════════════════════════════════════════
-// CLIENT-SIDE FILTERS
-// ══════════════════════════════════════════════════════════════
-function applyFilters(trials) {
-  return trials.filter(t => {
-    // Exclude crossover results (SCLC appearing in NSCLC search or vice versa)
-    if (t.isCrossover) return false;
-    // Line filter
-    if (S.lineFilter==='1L' && t.line!=='1L' && t.line!=='both') return false;
-    if (S.lineFilter==='2L' && t.line!=='2L' && t.line!=='both') return false;
-    // Brain filter
-    if (S.brainFilter==='allowed'  && t.brain!=='allowed')  return false;
-    if (S.brainFilter==='excluded' && t.brain!=='excluded') return false;
+/* ══════════════════════════════════════════════════════
+   CLIENT FILTER (line + brain only — no crossover filter)
+══════════════════════════════════════════════════════ */
+function clientFilter(trials) {
+  return trials.filter(function(t) {
+    if (LINE === '1L' && t.line !== '1L' && t.line !== 'both') return false;
+    if (LINE === '2L' && t.line !== '2L' && t.line !== 'both') return false;
+    if (BRAIN === 'allowed'  && t.brain !== 'allowed')  return false;
+    if (BRAIN === 'excluded' && t.brain !== 'excluded') return false;
     return true;
   });
 }
 
-// ══════════════════════════════════════════════════════════════
-// TAG HELPERS
-// ══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
+   TAG HELPERS
+══════════════════════════════════════════════════════ */
 function lineTag(l) {
   if (l==='1L')   return '<span class="tag tline">1차 치료</span>';
   if (l==='2L')   return '<span class="tag tline">2차 이후</span>';
@@ -813,159 +808,152 @@ function brainTag(b) {
   if (b==='excluded') return '<span class="tag tt">뇌전이 제외</span>';
   return '';
 }
-function typeTag() {
-  if (S.cellType==='sclc')  return '<span class="tag t-sclc">SCLC</span>';
-  return '<span class="tag t-nsclc">NSCLC</span>';
+function ctTag() {
+  return CT === 'sclc'
+    ? '<span class="tag t-sclc">SCLC</span>'
+    : '<span class="tag t-nsclc">NSCLC</span>';
 }
 
-// ══════════════════════════════════════════════════════════════
-// CONTACT RENDER
-// ══════════════════════════════════════════════════════════════
-function renderContact(c, small=false) {
+/* ══════════════════════════════════════════════════════
+   RENDER CONTACT
+══════════════════════════════════════════════════════ */
+function renderContact(c, small) {
   if (!c.name && !c.phone && !c.email) return '';
-  const sz = small ? 'font-size:10px' : 'font-size:12px';
-  return `<div class="contact-row">
-    ${c.name ? `<div class="cname" style="${sz}">${c.name}${c.role ? ` <span style="color:var(--text3);font-weight:400">(${c.role})</span>` : ''}</div>` : ''}
-    ${c.phone ? `<div class="cinfo">📞 <a href="tel:${c.phone}">${c.phone}</a></div>` : ''}
-    ${c.email ? `<div class="cinfo">✉ <a href="mailto:${c.email}">${c.email}</a></div>` : ''}
-  </div>`;
+  return '<div class="crow">'
+    + (c.name ? '<div class="cname2" style="font-size:'+(small?'10':'12')+'px">' + c.name
+        + (c.role ? ' <span style="color:var(--t3);font-weight:400">('+c.role+')</span>' : '')
+        + '</div>' : '')
+    + (c.phone ? '<div class="cinfo">📞 <a href="tel:'+c.phone+'">'+c.phone+'</a></div>' : '')
+    + (c.email ? '<div class="cinfo">✉ <a href="mailto:'+c.email+'">'+c.email+'</a></div>' : '')
+    + '</div>';
 }
 
-// ══════════════════════════════════════════════════════════════
-// RENDER CARD
-// ══════════════════════════════════════════════════════════════
-const STATUS_KO = {
-  RECRUITING:'● 모집 중',
-  ACTIVE_NOT_RECRUITING:'◉ 진행 중',
-  COMPLETED:'완료',
-  TERMINATED:'조기종료',
-  NOT_YET_RECRUITING:'준비 중',
-  SUSPENDED:'중단'
+/* ══════════════════════════════════════════════════════
+   RENDER CARD
+══════════════════════════════════════════════════════ */
+var STATUS_KO = {
+  RECRUITING:'● 모집 중', ACTIVE_NOT_RECRUITING:'◉ 진행 중',
+  COMPLETED:'완료', TERMINATED:'조기종료',
+  NOT_YET_RECRUITING:'준비 중', SUSPENDED:'중단'
 };
-
 function renderCard(t) {
-  const url   = `https://clinicaltrials.gov/study/${t.nct}`;
-  const mTags = t.muts.map(m => `<span class="tag tm">${m}</span>`).join('');
-  const dTags = t.drugs.slice(0,5).map(d => `<span class="tag td">${d}</span>`).join('');
-  const ph    = t.phases || '—';
-  const typ   = t.styp==='INTERVENTIONAL' ? '중재' : t.styp==='OBSERVATIONAL' ? '관찰' : '';
-  const sN    = t.sites.length;
-  const sc    = t.status==='RECRUITING' ? 'rec' : 'act';
-  const brainOk = t.brain === 'allowed';
-  const isSclc  = S.cellType === 'sclc';
+  var url    = 'https://clinicaltrials.gov/study/' + t.nct;
+  var mTags  = t.muts.map(function(m){ return '<span class="tag tm">'+m+'</span>'; }).join('');
+  var dTags  = t.drugs.slice(0,5).map(function(d){ return '<span class="tag td">'+d+'</span>'; }).join('');
+  var ph     = t.phases || '—';
+  var typ    = t.styp==='INTERVENTIONAL'?'중재':t.styp==='OBSERVATIONAL'?'관찰':'';
+  var sN     = t.sites.length;
+  var sc     = t.status==='RECRUITING'?'rec':'act';
+  var cls    = 'card' + (CT==='sclc'?' sclc-card':'') + (t.brain==='allowed'?' brain-ok':'');
 
-  let cardCls = 'card';
-  if (isSclc)   cardCls += ' sclc-card';
-  if (brainOk)  cardCls += ' brain-ok';
+  var ccHtml = '';
+  if (t.cc && t.cc.length) {
+    ccHtml = '<div class="cc-wrap"><div class="ccl">Study Contact</div>'
+      + t.cc.map(function(c){ return renderContact(c, false); }).join('')
+      + '</div>';
+  }
 
-  const centralHTML = t.centralContacts?.length ? `
-    <div class="central-contacts">
-      <div class="ccl">Study Contact (Central)</div>
-      ${t.centralContacts.map(c => renderContact(c)).join('')}
-    </div>` : '';
-
-  const sitesHTML = sN > 0
-    ? t.sites.map(s => {
-        const sdCls = s.status.toUpperCase().includes('RECRUIT') ? 'r' : 'a';
-        const sdLbl = s.status.toUpperCase().includes('RECRUIT') ? '모집중'
-                    : s.status.toUpperCase().includes('ACTIVE')  ? '진행중' : s.status;
-        const sContHTML = s.contacts?.length ? `
-          <div class="site-contacts">
-            <div class="scl">Site Contact</div>
-            ${s.contacts.map(c => renderContact(c, true)).join('')}
-          </div>` : '';
-        return `<div class="srow2">
-          <div style="flex:1;min-width:0;">
-            <div class="sname">${s.name}</div>
-            <div class="scity">${s.city}</div>
-            ${sContHTML}
-          </div>
-          ${s.status ? `<span class="sdot ${sdCls}">${sdLbl}</span>` : ''}
-        </div>`;
+  var sitesHtml = sN > 0
+    ? t.sites.map(function(s) {
+        var sdCls = s.status.toUpperCase().includes('RECRUIT') ? 'r' : 'a';
+        var sdLbl = s.status.toUpperCase().includes('RECRUIT') ? '모집중'
+                  : s.status.toUpperCase().includes('ACTIVE')  ? '진행중' : s.status;
+        var scHtml = '';
+        if (s.contacts && s.contacts.length) {
+          scHtml = '<div class="sc-wrap"><div class="scl2">Site Contact</div>'
+            + s.contacts.map(function(c){ return renderContact(c, true); }).join('')
+            + '</div>';
+        }
+        return '<div class="srow2"><div style="flex:1;min-width:0">'
+          + '<div class="sname">'+s.name+'</div>'
+          + '<div class="scity">'+s.city+'</div>'
+          + scHtml
+          + '</div>'
+          + (s.status ? '<span class="sdot '+sdCls+'">'+sdLbl+'</span>' : '')
+          + '</div>';
       }).join('')
-    : `<div class="nosite">국내 기관 정보 없음 — <a href="${url}" target="_blank">CTG.gov에서 확인 ↗</a></div>`;
+    : '<div class="nosite">국내 기관 정보 없음 — <a href="'+url+'" target="_blank">CTG.gov ↗</a></div>';
 
-  return `
-  <div class="${cardCls}">
-    <div class="ctop">
-      <div class="cl">
-        <div class="cnct">${t.nct} · ${t.spon}</div>
-        <div class="ctitle">${t.title}</div>
-        <div class="tags">
-          ${typeTag()}${mTags}${dTags}${lineTag(t.line)}${brainTag(t.brain)}
-          ${ph !== '—' ? `<span class="tag tp">${ph}</span>` : ''}
-          ${typ ? `<span class="tag tt">${typ}</span>` : ''}
-        </div>
-      </div>
-      <div class="cr">
-        <span class="spill ${sc}">${STATUS_KO[t.status]||t.status}</span>
-        <div class="cmeta">
-          ${t.enroll ? `목표 ${t.enroll.toLocaleString()}명<br>` : ''}
-          ${t.start  ? `시작: ${t.start}<br>` : ''}
-          국내 기관: ${sN}곳
-        </div>
-        <a href="${url}" target="_blank" class="ctglink">🔗 CTG 원본 ↗</a>
-      </div>
-    </div>
-    <button class="stoggle" onclick="toggleSites('${t.nct}',this)">
-      <span>국내 참여 기관 ${sN}곳${sN ? ' 및 연락처 보기' : ' (정보 없음)'}</span><span>▾</span>
-    </button>
-    <div class="spanel" id="sp-${t.nct}">
-      ${centralHTML}
-      <div class="slist">${sitesHTML}</div>
-    </div>
-  </div>`;
+  return '<div class="'+cls+'">'
+    + '<div class="ctop">'
+    +   '<div class="cl">'
+    +     '<div class="cnct">'+t.nct+' · '+t.spon+'</div>'
+    +     '<div class="ctitle">'+t.title+'</div>'
+    +     '<div class="tags">'+ctTag()+mTags+dTags+lineTag(t.line)+brainTag(t.brain)
+    +       (ph!=='—'?'<span class="tag tp">'+ph+'</span>':'')
+    +       (typ?'<span class="tag tt">'+typ+'</span>':'')
+    +     '</div>'
+    +   '</div>'
+    +   '<div class="cr">'
+    +     '<span class="spill '+sc+'">'+(STATUS_KO[t.status]||t.status)+'</span>'
+    +     '<div class="cmeta">'
+    +       (t.enroll?'목표 '+t.enroll.toLocaleString()+'명<br>':'')
+    +       (t.start ?'시작: '+t.start+'<br>':'')
+    +       '국내 기관: '+sN+'곳'
+    +     '</div>'
+    +     '<a href="'+url+'" target="_blank" class="ctglink">🔗 CTG 원본 ↗</a>'
+    +   '</div>'
+    + '</div>'
+    + '<button class="stoggle" onclick="toggleSites(\''+t.nct+'\',this)">'
+    +   '<span>국내 참여 기관 '+sN+'곳'+(sN?' 및 연락처 보기':' (정보 없음)')+'</span><span>▾</span>'
+    + '</button>'
+    + '<div class="spanel" id="sp-'+t.nct+'">'
+    +   ccHtml
+    +   '<div class="slist">'+sitesHtml+'</div>'
+    + '</div>'
+    + '</div>';
 }
 
 function toggleSites(nct, btn) {
-  const p = document.getElementById('sp-' + nct);
-  const open = p.classList.toggle('open');
+  var p = document.getElementById('sp-'+nct);
+  var open = p.classList.toggle('open');
   btn.querySelector('span:last-child').textContent = open ? '▴' : '▾';
 }
 
-// ══════════════════════════════════════════════════════════════
-// MAIN SEARCH
-// ══════════════════════════════════════════════════════════════
-async function doSearch(token=null, pageNum=1) {
-  if (S.busy) return;
-  S.busy = true;
-  const btn = document.getElementById('sbtn');
-  btn.disabled = true; btn.textContent = '검색 중...';
+/* ══════════════════════════════════════════════════════
+   MAIN SEARCH
+══════════════════════════════════════════════════════ */
+async function doSearch(token, pageNum) {
+  if (BUSY) return;
+  if (!token) token = null;
+  if (!pageNum) pageNum = 1;
+  BUSY = true;
 
-  const chips  = [...document.querySelectorAll('.chip.on')].map(c => c.dataset.q);
-  const kw     = document.getElementById('kw').value.trim();
-  const ctLabel = S.cellType === 'sclc' ? 'SCLC' : 'NSCLC';
-  const qDesc  = [...chips.filter(q => q && q !== 'small cell lung cancer'), kw]
-                   .filter(Boolean).join(' + ') || ctLabel;
+  var btn = document.getElementById('sbtn');
+  btn.disabled = true;
+  btn.textContent = '검색 중...';
 
-  document.getElementById('results').innerHTML = `
-    <div class="loading">
-      <div class="spinner"></div>
-      <div class="ltitle">ClinicalTrials.gov 실시간 조회 중</div>
-      <div class="lsub">${ctLabel} · ${qDesc} · South Korea</div>
-      <div class="lapi">clinicaltrials.gov/api/v2/studies</div>
-    </div>`;
+  var ctLabel = CT === 'sclc' ? 'SCLC' : 'NSCLC';
+
+  document.getElementById('results').innerHTML =
+    '<div class="state">'
+    + '<div class="spinner"></div>'
+    + '<div class="stitle">ClinicalTrials.gov 실시간 조회 중</div>'
+    + '<div class="ssub">'+ctLabel+' · South Korea</div>'
+    + '<div class="sapi">clinicaltrials.gov/api/v2/studies</div>'
+    + '</div>';
   document.getElementById('statsEl').style.display  = 'none';
   document.getElementById('resbarEl').style.display = 'none';
-  document.getElementById('pagerEl').innerHTML = '';
+  document.getElementById('pagerEl').innerHTML      = '';
   document.getElementById('fnotice').classList.remove('show');
 
   try {
-    const data      = await fetchPage(token);
-    const apiTotal  = data.totalCount || 0;
-    const all       = (data.studies || []).map(parse);
-    const nextToken = data.nextPageToken || null;
+    var res = await fetch(buildURL(token));
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' — ' + res.statusText);
+    var data = await res.json();
 
-    S.allTrials = all; S.total = apiTotal; S.page = pageNum;
-    if (nextToken && !S.tokens[pageNum]) S.tokens[pageNum] = nextToken;
+    var apiTotal  = data.totalCount || 0;
+    var allParsed = (data.studies || []).map(parse);
+    var nextToken = data.nextPageToken || null;
 
-    const filtered  = applyFilters(all);
-    S.filtered = filtered;
+    if (nextToken && !TOKENS[pageNum]) TOKENS[pageNum] = nextToken;
 
-    const crossN = all.length - filtered.length;  // how many were excluded as crossover
-    const recN   = filtered.filter(t => t.status === 'RECRUITING').length;
-    const brainN = filtered.filter(t => t.brain  === 'allowed').length;
-    const siteN  = filtered.reduce((a,t) => a + t.sites.length, 0);
+    var filtered = clientFilter(allParsed);
+    FILTERED = filtered;
+
+    var recN   = filtered.filter(function(t){ return t.status==='RECRUITING'; }).length;
+    var brainN = filtered.filter(function(t){ return t.brain==='allowed'; }).length;
+    var siteN  = filtered.reduce(function(a,t){ return a+t.sites.length; }, 0);
 
     document.getElementById('stT').textContent    = apiTotal.toLocaleString();
     document.getElementById('stR').textContent    = recN;
@@ -976,21 +964,19 @@ async function doSearch(token=null, pageNum=1) {
     document.getElementById('hTotal').textContent = apiTotal.toLocaleString();
     document.getElementById('hRec').textContent   = recN;
 
-    // Notice
-    const notices = [];
-    if (crossN > 0) notices.push(`${crossN}건 교차 결과 자동 제외 (${S.cellType==='sclc'?'NSCLC':'SCLC"} 포함 항목)`);
-    if (S.lineFilter  === '1L') notices.push('1차 치료만 표시');
-    if (S.lineFilter  === '2L') notices.push('2차 이후만 표시');
-    if (S.brainFilter === 'allowed')  notices.push('뇌전이 허용 trial만');
-    if (S.brainFilter === 'excluded') notices.push('뇌전이 제외 trial만');
-    if (notices.length > 0) {
-      if (notices.some(n => n.includes('라인') || n.includes('뇌전이')))
-        notices.push('(eligibility text 분석 기반 — 반드시 원문 확인)');
-      document.getElementById('fnoticeText').textContent = notices.join(' · ');
+    // Filter notice
+    var notices = [];
+    if (LINE  === '1L') notices.push('1차 치료만 표시');
+    if (LINE  === '2L') notices.push('2차 이후만 표시');
+    if (BRAIN === 'allowed')  notices.push('뇌전이 허용 trial만');
+    if (BRAIN === 'excluded') notices.push('뇌전이 제외 trial만');
+    if (notices.length) {
+      notices.push('(eligibility text 분석 기반 — 반드시 원문 확인)');
+      document.getElementById('fnotice-txt').textContent = notices.join(' · ');
       document.getElementById('fnotice').classList.add('show');
     }
 
-    const tp = Math.ceil(apiTotal / PER);
+    var tp = Math.ceil(apiTotal / PER);
     document.getElementById('rN').textContent  = filtered.length;
     document.getElementById('rP').textContent  = pageNum;
     document.getElementById('rTP').textContent = tp;
@@ -998,99 +984,118 @@ async function doSearch(token=null, pageNum=1) {
 
     document.getElementById('results').innerHTML = filtered.length
       ? filtered.map(renderCard).join('')
-      : `<div class="empty">
-           <div style="font-size:36px;margin-bottom:14px">🔬</div>
-           <div class="ltitle">필터 조건에 맞는 결과가 없습니다</div>
-           <div class="lsub">필터를 변경하거나 다른 검색어를 사용해보세요</div>
-         </div>`;
+      : '<div class="state"><div style="font-size:34px;margin-bottom:12px">🔬</div>'
+        + '<div class="stitle">필터 조건에 맞는 결과가 없습니다</div>'
+        + '<div class="ssub">필터를 해제하거나 다른 검색어를 사용해보세요</div></div>';
 
     renderPager(apiTotal, pageNum, nextToken);
 
   } catch(err) {
-    document.getElementById('results').innerHTML = `
-      <div class="errstate">
-        <div style="font-size:36px;margin-bottom:14px">⚠️</div>
-        <div style="font-size:15px;font-weight:600;color:var(--red);margin-bottom:8px">API 연결 오류</div>
-        <div style="color:var(--text2);font-size:13px;margin-bottom:12px">${err.message}</div>
-        <div style="font-size:12px;color:var(--text3);line-height:2;background:var(--surface);border-radius:10px;padding:16px 20px;display:inline-block;text-align:left;max-width:480px;">
-          <strong style="color:var(--text)">원인:</strong> Claude.ai 미리보기는 외부 API 호출이 차단됩니다.<br>
-          <strong style="color:var(--text)">해결:</strong> 이 <code style="color:var(--blue)">index.html</code>을 GitHub에 올리면 정상 작동.<br>
-          Settings → Pages → Deploy from branch
-        </div>
-        <br><br>
-        <button class="sbtn" onclick="doSearch()">다시 시도</button>
-      </div>`;
+    document.getElementById('results').innerHTML =
+      '<div class="state">'
+      + '<div style="font-size:34px;margin-bottom:12px">⚠️</div>'
+      + '<div class="stitle" style="color:var(--red)">API 연결 오류</div>'
+      + '<div class="ssub" style="color:var(--t2);margin-bottom:12px">'+err.message+'</div>'
+      + '<div style="font-size:12px;color:var(--t3);line-height:2.2;background:var(--surf);border-radius:10px;padding:14px 18px;display:inline-block;text-align:left;max-width:440px;">'
+      + '<strong style="color:var(--t)">원인:</strong> Claude.ai 미리보기는 외부 API 호출이 차단됩니다.<br>'
+      + '<strong style="color:var(--t)">해결:</strong> index.html을 GitHub Pages에 올리면 정상 작동합니다.<br>'
+      + 'Settings → Pages → Deploy from branch'
+      + '</div><br><br>'
+      + '<button class="sbtn" onclick="doSearch()">다시 시도</button>'
+      + '</div>';
   } finally {
-    S.busy = false; btn.disabled = false;
-    btn.textContent = '실시간 검색';
+    BUSY             = false;
+    btn.disabled     = false;
+    btn.textContent  = '실시간 검색';
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-// PAGINATION
-// ══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
+   PAGINATION
+══════════════════════════════════════════════════════ */
 function renderPager(total, cur, nextToken) {
-  const tp = Math.ceil(total / PER);
+  var tp = Math.ceil(total / PER);
   if (tp <= 1) return;
-  const pg = document.getElementById('pagerEl');
-  let h = `<button class="pbtn" ${cur<=1?'disabled':''} onclick="goPage(${cur-1})">← 이전</button>`;
-  const s=Math.max(1,cur-2), e=Math.min(tp,cur+2);
-  if (s>1) h += `<button class="pbtn" onclick="goPage(1)">1</button>`;
-  if (s>2) h += `<span class="pinfo">…</span>`;
-  for (let i=s;i<=e;i++) h += `<button class="pbtn ${i===cur?'on':''}" onclick="goPage(${i})">${i}</button>`;
-  if (e<tp-1) h += `<span class="pinfo">…</span>`;
-  if (e<tp)   h += `<button class="pbtn" onclick="goPage(${tp})">${tp}</button>`;
-  h += `<button class="pbtn" ${!nextToken?'disabled':''} onclick="goPage(${cur+1})">다음 →</button>`;
-  h += `<span class="pinfo">${total.toLocaleString()}건 중 ${(cur-1)*PER+1}–${Math.min(cur*PER,total)}건</span>`;
+  var pg = document.getElementById('pagerEl');
+  var h  = '<button class="pbtn" '+(cur<=1?'disabled':'')+' onclick="goPage('+(cur-1)+')">← 이전</button>';
+  var s  = Math.max(1,cur-2), e = Math.min(tp,cur+2);
+  if (s>1) h += '<button class="pbtn" onclick="goPage(1)">1</button>';
+  if (s>2) h += '<span class="pinfo">…</span>';
+  for (var i=s; i<=e; i++)
+    h += '<button class="pbtn '+(i===cur?'on':'')+'" onclick="goPage('+i+')">'+i+'</button>';
+  if (e<tp-1) h += '<span class="pinfo">…</span>';
+  if (e<tp)   h += '<button class="pbtn" onclick="goPage('+tp+')">'+tp+'</button>';
+  h += '<button class="pbtn" '+(!nextToken?'disabled':'')+' onclick="goPage('+(cur+1)+')">다음 →</button>';
+  h += '<span class="pinfo">'+total.toLocaleString()+'건 중 '+((cur-1)*PER+1)+'–'+Math.min(cur*PER,total)+'건</span>';
   pg.innerHTML = h;
 }
 async function goPage(n) {
-  if (n<1||S.busy) return;
-  await doSearch(S.tokens[n-1]||null, n);
+  if (n < 1 || BUSY) return;
+  await doSearch(TOKENS[n-1] || null, n);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ══════════════════════════════════════════════════════════════
-// RESET
-// ══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
+   RESET
+══════════════════════════════════════════════════════ */
 function doReset() {
-  setCellType('nsclc');
-  switchMode('mut');
+  CT   = 'nsclc';
+  MODE = 'mut';
+  LINE = '';
+  BRAIN= '';
+
+  document.getElementById('tab-nsclc').setAttribute('data-active','1');
+  document.getElementById('tab-sclc') .setAttribute('data-active','0');
+  document.getElementById('tab-mut')  .setAttribute('data-active','1');
+  document.getElementById('tab-drug') .setAttribute('data-active','0');
+  document.getElementById('tab-mut')  .setAttribute('data-ct','nsclc');
+  document.getElementById('tab-drug') .setAttribute('data-ct','nsclc');
+  document.getElementById('sbtn').className = 'sbtn';
+
+  showPanels('nsclc','mut');
+  resetChips('nsclc','mut');
+
   document.getElementById('kw').value = '';
-  document.getElementById('statusF').value = 'RECRUITING,ACTIVE_NOT_RECRUITING';
-  S.lineFilter=''; S.brainFilter='';
-  ['line','brain'].forEach(t => {
-    document.querySelectorAll(`.ftab.${t}`).forEach(b => b.classList.remove('on'));
-    document.querySelector(`.ftab.${t}[data-val=""]`).classList.add('on');
-  });
-  S.tokens=[null]; S.page=1;
+  document.getElementById('statusSel').value = 'RECRUITING,ACTIVE_NOT_RECRUITING';
+
+  document.getElementById('fl-a').classList.add('fon-line');
+  document.getElementById('fl-1').classList.remove('fon-line');
+  document.getElementById('fl-2').classList.remove('fon-line');
+  document.getElementById('fb-a').classList.add('fon-brain');
+  document.getElementById('fb-y').classList.remove('fon-brain');
+  document.getElementById('fb-n').classList.remove('fon-brain');
+
+  TOKENS = [null];
   document.getElementById('fnotice').classList.remove('show');
 }
 
-// ══════════════════════════════════════════════════════════════
-// EXPORT CSV
-// ══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
+   CSV EXPORT
+══════════════════════════════════════════════════════ */
 function exportCSV() {
-  const rows = [['NCT','Title','Status','Phase','Sponsor','CancerType','Mutations','Drugs','Line','BrainMet','KoreaSites','KoreaCities','Start','Enrollment']];
-  S.filtered.forEach(t => rows.push([
-    t.nct, `"${t.title.replace(/"/g,'""')}"`, t.status, t.phases, `"${t.spon}"`,
-    S.cellType.toUpperCase(),
-    t.muts.join(';'), t.drugs.join(';'), t.line, t.brain,
-    `"${t.sites.map(s=>s.name).join(' | ')}"`,
-    `"${t.sites.map(s=>s.city).join(' | ')}"`,
-    t.start, t.enroll||''
-  ]));
-  const blob = new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8;'});
-  Object.assign(document.createElement('a'),{
-    href: URL.createObjectURL(blob),
-    download: `${S.cellType.toUpperCase()}_Korea_${new Date().toISOString().slice(0,10)}.csv`
-  }).click();
+  var rows = [['NCT','Title','Status','Phase','Sponsor','CancerType',
+               'Mutations','Drugs','Line','BrainMet','KoreaSites','KoreaCities','Start','Enrollment']];
+  FILTERED.forEach(function(t) {
+    rows.push([
+      t.nct, '"'+t.title.replace(/"/g,'""')+'"', t.status, t.phases, '"'+t.spon+'"',
+      CT.toUpperCase(), t.muts.join(';'), t.drugs.join(';'), t.line, t.brain,
+      '"'+t.sites.map(function(s){return s.name;}).join(' | ')+'"',
+      '"'+t.sites.map(function(s){return s.city;}).join(' | ')+'"',
+      t.start, t.enroll||''
+    ]);
+  });
+  var blob = new Blob(['\uFEFF'+rows.map(function(r){return r.join(',');}).join('\n')],
+    {type:'text/csv;charset=utf-8;'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = CT.toUpperCase()+'_Korea_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
 }
 
-// ══════════════════════════════════════════════════════════════
-// KEYBOARD
-// ══════════════════════════════════════════════════════════════
-document.getElementById('kw').addEventListener('keydown', e => {
+/* ══════════════════════════════════════════════════════
+   KEYBOARD
+══════════════════════════════════════════════════════ */
+document.getElementById('kw').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doSearch();
 });
 </script>
