@@ -219,7 +219,10 @@ footer a:hover{color:var(--blue);}
 
 <header>
   <div class="hdr">
-    <div class="logo">폐암<span>.</span>임상시험<span>.</span>KR</div>
+    <div>
+      <div class="logo">폐암<span>.</span>임상시험<span>.</span>KR</div>
+      <div style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:.4px;margin-top:1px;">Jeong Uk Lim, MD PhD</div>
+    </div>
     <div class="hbadges">
       <div class="hbdg">총 <span id="hTotal" style="color:#fff">—</span>건</div>
       <div class="hbdg">모집중 <span id="hRec" style="color:var(--green)">—</span>건</div>
@@ -463,6 +466,9 @@ footer a:hover{color:var(--blue);}
 </div><!-- /main -->
 
 <footer>
+  <div style="font-size:12px;color:var(--t2);margin-bottom:6px;letter-spacing:.5px;">
+    Jeong Uk Lim, MD PhD
+  </div>
   폐암.임상시험.KR &nbsp;·&nbsp; Data: <a href="https://clinicaltrials.gov" target="_blank">ClinicalTrials.gov API v2</a> (실시간) &nbsp;·&nbsp;
   NSCLC / SCLC API 레벨 분리 &nbsp;·&nbsp; 라인·뇌전이 필터는 eligibility text 분석 기반 — 반드시 원문 확인
 </footer>
@@ -782,10 +788,20 @@ function detectBrain(txt) {
 }
 
 /* ══════════════════════════════════════════════════════
-   CLIENT FILTER (line + brain only — no crossover filter)
+   CLIENT FILTER
+   - SCLC 검색 시: title에 "non-small cell" 또는 "nsclc" 포함된 결과 제외
+     (eligibility text는 건드리지 않음 — false positive 방지)
+   - 치료 라인 / 뇌전이 필터
 ══════════════════════════════════════════════════════ */
 function clientFilter(trials) {
   return trials.filter(function(t) {
+    // SCLC 탭: title에 NSCLC 키워드가 있는 trial 제외
+    if (CT === 'sclc') {
+      var titleLow = t.title.toLowerCase();
+      if (titleLow.includes('non-small cell') ||
+          titleLow.includes('non small cell') ||
+          titleLow.includes('nsclc')) return false;
+    }
     if (LINE === '1L' && t.line !== '1L' && t.line !== 'both') return false;
     if (LINE === '2L' && t.line !== '2L' && t.line !== 'both') return false;
     if (BRAIN === 'allowed'  && t.brain !== 'allowed')  return false;
